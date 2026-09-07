@@ -1,0 +1,513 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{r}
+
+knitr::opts_chunk$set(echo = FALSE, fig.width=9, message = FALSE, warning=FALSE)
+
+library(tidyverse)
+library(sf)
+library(readxl)
+library(kableExtra)
+library(flextable)
+library(viridis)
+library(scales)
+
+`%out%` <- Negate(`%in%`)
+
+theme_set(theme_light())
+```
+## Geodata
+
+```{r}
+bagmati <- st_read("./data/Ward_Bagmati.shp") |> 
+  st_drop_geometry()
+
+gandaki <- st_read("./data/Ward_Gandaki.shp") |> 
+  st_drop_geometry()
+
+nepal_admin <- read_xlsx("./data/npl_admin_boundaries.xlsx", 
+                         sheet = 7) |> 
+  select(adm3_name, adm3_pcode, adm2_name, adm2_pcode, adm1_name, adm1_pcode)
+
+wards <- st_read("./data/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
+
+affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
+  janitor::clean_names()
+
+adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
+```
+
+```{r}
+affected_wards_population <- read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx") |> 
+  janitor::clean_names()
+```
+
+### Wards
+
+#### Census
+
+```{r}
+ward_fill_filter <- function(tbl) {
+  tbl |> 
+    fill(province, .direction = "down") |>
+    fill(district, .direction = "down") |>
+    fill(municipality, .direction = "down") |>
+    filter(!is.na(ward))
+}
+```
+
+
+```{r}
+read_xlsx("./data/WRD_Bagmati_Hhld01-OwnershipOfHouse.xlsx", 
+          skip = 3) |>
+  setNames(c("province", "district", "municipality", "ward", "ownership_total", 
+             "ownership_owned", "ownership_rented", "ownership_institutional", 
+             "ownership_other")) |> 
+  ward_fill_filter()
+```
+
+```{r}
+read_xlsx("./data/WRD_Bagmati_Hhld02-FoundationOfHouse.xlsx", 
+          skip = 2) |> 
+  setNames(c("province", "district", "municipality", "ward", "foundation_total", 
+             "foundation_mud", "foundation_mud_bonded_bricks_stone", 
+             "foundation_cement_bonded_bricks_stone", 
+             "reinforced_cement_concrete_with_pillars", 
+             "wooden_pillars", "other")) |> 
+  ward_fill_filter()
+  
+```
+
+```{r}
+read_xlsx("./data/WRD_Bagmati_Hhld03-OuterWallOfHouse.xlsx", 
+          skip = 2) |> 
+  setNames(c("province", "district", "municipality", "ward", "outer_wall_total",
+             "outer_wall_mud_bonded_bricks_stone", 
+             "outer_wall_cement_bonded_bricks_stone", 
+             "wood_planks", 
+             "bamboo", 
+             "unbaked_bricks", 
+             "galvanised_sheet", 
+             "prefabricated_sheet", 
+             "other")) |> 
+  ward_fill_filter()
+
+```
+
+```{r}
+read_xlsx("./data/WRD_Bagmati_Hhld04-RoofOfHouse.xlsx", skip = 2) |> 
+  setNames(c("province", "district", "municipality", "ward", "roof_total",
+             "galvanised_sheet", 
+             "reinforced_cement_concrete", 
+             "thatch_straw", 
+             "tile", 
+             "stone_slate", 
+             "wood_planks", 
+             "mud", 
+             "other")) |> 
+  ward_fill_filter()
+  
+```
+
+```{r}
+read_xlsx("./data/WRD_Bagmati_Hhld05-FloorOfHouse.xlsx", 
+          skip = 2) |> 
+  setNames(c("province", "district", "municipality", "ward", "floor_total",
+             "mud", "wooden_plank_bamboo", "bricks_stone", 
+             "ceramic_tile", "cemented", "other")) |>
+  ward_fill_filter()
+```
+
+```{r}
+read_xlsx("./data/WRD_Bagmati_Hhld06-SourceOfDrinkingWater.xlsx", skip = 2)
+```
+
+
+Mud	Wooden plank/ bamboo	Bricks/stone	Ceramic tile	Cemented	Other
+
+
+
+```{r}
+affected_wards |> 
+  select(adm2_en, adm2_pcode, adm3_en, new_ward_n) |> 
+  left_join(nepal_admin |> 
+              distinct(adm1_name, adm2_pcode), 
+            by = "adm2_pcode") |> 
+  select(adm1_en = adm1_name, adm2_en, adm3_en, ward_number = new_ward_n) |> 
+  count(adm1_en)
+  write_csv("./data/locations_assessment_registry.csv")
+
+nepal_admin |> 
+  filter(adm1_name %in% c("Bagmati", "Gandaki")) |> 
+  distinct(adm1_name, adm2_name, adm3_name, adm1_pcode, adm2_pcode, adm3_pcode) |> 
+  write_csv("./data/locations_assessment_registry.csv")
+ 
+```
+
+
+
+```{r}
+affected_wards |> count(adm1_pcode, adm2_en)
+affected_wards |> 
+  glimpse()
+```
+
+
+```{r}
+bagmati |> 
+  janitor::clean_names() |> 
+  select(district, 
+         DCODE)
+```
+
+```{r}
+
+affected_wards_population |> 
+  mutate(count = 1) |> 
+  group_by(district) |> 
+  summarise(municipalities = n_distinct(adm3_pcode), 
+            municipalities_emergency = sum(count[emergency_declared == "Yes"], na.rm = TRUE), 
+            affected_population = sum(estimated_affected_population)) |> 
+  rename(`Affected Population` = affected_population, 
+         `Municipalities declared emergency` = municipalities_emergency, 
+         District = district, 
+         Municipalities = municipalities) |> 
+  arrange(desc(`Affected Population`)) |> 
+  flextable() %>% 
+  set_caption(caption = "Affected population by municipality") %>% 
+  theme_zebra() |> 
+  save_as_image("./plots/affected_population_municipality.png")
+```
+
+## 5Ws
+
+
+```{r}
+consolidated <- read_xlsx("./data/NEPAL Consolidated Data (for dashboard) 20260906.xlsx", 
+                          sheet = "Consolidated_Data") |> 
+  janitor::clean_names() |> 
+  mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
+  mutate_at(c("province", "district", "municipality"), ~ str_trim(.)) |> 
+  mutate(municipality = str_remove_all(municipality, " Gaunpalika")) |> 
+  mutate(province = case_when(
+    district == "Gorkha" ~ "Gandaki", 
+    district == "Tanahu" ~ "Gandaki",
+    TRUE ~ province
+  )) |> 
+  mutate(district = case_when(
+    municipality == "Gosaikunda" ~ "Rasuwa", 
+    municipality == "Bidur Municipality" ~ "Nuwakot", 
+    TRUE ~ district
+  )) |> 
+  mutate(municipality = case_when(
+    municipality == "Benighat" ~ "Benighat Rorang", 
+    municipality == "Galchi Rural Municipality" ~ "Galchhi", 
+    municipality == "Gandaki" ~ "Gandaki", 
+    municipality == "Bheri Malika Municipality" ~ "Bheri Malika", 
+    municipality == "Nalgad Municipality" ~ "Nalgad", 
+    municipality == "Kathmandu Metropolitian City" ~ "Kathmandu", 
+    municipality == "Nagarjun Municipality" ~ "Nagarjun", 
+    municipality == "Belkotgadhi Municipality|Belkotgadhi Nagarpalika" ~ "Belkotgadhi", 
+    str_detect(municipality, "Bidur") ~ "Bidur", 
+    municipality == "Kispang Municipality" ~ "Kispang", 
+    municipality == "Tarkeshwor" ~ "Tarakeshwor", 
+    municipality == "Rasuwa Dao, Dhunche" ~ "Gosaikunda",
+    str_detect(municipality, "Devghat") ~ "Devghat", 
+    str_detect(municipality, "Gandaki") ~ "Gandaki", 
+    str_detect(municipality, "Belkotgadhi") ~ "Belkotgadhi", 
+    municipality == "Aanbukhaireni" ~ "Aanbu Khaireni",
+    TRUE ~ municipality)) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_name, adm1_pcode), 
+    by = c("province" = "adm1_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_pcode, adm2_name, adm2_pcode), 
+    by = c("adm1_pcode", "district" = "adm2_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_pcode, adm2_pcode, 
+             adm3_name, adm3_pcode), 
+    by = c("adm1_pcode", "adm2_pcode", "municipality" = "adm3_name")
+  ) |> 
+  rename(individuals_reached = total_number_of_beneficiaries_reached_people_individuals)
+
+```
+
+
+
+```{r planned-reach-municipality, fig.height=8}
+consolidated |> 
+  mutate(sector = ifelse(str_detect(sector, "Protection"), "Protection", sector), 
+         sector = ifelse(str_detect(sector, "Health"), "Health", sector)) |> 
+  filter(sector %out% c("ETC", "Logistics") & !is.na(sector)) |> 
+  filter(province != "Karnali") |>
+  # Remember to allow Kathmandu back in when they have more people who have been reached
+  filter(district != "Kathmandu") |> 
+  group_by(province, district, municipality, sector, adm3_pcode) |> 
+  summarise(
+    individuals_targeted = sum(people_targeted_individuals, na.rm = TRUE), 
+    individuals_reached = sum(individuals_reached, na.rm = TRUE), 
+    .groups = "drop"
+  ) |>  
+  mutate(label = paste0(municipality, ", ", district)) |> 
+  filter(individuals_targeted != 0 | 
+           individuals_reached != 0) |> 
+  mutate(individuals_targeted = 
+           ifelse(individuals_targeted == 0 & individuals_reached != 0, 
+                  individuals_reached, individuals_targeted)) |> 
+  left_join(
+    affected_wards_population |>
+      group_by(adm3_pcode) |>
+      summarise(
+        estimated_affected_population = sum(estimated_affected_population, na.rm = TRUE)),
+    by = "adm3_pcode") |> 
+  pivot_longer(cols = c(individuals_targeted, 
+                        individuals_reached, 
+                        estimated_affected_population), 
+               names_to = "variable", 
+               values_to = "value") |> 
+  mutate(variable = str_replace_all(variable, "_", " "), 
+         variable = str_replace_all(variable, "individuals", "beneficiaries"), 
+         variable = str_to_title(variable), 
+         variable = fct_relevel(variable,
+                                c("Beneficiaries Targeted", 
+                                  "Beneficiaries Reached", 
+                                  "Estimated Affected Population"))) |> 
+  ggplot(aes(x = value, y = municipality)) + 
+  geom_col(aes(fill = fct_rev(variable)), position = position_dodge()) + 
+  scale_fill_viridis_d() + 
+  scale_x_continuous(labels = comma) + 
+  facet_wrap(~district, scales = "free", 
+             ncol = 2) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  labs(x = "",  
+       y = "Municipality", 
+       title = "Planned, Reached and Estimated Affected Population by Municipality",
+       subtitle = "as of 20260906, figures listed are beneficiaries frequencies, not individuals; from the 5Ws", 
+       fill = "") +
+   theme(strip.background = element_rect(fill = "black"), 
+         strip.text = element_text(size = 13), 
+         axis.text.y = element_text(size = 13))
+   
+ggsave("./plots/planned_reached_municipality.png", height = 8, width = 12)
+```
+
+```{r}
+consolidated |> 
+  mutate(sector = ifelse(str_detect(sector, "Protection"), "Protection", sector), 
+         sector = ifelse(str_detect(sector, "Health"), "Health", sector)) |> 
+  filter(sector %out% c("ETC", "Logistics") & !is.na(sector)) |> 
+  filter(province != "Karnali") |> 
+  group_by(province, district, municipality, sector, adm3_pcode) |> 
+  summarise(
+    individuals_targeted = sum(people_targeted_individuals, na.rm = TRUE), 
+    individuals_reached = sum(individuals_reached, na.rm = TRUE), 
+    .groups = "drop"
+  ) |>  
+  mutate(label = paste0(district, ", ", municipality)) |> 
+  filter(individuals_targeted != 0 | 
+           individuals_reached != 0) |> 
+  mutate(individuals_targeted = 
+           ifelse(individuals_targeted == 0 & individuals_reached != 0, 
+                  individuals_reached, individuals_targeted)) |> 
+  left_join(
+    affected_wards_population |>
+      group_by(adm3_pcode) |>
+      summarise(
+        estimated_affected_population = sum(estimated_affected_population, na.rm = TRUE)),
+    by = "adm3_pcode") |> 
+  pivot_longer(cols = c(individuals_targeted, 
+                        individuals_reached), 
+               names_to = "variable", 
+               values_to = "value") |> 
+  mutate(variable = str_replace_all(variable, "_", " "), 
+         variable = str_to_title(variable)) |> 
+  ggplot(aes(x = value, y = label)) + 
+  geom_col(aes(fill = variable), position = position_dodge()) + 
+  scale_fill_viridis_d(begin = .5) + 
+  scale_x_continuous(labels = comma) + 
+  facet_wrap(~sector, scales = "free", 
+             ncol = 1) +
+  labs(x = "", 
+       y = "Municipality and District", 
+       title = "Planned, Reached and Estimated Affected Population by Municipality", 
+       fill = "") +
+   theme(strip.background = element_rect(fill = "black"), 
+         title = element_text(size = 9))
+
+ggsave("./plots/planned_reached_sectors.png", height = 11, width = 8)
+  
+```
+
+
+```{r}
+consolidated |> 
+  filter(municipality == "Gosaikunda" & sector == "WASH") |> 
+  group_by(sector) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE), 
+            individuals_targeted = sum(people_targeted_individuals, na.rm = TRUE))
+```
+
+
+```{r}
+consolidated |> 
+  mutate(sector = ifelse(str_detect(sector, "Protection"), "Protection", sector), 
+         sector = ifelse(str_detect(sector, "Health"), "Health", sector)) |> 
+  filter(sector %out% c("ETC", "Logistics") & !is.na(sector)) |> 
+  filter(province != "Karnali") |>
+  group_by(district, adm2_pcode, municipality, adm3_pcode, sector, lead_agency, implementing_partner) |> 
+  summarise(
+    frequencies = sum(individuals_reached, na.rm = TRUE), 
+    .groups = "drop"
+  ) |> 
+  mutate(duplicate = ifelse(
+    implementing_partner == lead_agency, 
+    1, 0
+  )) |> 
+  mutate(implementing_partner = ifelse(
+    duplicate == 1, NA_character_, implementing_partner
+  )) |> 
+  pivot_longer(
+    lead_agency:implementing_partner, 
+    names_to = "role",
+    values_to = "agencies"
+  ) |> 
+  select(-frequencies, -duplicate) |> 
+  filter(!is.na(agencies)) |>  
+  group_by(district, adm2_pcode, municipality, adm3_pcode, sector) |> 
+  summarise(num_agencies = n_distinct(agencies), 
+            agencies_text = paste(agencies, collapse = ",")) |> 
+  right_join(
+      adm3 |> filter(adm2_name %in% c("Dhading", "Nuwakot", "Gorkha", 
+                                "Jajarkot", "Kathmandu", "Mugu", 
+                                "Rasuwa", "Tanahu")), 
+      by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  filter(!is.na(municipality) & !is.na(sector)) |> 
+  st_as_sf() |> 
+  ggplot() +
+  geom_sf(aes(fill = num_agencies), linewidth =.1) +
+  geom_sf_text(aes(label = municipality), size = 2) +
+  scale_fill_viridis(direction = -1) + 
+  facet_wrap(~sector) + 
+  labs(title = "Number of agencies by sector", 
+       subtitle = "as of 20260906, from the 5Ws",
+       x = "", y = "", 
+       fill = "Number of\nagencies") + 
+  theme(strip.background = element_rect(fill = "black"), 
+        axis.text.x = element_text(size = 5), 
+        axis.text.y = element_text(size = 5))
+  
+ggsave("./plots/sector_agencies_map.png", height = 7, width = 11, units = "in")
+```
+
+
+```{r}
+consolidated |> 
+  filter(province != "Karnali") |> 
+  group_by(response_modality) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE)) |> 
+  arrange(desc(individuals_reached)) |> 
+  filter(individuals_reached != 0) |> 
+  mutate(response_modality = ifelse(is.na(response_modality), 
+                                    "N.A.", response_modality)) |> 
+  mutate(pc = round(individuals_reached / sum(individuals_reached) * 100, 2)) |> 
+  rename(`Response modality` = response_modality, 
+         `Beneficiary frequencies` = individuals_reached, 
+         `%` = pc) |> 
+  flextable() |> 
+  theme_zebra() |> 
+  save_as_image("./plots/response_modality.png")
+
+consolidated |> 
+  filter(is.na(response_modality)) |> 
+  count(activity_description, sort = TRUE)
+
+consolidated |> filter(is.na(activity))
+```
+
+
+```{r}
+consolidated |> 
+  group_by(activity) |> 
+  summarise(
+    individuals_reached = sum(individuals_reached, na.rm = TRUE), 
+    individuals_targeted = sum(people_targeted_individuals, na.rm = TRUE)
+  ) |> 
+  arrange(desc(individuals_reached)) |>
+  rename(
+    Activity = activity, 
+    `Individuals reached` = individuals_reached, 
+    `Individuals targeted` = individuals_targeted
+  ) |> 
+  head(10) |> 
+  # mutate(activity = str_sub(activity, start = 1L, end = 70L)) |> 
+  flextable() |> 
+  flextable::set_caption(as_paragraph(as_chunk("Top 10 activities by individuals reached"))) |> 
+  theme_zebra() |> 
+  flextable::width(width = 3) |> 
+  save_as_image("./plots/top_activities.png")
+```
+
+
+```{r}
+adm3 |> filter(adm2_name %in% c("Dhading", "Nuwakot", "Gorkha", 
+                                "Jajarkot", "Kathmandu", "Mugu", 
+                                "Rasuwa", "Tanahu"))
+
+adm3 |> 
+  filter(adm1_name %in% c("Bagmati", "Gandaki")) |> 
+  st_as_sf() |> 
+  ggplot() +
+  geom_sf(size = .1) + 
+  geom_sf_text(aes(label = adm2_name), size = 1) +
+  geom_sf_text(aes(label = adm3_name), size = 1.5)
+  
+```
+
+
+## Contacts
+
+```{r}
+contact_list <- read_csv("./data/Nepal Flood Response Contact List - Contact List.csv", 
+         skip = 2) |> 
+  janitor::clean_names() |> 
+  mutate(agency = case_when(
+    str_detect(agency, "CWIN|cwin|Cwin|CWIN-|CWIM- NEPAL") ~ "CWIN-Nepal", 
+    str_detect(agency, "DFAT|Australian Department of Foreign Affairs and Trade") ~ "DFAT", 
+    str_detect(agency, "Habitat for Humanity") ~ "Habitat for Humanity", 
+    str_detect(agency, "FAIR MED / MANK") ~ "MANK and FAIR MED", 
+    str_detect(agency, "Nepal Red Cross Society|Nepal Redcross Society") ~ "Nepal Red Cross Society", 
+    str_detect(agency, "OM ") ~ "Operation Mobilisation", 
+    str_detect(agency, "Plan International") ~ "Plan International", 
+    str_detect(agency, "Save the Children") ~ "Save the Children", 
+    str_detect(agency, "UN Women") ~ "UN Women", 
+    str_detect(agency, "UNESCO") ~ "UNESCO", 
+    str_detect(agency, "UNFPA") ~ "UNFPA", 
+    str_detect(agency, "UNODC") ~ "UNODC", 
+    str_detect(agency, "Unicef") ~ "UNICEF", 
+    str_detect(agency, "WFP|World Food Programme") ~ "WFP", 
+    str_detect(agency, "World Health Organization") ~ "WHO", 
+    str_detect(agency, "One heart worldwide") ~ "One Heart Worldwide", 
+    TRUE ~ agency
+  )) 
+
+contact_list |> count(agency)
+
+contact_list |> write_csv("./data/contact_list_agencies_cleaned_20260907.csv")
+```
+
+
+## Wards census
+
+```{r}
+
+```
+
