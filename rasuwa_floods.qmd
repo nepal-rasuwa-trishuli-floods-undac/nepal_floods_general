@@ -19,7 +19,7 @@ library(scales)
 
 theme_set(theme_light())
 ```
-## Geodata
+# Geodata
 
 ```{r}
 bagmati <- st_read("./data/shapefiles/Ward_Bagmati.shp") |> 
@@ -41,7 +41,7 @@ adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
 ``` 
 
 
-### Wards
+# Wards
 
 ```{r}
 affected_wards_population <- read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx") |> 
@@ -49,11 +49,9 @@ affected_wards_population <- read_xlsx("./data/Copy of Affected Palikas and Ward
 ```
 
 
-#### Census
+## Census
 
-```{r}
-
-```
+### Functions
 
 
 ```{r}
@@ -64,9 +62,77 @@ ward_fill_filter <- function(tbl) {
     fill(municipality, .direction = "down") |>
     filter(!is.na(ward))
 }
+
+ward_fill_filter2 <- function(tbl) {
+  tbl |> 
+    fill(province, .direction = "down") |>
+    fill(district, .direction = "down") |>
+    fill(municipality, .direction = "down") |>
+    fill(ward, .direction = "down") |> 
+    filter(!is.na(ward))
+}
+
+bagmati_district_names <- function(tbl) {
+  tbl |>
+    mutate(province = "Bagmati") |> 
+    mutate(district = as.character(district)) |>
+    mutate(
+      district = case_when(
+        district == 23 ~ "Dolakha",
+        district == 24 ~ "Sindhupalchok",
+        district == 25 ~ "Rasuwa",
+        district == 26 ~ "Dhading",
+        district == 27 ~ "Nuwakot",
+        district == 28 ~ "Kathmandu",
+        district == 29 ~ "Bhaktapur",
+        district == 30 ~ "Lalitpur",
+        district == 31 ~ "Kavrepalanchok",
+        district == 32 ~ "Ramechhap",
+        district == 33 ~ "Sindhuli",
+        district == 34 ~ "Makwanpur",
+        district == 35 ~ "Chitawan",
+        TRUE ~ district
+      )
+    ) |> 
+    filter(name %out% c("Dolakha", "Sindhupalchok", "Rasuwa", "Dhading", 
+                      "Nuwakot", "Kathmandu", "Bhaktapur", "Lalitpur",
+                      "Kavrepalanchok", "Ramechhap", "Sindhuli", "Makwanpur", 
+                      "Chitawan", "NEPAL", "BAGMATI")) |> 
+  select(-municipality) |> 
+  rename(municipality = name) |> 
+  mutate(ward = ifelse(ward == "Total", "All Wards", ward))
+}
+
+gandaki_district_names <- function(tbl) {
+  tbl |>
+    mutate(province = "Gandaki") |>
+    mutate(district = as.character(district)) |>
+    mutate(
+      district = case_when(
+        district == 36 ~ "Gorkha",
+        district == 37 ~ "Manang",
+        district == 38 ~ "Mustang",
+        district == 39 ~ "Myagdi",
+        district == 40 ~ "Kaski",
+        district == 41 ~ "Lamjung",
+        district == 42 ~ "Tanahu",
+        district == 43 ~ "Nawalparasi East",
+        district == 44 ~ "Syangja",
+        district == 45 ~ "Parbat",
+        district == 46 ~ "Baglung",
+        TRUE ~ district
+      )
+    ) |> 
+    filter(name %out% c("Gorkha", "Manang", "Mustang", "Myagdi", "Kaski",
+                      "Lamjung", "Tanahu", "Nawalparasi East", "Syangja", "Parbat",
+                      "Baglung", "NEPAL", "GANDAKI")) |> 
+  select(-municipality) |> 
+  rename(municipality = name) |> 
+  mutate(ward = ifelse(ward == "Total", "All Wards", ward))
+}
 ```
 
-##### Household - Bagmati 
+### Household - Bagmati 
 
 ```{r bagmati warning=FALSE, message=FALSE}
 bagmati <- cbind(
@@ -209,31 +275,7 @@ bagmati <- cbind(
              "wealth_quintile_middle_quintile_pc", 
              "wealth_quintile_richer_quintile_pc", 
              "wealth_quintile_richest_quintile_pc")) |> 
-  mutate(province = "Bagmati") |> 
-  mutate(district = as.character(district)) |> 
-  mutate(district = case_when(
-    district == 23 ~ "Dolakha", 
-    district == 24 ~ "Sindhupalchok", 
-    district == 25 ~ "Rasuwa", 
-    district == 26 ~ "Dhading", 
-    district == 27 ~ "Nuwakot", 
-    district == 28 ~ "Kathmandu", 
-    district == 29 ~ "Bhaktapur", 
-    district == 30 ~ "Lalitpur", 
-    district == 31 ~ "Kavrepalanchok", 
-    district == 32 ~ "Ramechhap", 
-    district == 33 ~ "Sindhuli", 
-    district == 34 ~ "Makwanpur", 
-    district == 35 ~ "Chitawan", 
-    TRUE ~ district
-  )) |> 
-  filter(name %out% c("Dolakha", "Sindhupalchok", "Rasuwa", "Dhading", 
-                      "Nuwakot", "Kathmandu", "Bhaktapur", "Lalitpur",
-                      "Kavrepalanchok", "Ramechhap", "Sindhuli", "Makwanpur", 
-                      "Chitawan", "NEPAL", "BAGMATI")) |> 
-  select(-municipality) |> 
-  rename(municipality = name) |> 
-  mutate(ward = ifelse(ward == "Total", "All Wards", ward)) |> 
+  bagmati_district_names() |> 
   select(-province, -district, -municipality, -ward), 
   
   read_xlsx("./data/census/Rev_Bagmati_Hhld_QualityOfHouse_Ward_formated.xlsx", skip = 2) |> 
@@ -248,36 +290,12 @@ bagmati <- cbind(
              "house_quality_moderate_pc", 
              "house_quality_inadequate_pc", 
              "house_quality_least_adequate_pc")) |> 
-  mutate(province = "Bagmati") |> 
-  mutate(district = as.character(district)) |> 
-  mutate(district = case_when(
-    district == 23 ~ "Dolakha", 
-    district == 24 ~ "Sindhupalchok", 
-    district == 25 ~ "Rasuwa", 
-    district == 26 ~ "Dhading", 
-    district == 27 ~ "Nuwakot", 
-    district == 28 ~ "Kathmandu", 
-    district == 29 ~ "Bhaktapur", 
-    district == 30 ~ "Lalitpur", 
-    district == 31 ~ "Kavrepalanchok", 
-    district == 32 ~ "Ramechhap", 
-    district == 33 ~ "Sindhuli", 
-    district == 34 ~ "Makwanpur", 
-    district == 35 ~ "Chitawan", 
-    TRUE ~ district
-  )) |> 
-  filter(name %out% c("Dolakha", "Sindhupalchok", "Rasuwa", "Dhading", 
-                      "Nuwakot", "Kathmandu", "Bhaktapur", "Lalitpur",
-                      "Kavrepalanchok", "Ramechhap", "Sindhuli", "Makwanpur", 
-                      "Chitawan", "NEPAL", "BAGMATI")) |> 
-  select(-municipality) |> 
-  rename(municipality = name) |> 
-  mutate(ward = ifelse(ward == "Total", "All Wards", ward)) |> 
-    select(-province, -district, -municipality, -ward) 
+ bagmati_district_names() |>  
+ select(-province, -district, -municipality, -ward) 
 )
 ```
 
-##### Household - Gandaki
+### Household - Gandaki
 
 ```{r}
 gandaki <- cbind(
@@ -420,31 +438,10 @@ gandaki <- cbind(
              "wealth_quintile_middle_quintile_pc", 
              "wealth_quintile_richer_quintile_pc", 
              "wealth_quintile_richest_quintile_pc")) |> 
-  mutate(province = "Gandaki") |> 
-  mutate(district = as.character(district)) |> 
-  mutate(district = case_when(
-    district == 36 ~ "Gorkha", 
-    district == 37 ~ "Manang", 
-    district == 38 ~ "Mustang", 
-    district == 39 ~ "Myagdi", 
-    district == 40 ~ "Kaski", 
-    district == 41 ~ "Lamjung", 
-    district == 42 ~ "Tanahu", 
-    district == 43 ~ "Nawalparasi East", 
-    district == 44 ~ "Syangja", 
-    district == 45 ~ "Parbat", 
-    district == 46 ~ "Baglung", 
-    TRUE ~ district
-  )) |> 
-  filter(name %out% c("Gorkha", "Manang", "Mustang", "Myagdi", "Kaski",
-                      "Lamjung", "Tanahu", "Nawalparasi East", "Syangja", "Parbat",
-                      "Baglung", "NEPAL", "GANDAKI")) |> 
-  select(-municipality) |> 
-  rename(municipality = name) |> 
+  gandaki_district_names() |> 
   # One extra municipality (electoral constituency, really)
   # That does not appear in the other datasets
   filter(municipality != "Nawalparasi (Bardaghat Susta East)") |> 
-  mutate(ward = ifelse(ward == "Total", "All Wards", ward)) |> 
   select(-province, -district, -municipality, -ward), 
   
   read_xlsx("./data/census/Rev_Gandaki_Hhld_QualityOfHouse_Ward_formated.xlsx", skip = 2) |> 
@@ -459,22 +456,7 @@ gandaki <- cbind(
              "house_quality_moderate_pc", 
              "house_quality_inadequate_pc", 
              "house_quality_least_adequate_pc")) |> 
-  mutate(province = "Gandaki") |> 
-  mutate(district = as.character(district)) |> 
-  mutate(district = case_when(
-    district == 36 ~ "Gorkha", 
-    district == 37 ~ "Manang", 
-    district == 38 ~ "Mustang", 
-    district == 39 ~ "Myagdi", 
-    district == 40 ~ "Kaski", 
-    district == 41 ~ "Lamjung", 
-    district == 42 ~ "Tanahu", 
-    district == 43 ~ "Nawalparasi East", 
-    district == 44 ~ "Syangja", 
-    district == 45 ~ "Parbat", 
-    district == 46 ~ "Baglung", 
-    TRUE ~ district
-  )) |> 
+  gandaki_district_names() |> 
   filter(name %out% c("Gorkha", "Manang", "Mustang", "Myagdi", "Kaski",
                       "Lamjung", "Tanahu", "Nawalparasi East", "Syangja", "Parbat",
                       "Baglung", "NEPAL", "GANDAKI")) |> 
@@ -493,7 +475,7 @@ gandaki <- cbind(
 
 
 
-##### Household - Bagmati-Gandaki combined
+### Household - Bagmati-Gandaki combined
 
 ```{r census-combined-check}
 bagmati |> 
@@ -518,6 +500,7 @@ gandaki |>
   filter(difference != 0)
   
 ```
+
 
 ```{r}
 # Combining and cleaning place names to match the pcode dataset 
@@ -563,7 +546,7 @@ bagmati_gandaki_hhd <- rbind(
 ```
 
 
-##### Population - Bagmati
+### Population - Bagmati
 
 
 ```{r}
@@ -579,27 +562,161 @@ read_xlsx("./data/census/WRD_Bagmati_Indv01-HouseholdAndPopulation.xlsx", skip =
 ```
 
 ```{r}
-WRD_Bagmati_Indv05-EconomicActivity.xlsx
+
+
+read_xlsx("./data/census/WRD_Bagmati_Indv05-EconomicActivity.xlsx", skip = 2) |> 
+  setNames(c("province", "district", "municipality", "ward", "sex", "total_population",
+             "total_population_10_years_and_older",
+             "economically_ative_usually_employed",
+             "economically_active_usually_unemployed", 
+             "not_usually_economically_active", 
+             "not_economically_active", 
+             "economic_activity_not_stated")) |> 
+  ward_fill_filter2() |> 
+  filter(!is.na(sex)) |> 
+  mutate(sex = str_to_lower(sex)) |> 
+  pivot_wider(
+    names_from = c("sex"), 
+    values_from = c("total_population",
+                    "total_population_10_years_and_older", 
+                    "economically_ative_usually_employed", 
+                    "economically_active_usually_unemployed", 
+                    "not_usually_economically_active", 
+                    "not_economically_active"), 
+    names_glue ="{sex}_{.value}"
+  ) |> 
+  glimpse()
+
+
+```
+```{r}
+read_xlsx("./data/census/WRD_Bagmati_Indv02-FiveYearsAgeGroupsAndSex.xlsx", skip = 2) |> 
+  setNames(c("province", "district", "municipality", "ward", 
+             "five_year_age_group", 
+             "total",
+             "male", 
+             "female")) |> 
+  ward_fill_filter2() |> 
+  filter(!is.na(five_year_age_group)) |> 
+  mutate(five_year_age_group = str_replace(five_year_age_group, "-| ", "_"), 
+         five_year_age_group = str_to_lower(five_year_age_group),
+         five_year_age_group = str_replace(five_year_age_group, " yrs.", "_yrs"), 
+         five_year_age_group = str_remove(five_year_age_group, "\\."), 
+         five_year_age_group = str_replace(five_year_age_group, "\\+", "plus")) |> 
+  pivot_wider(
+    names_from = "five_year_age_group", 
+    values_from = c("total", "male", "female"), 
+    names_glue = "{.value}_{five_year_age_group}"
+  ) 
 ```
 
-Sex
-"Total Population 10 Yrs. and above"
-Economically active, usually Employed
-Economically active, usually Unemployed
-Not Usually Active
-"Not Economically Active"
-Economic Activity Not Stated
+```{r}
+read_xlsx("./data/census/Indv_Bagmati_educationaStatusChild_Ward.xlsx", skip = 2) |> 
+  setNames(
+    c("province", "district", "municipality", "name", "ward",
+      "total_children_5_17", 
+      "male_children_5_17", 
+      "female_children_5_17", 
+      "currently_attending_school_male", 
+      "currently_attending_school_female", 
+      "oos_ever_attended_school_male", 
+      "oos_ever_attended_school_female", 
+      "oos_never_attended_school_male", 
+      "oos_never_attended_school_female", 
+      "currently_attending_school_total_pc", 
+      "currently_attending_school_male_pc", 
+      "currently_attending_school_female_pc", 
+      "oos_ever_attended_school_total_pc", 
+      "oos_ever_attended_school_male_pc", 
+      "oos_ever_attended_school_female_pc", 
+      "oos_never_attended_school_total_pc", 
+      "oos_never_attended_school_male_pc", 
+      "oos_never_attended_school_female_pc")
+  ) |> 
+  ward_fill_filter() |> 
+  bagmati_district_names() |> 
+  glimpse()
+  
+```
 
 
 
+```{r}
+read_xlsx("./data/census/Indv_Bagmati_Adultliteracy15plus_Ward.xlsx", skip = 2) |> 
+  setNames(
+    c("province", "district", "municipality", "name", "ward",
+      "population_15plus_total",
+      "population_15plus_male", 
+      "population_15plus_female", 
+      "literate_population_total", 
+      "literate_population_male", 
+      "literate_population_female", 
+      "literacy_rate_total", 
+      "literacy_rate_male", 
+      "literacy_rate_female"
+      )
+  ) |> 
+  ward_fill_filter() |> 
+  bagmati_district_names() |>
+  glimpse()
+  
+```
 
-
-
-
-
-
-Number of households	Population			Average household size	Sex ratio
-	Total	Male	Female		
+```{r}
+read_xlsx("./data/census/Indv_Bagmati_BroadAge_dependency_ward.xlsx", skip = 2) |> 
+  setNames(c("province", "district", "municipality", "name", "ward",
+             "population_0_14", 
+             "population_15_64", 
+             "population_65plus", 
+             "total_population", 
+             "child_dependency_ratio", 
+             "elderly_dependency_ratio",  
+             "total_dependency_ratio")) |> 
+  ward_fill_filter() |> 
+  bagmati_district_names() |> 
+  glimpse()
+```
+```{r}
+read_xlsx("./data/census/Indv_Bagmati_educationalLevel_Ward.xlsx", skip = 2) |> 
+  setNames(c("province", "district", "municipality", "name", "ward",
+             "population_5plus_total", 
+             "population_5plus_male", 
+             "population_5plus_female", 
+             "education_level_illiterate_male", 
+             "education_level_illiterate_female", 
+             "education_level_early_childhood_male", 
+             "education_level_early_childhood_female", 
+             "education_level_basic_level_male", 
+             "education_level_basic_level_female", 
+             "education_level_secondary_male", 
+             "education_level_secondary_female", 
+             "education_level_higher_education_male", 
+             "education_level_higher_education_female", 
+             "education_level_other_male", 
+             "education_level_other_female", 
+             "education_level_illiterate_pc_total", 
+             "education_level_illiterate_pc_male", 
+             "education_level_illiterate_pc_female", 
+             "education_level_early_childhood_pc_total", 
+             "education_level_early_childhood_pc_male", 
+             "education_level_early_childhood_pc_female", 
+             "education_level_basic_level_pc_total", 
+             "education_level_basic_level_pc_male", 
+             "education_level_basic_level_pc_female", 
+             "education_level_secondary_pc_total", 
+             "education_level_secondary_pc_male", 
+             "education_level_secondary_pc_female", 
+             "education_level_higher_education_pc_total",
+             "education_level_higher_education_pc_male", 
+             "education_level_higher_education_pc_female", 
+             "education_level_other_pc_total", 
+             "education_level_other_pc_male", 
+             "education_level_other_pc_female"
+             )) |> 
+  ward_fill_filter() |> 
+  bagmati_district_names() |> 
+  glimpse()
+```
 
 
 ```{r}
