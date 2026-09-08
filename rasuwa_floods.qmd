@@ -3,7 +3,7 @@ title: "Untitled"
 format: html
 ---
 
-```{r}
+```{r setup}
 
 knitr::opts_chunk$set(echo = FALSE, fig.width=9, message = FALSE, warning=FALSE)
 
@@ -22,10 +22,10 @@ theme_set(theme_light())
 ## Geodata
 
 ```{r}
-bagmati <- st_read("./data/Ward_Bagmati.shp") |> 
+bagmati <- st_read("./data/shapefiles/Ward_Bagmati.shp") |> 
   st_drop_geometry()
 
-gandaki <- st_read("./data/Ward_Gandaki.shp") |> 
+gandaki <- st_read("./data/shapefiles/Ward_Gandaki.shp") |> 
   st_drop_geometry()
 
 nepal_admin <- read_xlsx("./data/npl_admin_boundaries.xlsx", 
@@ -38,16 +38,23 @@ affected_wards <- read_xls("./data/Affected_wardsV2.xls") |>
   janitor::clean_names()
 
 adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
-```
+``` 
+
+
+### Wards
 
 ```{r}
 affected_wards_population <- read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx") |> 
   janitor::clean_names()
 ```
 
-### Wards
 
 #### Census
+
+```{r}
+
+```
+
 
 ```{r}
 ward_fill_filter <- function(tbl) {
@@ -59,9 +66,11 @@ ward_fill_filter <- function(tbl) {
 }
 ```
 
+##### Household - Bagmati 
+
 ```{r bagmati warning=FALSE, message=FALSE}
 bagmati <- cbind(
-  read_xlsx("./data/WRD_Bagmati_Hhld01-OwnershipOfHouse.xlsx", 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld01-OwnershipOfHouse.xlsx", 
           skip = 3) |>
   setNames(c("province", "district", "municipality", "ward", "ownership_total", 
              "ownership_owned", 
@@ -70,7 +79,7 @@ bagmati <- cbind(
              "ownership_other")) |> 
   ward_fill_filter(), 
   
-  read_xlsx("./data/WRD_Bagmati_Hhld02-FoundationOfHouse.xlsx", 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld02-FoundationOfHouse.xlsx", 
           skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "foundation_total", 
              "foundation_mud", 
@@ -82,7 +91,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward), 
   
-  read_xlsx("./data/WRD_Bagmati_Hhld03-OuterWallOfHouse.xlsx", 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld03-OuterWallOfHouse.xlsx", 
           skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "outer_wall_total",
              "outer_wall_mud_bonded_bricks_stone", 
@@ -96,7 +105,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward), 
   
-  read_xlsx("./data/WRD_Bagmati_Hhld04-RoofOfHouse.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld04-RoofOfHouse.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "roof_total",
              "roof_galvanised_sheet", 
              "roof_reinforced_cement_concrete", 
@@ -109,7 +118,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward), 
   
-  read_xlsx("./data/WRD_Bagmati_Hhld05-FloorOfHouse.xlsx", 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld05-FloorOfHouse.xlsx", 
           skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "floor_total",
              "floor_mud", 
@@ -121,7 +130,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward), 
   
-  read_xlsx("./data/WRD_Bagmati_Hhld06-SourceOfDrinkingWater.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld06-SourceOfDrinkingWater.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "drinking_water_total",
            "drinking_water_tap_piped_within_premises", 
            "drinking_water_tap_piped_outside_premises", 
@@ -135,7 +144,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward), 
   
-  read_xlsx("./data/WRD_Bagmati_Hhld07-CookingFuel.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld07-CookingFuel.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "cooking_fuel_total",
              "cooking_fuel_wood_firewood", 
              "cooking_fuel_lpg", 
@@ -147,7 +156,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward),
   
-  read_xlsx("./data/WRD_Bagmati_Hhld08-LightingFuel.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld08-LightingFuel.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "lighting_fuel_total",
              "lighting_electricity", 
              "lighting_solar", 
@@ -157,7 +166,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward),
   
-  read_xlsx("./data/WRD_Bagmati_Hhld09-ToiletFacility.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld09-ToiletFacility.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "toilet_total",
              "toilet_flush_public_sewerage", 
              "toilet_flush_septic_tank", 
@@ -167,7 +176,7 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward),
   
-  read_xlsx("./data/WRD_Bagmati_Hhld10-HouseholdAmenities.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/WRD_Bagmati_Hhld10-HouseholdAmenities.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "hh_amenities_total",
              "hh_amenities_without", 
              "hh_amenities_at_least_one", 
@@ -188,18 +197,18 @@ bagmati <- cbind(
   ward_fill_filter() |> 
   select(-province, -district, -municipality, -ward),
   
-  read_xlsx("./data/Rev_Bagmati_Hhld_WealthQuintileHousehold_Ward_formated.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/Rev_Bagmati_Hhld_WealthQuintileHousehold_Ward_formated.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "name", "ward", "wealth_quintile_total",
-             "poorest_quintile_count", 
-             "poorer_quintile_count", 
-             "middle_quintile_count", 
-             "richer_quintile_count", 
-             "richest_quintile_count", 
-             "poorest_quintile_pc", 
-             "poorer_quintile_pc",
-             "middle_quintile_pc", 
-             "richer_quintile_pc", 
-             "richest_quintile_pc")) |> 
+             "wealth_quintile_poorest_quintile_count", 
+             "wealth_quintile_poorer_quintile_count", 
+             "wealth_quintile_middle_quintile_count", 
+             "wealth_quintile_richer_quintile_count", 
+             "wealth_quintile_richest_quintile_count", 
+             "wealth_quintile_poorest_quintile_pc", 
+             "wealth_quintile_poorer_quintile_pc",
+             "wealth_quintile_middle_quintile_pc", 
+             "wealth_quintile_richer_quintile_pc", 
+             "wealth_quintile_richest_quintile_pc")) |> 
   mutate(province = "Bagmati") |> 
   mutate(district = as.character(district)) |> 
   mutate(district = case_when(
@@ -227,7 +236,7 @@ bagmati <- cbind(
   mutate(ward = ifelse(ward == "Total", "All Wards", ward)) |> 
   select(-province, -district, -municipality, -ward), 
   
-  read_xlsx("./data/Rev_Bagmati_Hhld_QualityOfHouse_Ward_formated.xlsx", skip = 2) |> 
+  read_xlsx("./data/census/Rev_Bagmati_Hhld_QualityOfHouse_Ward_formated.xlsx", skip = 2) |> 
    setNames(c("province", "district", "municipality", "name", "ward", "house_quality_total",
              "house_quality_most_adequate_count", 
              "house_quality_adequate_count", 
@@ -268,33 +277,20 @@ bagmati <- cbind(
 )
 ```
 
-```{r census-combined-check}
-bagmati |> 
-  select(province, district, municipality, ward, contains("total")) |> 
-  mutate(difference = ownership_total - foundation_total + 
-           outer_wall_total - roof_total +
-           floor_total - drinking_water_total +
-           cooking_fuel_total - lighting_fuel_total + 
-           toilet_total - hh_amenities_total + 
-           wealth_quintile_total - house_quality_total) |> 
-  filter(difference != 0)
-  glimpse()
-```
-
+##### Household - Gandaki
 
 ```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld01-OwnershipOfHouse.xlsx", 
+gandaki <- cbind(
+  read_xlsx("./data/census/WRD_Gandaki_Hhld01-OwnershipOfHouse.xlsx", 
           skip = 3) |>
   setNames(c("province", "district", "municipality", "ward", "ownership_total", 
              "ownership_owned", 
              "ownership_rented", 
              "ownership_institutional", 
              "ownership_other")) |> 
-  ward_fill_filter()
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld02-FoundationOfHouse.xlsx", 
+  ward_fill_filter(), 
+  
+  read_xlsx("./data/census/WRD_Gandaki_Hhld02-FoundationOfHouse.xlsx", 
           skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "foundation_total", 
              "foundation_mud", 
@@ -303,12 +299,10 @@ read_xlsx("./data/WRD_Bagmati_Hhld02-FoundationOfHouse.xlsx",
              "foundation_reinforced_cement_concrete_with_pillars", 
              "foundation_wooden_pillars", 
              "foundation_other")) |> 
-  ward_fill_filter()
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward) , 
   
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld03-OuterWallOfHouse.xlsx", 
+  read_xlsx("./data/census/WRD_Gandaki_Hhld03-OuterWallOfHouse.xlsx", 
           skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "outer_wall_total",
              "outer_wall_mud_bonded_bricks_stone", 
@@ -319,12 +313,10 @@ read_xlsx("./data/WRD_Bagmati_Hhld03-OuterWallOfHouse.xlsx",
              "outer_wall_galvanised_sheet", 
              "outer_wall_prefabricated_sheet", 
              "outer_wall_other")) |> 
-  ward_fill_filter()
-
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld04-RoofOfHouse.xlsx", skip = 2) |> 
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward), 
+  
+  read_xlsx("./data/census/WRD_Gandaki_Hhld04-RoofOfHouse.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "roof_total",
              "roof_galvanised_sheet", 
              "roof_reinforced_cement_concrete", 
@@ -334,12 +326,10 @@ read_xlsx("./data/WRD_Bagmati_Hhld04-RoofOfHouse.xlsx", skip = 2) |>
              "roof_wood_planks", 
              "roof_mud", 
              "roof_other")) |> 
-  ward_fill_filter()
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward), 
   
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld05-FloorOfHouse.xlsx", 
+  read_xlsx("./data/census/WRD_Gandaki_Hhld05-FloorOfHouse.xlsx", 
           skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "floor_total",
              "floor_mud", 
@@ -348,11 +338,10 @@ read_xlsx("./data/WRD_Bagmati_Hhld05-FloorOfHouse.xlsx",
              "floor_ceramic_tile", 
              "floor_cemented", 
              "floor_other")) |>
-  ward_fill_filter()
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld06-SourceOfDrinkingWater.xlsx", skip = 2) |> 
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward) , 
+  
+  read_xlsx("./data/census/WRD_Gandaki_Hhld06-SourceOfDrinkingWater.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "drinking_water_total",
            "drinking_water_tap_piped_within_premises", 
            "drinking_water_tap_piped_outside_premises", 
@@ -363,11 +352,10 @@ read_xlsx("./data/WRD_Bagmati_Hhld06-SourceOfDrinkingWater.xlsx", skip = 2) |>
            "drinking_water_river_stream", 
            "drinking_water_jar_bottle", 
            "drinking_water_other")) |> 
-  ward_fill_filter()
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld07-CookingFuel.xlsx", skip = 2) |> 
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward) , 
+  
+  read_xlsx("./data/census/WRD_Gandaki_Hhld07-CookingFuel.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "cooking_fuel_total",
              "cooking_fuel_wood_firewood", 
              "cooking_fuel_lpg", 
@@ -376,34 +364,30 @@ read_xlsx("./data/WRD_Bagmati_Hhld07-CookingFuel.xlsx", skip = 2) |>
              "cooking_fuel_biogas", 
              "cooking_fuel_kerosene", 
              "cooking_fuel_other")) |> 
-  ward_fill_filter()
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld08-LightingFuel.xlsx", skip = 2) |> 
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward), 
+  
+  read_xlsx("./data/census/WRD_Gandaki_Hhld08-LightingFuel.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "lighting_fuel_total",
              "lighting_electricity", 
              "lighting_solar", 
              "lighting_kerosene", 
              "lighting_biogas", 
              "lighting_other")) |> 
-  ward_fill_filter() 
-```
-
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld09-ToiletFacility.xlsx", skip = 2) |> 
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward), 
+  
+  read_xlsx("./data/census/WRD_Gandaki_Hhld09-ToiletFacility.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "toilet_total",
              "toilet_flush_public_sewerage", 
              "toilet_flush_septic_tank", 
              "toilet_pit", 
              "toilet_public", 
              "toilet_no_toilet")) |> 
-  ward_fill_filter() 
-```
-
-```{r}
-read_xlsx("./data/WRD_Bagmati_Hhld10-HouseholdAmenities.xlsx", skip = 2) |> 
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward), 
+  
+  read_xlsx("./data/census/WRD_Gandaki_Hhld10-HouseholdAmenities.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "ward", "hh_amenities_total",
              "hh_amenities_without", 
              "hh_amenities_at_least_one", 
@@ -421,123 +405,201 @@ read_xlsx("./data/WRD_Bagmati_Hhld10-HouseholdAmenities.xlsx", skip = 2) |>
              "hh_amenities_refridgerator", 
              "hh_amenities_washing_machine", 
              "hh_amenities_air_conditioner")) |> 
-  ward_fill_filter()
-  glimpse()
-```
-
-```{r}
-read_xlsx("./data/Rev_Bagmati_Hhld_QualityOfHouse_Ward_formated.xlsx", skip = 2) |> 
-   setNames(c("province", "district", "municipality", "name", "ward", "house_quality_total",
-             "most_adequate_count", 
-             "adequate_count", 
-             "moderate_count", 
-             "inadequate_count", 
-             "least_adequate_count", 
-             "most_adequate_pc", 
-             "adequate_pc",
-             "moderate_pc", 
-             "inadequate_pc", 
-             "least_adequate_pc")) |> 
-  mutate(province = "Bagmati") |> 
-  mutate(district = as.character(district)) |> 
-  mutate(district = case_when(
-    district == 23 ~ "Dolakha", 
-    district == 24 ~ "Sindhupalchok", 
-    district == 25 ~ "Rasuwa", 
-    district == 26 ~ "Dhading", 
-    district == 27 ~ "Nuwakot", 
-    district == 28 ~ "Kathmandu", 
-    district == 29 ~ "Bhaktapur", 
-    district == 30 ~ "Lalitpur", 
-    district == 31 ~ "Kavrepalanchok", 
-    district == 32 ~ "Ramechhap", 
-    district == 33 ~ "Sindhuli", 
-    district == 34 ~ "Makwanpur", 
-    district == 35 ~ "Chitawan", 
-    TRUE ~ district
-  )) |> 
-  filter(name %out% c("Dolakha", "Sindhupalchok", "Rasuwa", "Dhading", 
-                      "Nuwakot", "Kathmandu", "Bhaktapur", "Lalitpur",
-                      "Kavrepalanchok", "Ramechhap", "Sindhuli", "Makwanpur", 
-                      "Chitawan", "NEPAL", "BAGMATI")) |> 
-  select(-municipality) |> 
-  rename(municipality = name) |> 
-  mutate(ward = ifelse(ward == "Total", "All Wards", ward)) 
-  glimpse()
-```
-
-
-```{r}
-read_xlsx("./data/Rev_Bagmati_Hhld_WealthQuintileHousehold_Ward_formated.xlsx", skip = 2) |> 
+  ward_fill_filter() |> 
+  select(-province, -district, -municipality, -ward), 
+  
+  read_xlsx("./data/census/Rev_Gandaki_Hhld_WealthQuintileHousehold_Ward_formated.xlsx", skip = 2) |> 
   setNames(c("province", "district", "municipality", "name", "ward", "wealth_quintile_total",
-             "poorest_quintile_count", 
-             "poorer_quintile_count", 
-             "middle_quintile_count", 
-             "richer_quintile_count", 
-             "richest_quintile_count", 
-             "poorest_quintile_pc", 
-             "poorer_quintile_pc",
-             "middle_quintile_pc", 
-             "richer_quintile_pc", 
-             "richest_quintile_pc")) |> 
-  mutate(province = "Bagmati") |> 
+             "wealth_quintile_poorest_quintile_count", 
+             "wealth_quintile_poorer_quintile_count", 
+             "wealth_quintile_middle_quintile_count", 
+             "wealth_quintile_richer_quintile_count", 
+             "wealth_quintile_richest_quintile_count", 
+             "wealth_quintile_poorest_quintile_pc", 
+             "wealth_quintile_poorer_quintile_pc",
+             "wealth_quintile_middle_quintile_pc", 
+             "wealth_quintile_richer_quintile_pc", 
+             "wealth_quintile_richest_quintile_pc")) |> 
+  mutate(province = "Gandaki") |> 
   mutate(district = as.character(district)) |> 
   mutate(district = case_when(
-    district == 23 ~ "Dolakha", 
-    district == 24 ~ "Sindhupalchok", 
-    district == 25 ~ "Rasuwa", 
-    district == 26 ~ "Dhading", 
-    district == 27 ~ "Nuwakot", 
-    district == 28 ~ "Kathmandu", 
-    district == 29 ~ "Bhaktapur", 
-    district == 30 ~ "Lalitpur", 
-    district == 31 ~ "Kavrepalanchok", 
-    district == 32 ~ "Ramechhap", 
-    district == 33 ~ "Sindhuli", 
-    district == 34 ~ "Makwanpur", 
-    district == 35 ~ "Chitawan", 
+    district == 36 ~ "Gorkha", 
+    district == 37 ~ "Manang", 
+    district == 38 ~ "Mustang", 
+    district == 39 ~ "Myagdi", 
+    district == 40 ~ "Kaski", 
+    district == 41 ~ "Lamjung", 
+    district == 42 ~ "Tanahu", 
+    district == 43 ~ "Nawalparasi East", 
+    district == 44 ~ "Syangja", 
+    district == 45 ~ "Parbat", 
+    district == 46 ~ "Baglung", 
     TRUE ~ district
   )) |> 
-  filter(name %out% c("Dolakha", "Sindhupalchok", "Rasuwa", "Dhading", 
-                      "Nuwakot", "Kathmandu", "Bhaktapur", "Lalitpur",
-                      "Kavrepalanchok", "Ramechhap", "Sindhuli", "Makwanpur", 
-                      "Chitawan", "NEPAL", "BAGMATI")) |> 
+  filter(name %out% c("Gorkha", "Manang", "Mustang", "Myagdi", "Kaski",
+                      "Lamjung", "Tanahu", "Nawalparasi East", "Syangja", "Parbat",
+                      "Baglung", "NEPAL", "GANDAKI")) |> 
   select(-municipality) |> 
   rename(municipality = name) |> 
-  mutate(ward = ifelse(ward == "Total", "All Wards", ward))
-  glimpse()
+  # One extra municipality (electoral constituency, really)
+  # That does not appear in the other datasets
+  filter(municipality != "Nawalparasi (Bardaghat Susta East)") |> 
+  mutate(ward = ifelse(ward == "Total", "All Wards", ward)) |> 
+  select(-province, -district, -municipality, -ward), 
+  
+  read_xlsx("./data/census/Rev_Gandaki_Hhld_QualityOfHouse_Ward_formated.xlsx", skip = 2) |> 
+   setNames(c("province", "district", "municipality", "name", "ward", "house_quality_total",
+             "house_quality_most_adequate_count", 
+             "house_quality_adequate_count", 
+             "house_quality_moderate_count", 
+             "house_quality_inadequate_count", 
+             "house_quality_least_adequate_count", 
+             "house_quality_most_adequate_pc", 
+             "house_quality_adequate_pc",
+             "house_quality_moderate_pc", 
+             "house_quality_inadequate_pc", 
+             "house_quality_least_adequate_pc")) |> 
+  mutate(province = "Gandaki") |> 
+  mutate(district = as.character(district)) |> 
+  mutate(district = case_when(
+    district == 36 ~ "Gorkha", 
+    district == 37 ~ "Manang", 
+    district == 38 ~ "Mustang", 
+    district == 39 ~ "Myagdi", 
+    district == 40 ~ "Kaski", 
+    district == 41 ~ "Lamjung", 
+    district == 42 ~ "Tanahu", 
+    district == 43 ~ "Nawalparasi East", 
+    district == 44 ~ "Syangja", 
+    district == 45 ~ "Parbat", 
+    district == 46 ~ "Baglung", 
+    TRUE ~ district
+  )) |> 
+  filter(name %out% c("Gorkha", "Manang", "Mustang", "Myagdi", "Kaski",
+                      "Lamjung", "Tanahu", "Nawalparasi East", "Syangja", "Parbat",
+                      "Baglung", "NEPAL", "GANDAKI")) |> 
+  select(-municipality) |> 
+  rename(municipality = name) |> 
+  # One extra municipality (electoral constituency, really)
+  # That does not appear in the other datasets
+  filter(municipality != "Nawalparasi (Bardaghat Susta East)") |> 
+  mutate(ward = ifelse(ward == "Total", "All Wards", ward)) |> 
+  select(-province, -district, -municipality, -ward)
+  
+  
+  ) 
+  
+```
+
+
+
+##### Household - Bagmati-Gandaki combined
+
+```{r census-combined-check}
+bagmati |> 
+  select(province, district, municipality, ward, contains("total")) |> 
+  mutate(difference = ownership_total - foundation_total + 
+           outer_wall_total - roof_total +
+           floor_total - drinking_water_total +
+           cooking_fuel_total - lighting_fuel_total + 
+           toilet_total - hh_amenities_total + 
+           wealth_quintile_total - house_quality_total) |> 
+  filter(difference != 0)
+
+
+gandaki |> 
+  select(province, district, municipality, ward, contains("total")) |> 
+  mutate(difference = ownership_total - foundation_total + 
+           outer_wall_total - roof_total +
+           floor_total - drinking_water_total +
+           cooking_fuel_total - lighting_fuel_total + 
+           toilet_total - hh_amenities_total + 
+           wealth_quintile_total - house_quality_total) |> 
+  filter(difference != 0)
+  
 ```
 
 ```{r}
-c("Dolakha", "Sindhupalchok", "Rasuwa", "Dhading", 
-  "Nuwakot", "Kathmandu", "Bhaktapur", "Lalitpur", 
-  "Kavrepalanchok", "Ramechhap", "Sindhuli", "Makwanpur", 
-  "Chitawan")
+# Combining and cleaning place names to match the pcode dataset 
+bagmati_gandaki_hhd <- rbind(
+  bagmati, gandaki
+) |> 
+  mutate(district = ifelse(district == "Nawalparasi (East)", "Nawalparasi East", district)) |>
+  mutate(municipality = str_remove_all(municipality, "Gaunpalika|Municipality"), 
+         municipality = str_trim(municipality)) |> 
+  mutate(municipality = case_when(
+    municipality == "Melanchi" ~ "Melamchi", 
+    municipality == "Kathmandu Metropolitian City" ~ "Kathmandu", 
+    municipality == "Lalitpur Metropolitian City" ~ "Lalitpur", 
+    municipality == "Hetauda Sub-Metropolitian City" ~ "Hetauda", 
+    municipality == "Bharatpur Metropolitian City" ~ "Bharatpur", 
+    municipality == "Manang Ngisyang" ~ "Ngisyang", 
+    municipality == "Pokhara Metropolitian City" ~ "Pokhara", 
+    TRUE ~ municipality
+  )) |> 
+  left_join(
+    nepal_admin |> 
+      filter(adm1_name %in% c("Bagmati", "Gandaki")) |> 
+      distinct(adm1_name, adm1_pcode), 
+    by = c("province" = "adm1_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      filter(adm1_name %in% c("Bagmati", "Gandaki")) |> 
+      distinct(adm1_pcode, adm2_name, adm2_pcode), 
+    by = c("adm1_pcode", "district" = "adm2_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      filter(adm1_name %in% c("Bagmati", "Gandaki")) |> 
+      distinct(adm2_pcode, adm3_name, adm3_pcode), 
+    by = c("adm2_pcode", "municipality" = "adm3_name")
+  ) |> 
+  rename(total_households = ownership_total) |> 
+  select(-foundation_total, -outer_wall_total, -roof_total, -floor_total, 
+         -drinking_water_total, -cooking_fuel_total, -lighting_fuel_total, 
+         -toilet_total, -hh_amenities_total, -wealth_quintile_total, 
+         -house_quality_total)
 ```
 
-c(")
 
-23 - Dolakha
-24 - Sindhupalchok
-25 - Rasuwa
-26 - Dhading
-27 - Nuwakot
-28 - Kathmandu
-29 - Bhaktapur
-30 - Lalitpur
-31 - Kavrepalanchok
-32 - Ramechhap
-33 - Sindhuli
-34 - Makwanpur
-35 - Chitawan
+##### Population - Bagmati
 
 
+```{r}
+read_xlsx("./data/census/WRD_Bagmati_Indv01-HouseholdAndPopulation.xlsx", skip = 2) |> 
+  setNames(c("province", "district", "municipality", "ward", "total_households",
+             "population_total", 
+             "population_male",
+             "population_female",
+             "average_household_size", 
+             "sex_ratio")) |> 
+  ward_fill_filter() 
+  
+```
+
+```{r}
+WRD_Bagmati_Indv05-EconomicActivity.xlsx
+```
+
+Sex
+"Total Population 10 Yrs. and above"
+Economically active, usually Employed
+Economically active, usually Unemployed
+Not Usually Active
+"Not Economically Active"
+Economic Activity Not Stated
 
 
 
 
-Total Household	Wealth Quintile (count)					Wealth Quintile (%)				
-	Poorest	Poorer	Middle	Richer	Richest	Poorest	Poorer	Middle	Richer	Richest
+
+
+
+
+
+Number of households	Population			Average household size	Sex ratio
+	Total	Male	Female		
 
 
 ```{r}
@@ -558,20 +620,6 @@ nepal_admin |>
 ```
 
 
-
-```{r}
-affected_wards |> count(adm1_pcode, adm2_en)
-affected_wards |> 
-  glimpse()
-```
-
-
-```{r}
-bagmati |> 
-  janitor::clean_names() |> 
-  select(district, 
-         DCODE)
-```
 
 ```{r}
 
@@ -596,7 +644,7 @@ affected_wards_population |>
 
 
 ```{r}
-consolidated <- read_xlsx("./data/NEPAL Consolidated Data (for dashboard) 20260906.xlsx", 
+consolidated <- read_xlsx("./data/NEPAL Consolidated Data (for dashboard) 20260907.xlsx", 
                           sheet = "Consolidated_Data") |> 
   janitor::clean_names() |> 
   mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
@@ -650,7 +698,7 @@ consolidated <- read_xlsx("./data/NEPAL Consolidated Data (for dashboard) 202609
 
 ```
 
-
+### Planned/Reached Municipality
 
 ```{r planned-reach-municipality, fig.height=8}
 consolidated |> 
@@ -692,7 +740,8 @@ consolidated |>
                                   "Estimated Affected Population"))) |> 
   ggplot(aes(x = value, y = municipality)) + 
   geom_col(aes(fill = fct_rev(variable)), position = position_dodge()) + 
-  scale_fill_viridis_d() + 
+  scale_fill_brewer(palette = "BuPu", direction = -1) +
+  # scale_fill_viridis_d() + 
   scale_x_continuous(labels = comma) + 
   facet_wrap(~district, scales = "free", 
              ncol = 2) +
@@ -700,7 +749,7 @@ consolidated |>
   labs(x = "",  
        y = "Municipality", 
        title = "Planned, Reached and Estimated Affected Population by Municipality",
-       subtitle = "as of 20260906, figures listed are beneficiaries frequencies, not individuals; from the 5Ws", 
+       subtitle = "as of 20260907, figures listed are beneficiaries frequencies, not individuals; from the 5Ws", 
        fill = "") +
    theme(strip.background = element_rect(fill = "black"), 
          strip.text = element_text(size = 13), 
@@ -708,6 +757,8 @@ consolidated |>
    
 ggsave("./plots/planned_reached_municipality.png", height = 8, width = 12)
 ```
+
+
 
 ```{r}
 consolidated |> 
@@ -765,6 +816,7 @@ consolidated |>
             individuals_targeted = sum(people_targeted_individuals, na.rm = TRUE))
 ```
 
+### Sector agencies map
 
 ```{r}
 consolidated |> 
@@ -801,21 +853,27 @@ consolidated |>
       by = c("adm2_pcode", "adm3_pcode")
   ) |> 
   filter(!is.na(municipality) & !is.na(sector)) |> 
+  mutate(num_agencies = as.numeric(num_agencies)) |> 
   st_as_sf() |> 
   ggplot() +
   geom_sf(aes(fill = num_agencies), linewidth =.1) +
   geom_sf_text(aes(label = municipality), size = 2) +
-  scale_fill_viridis(direction = -1) + 
+  scale_fill_continuous(palette = "Blues", 
+                        breaks = seq(1, 20, 2), 
+                        guide = guide_colorbar(barheight = unit(6, "cm"))) +
+  # scale_fill_viridis(direction = -1) + 
   facet_wrap(~sector) + 
-  labs(title = "Number of agencies by sector", 
-       subtitle = "as of 20260906, from the 5Ws",
+  labs(title = "Number of agencies by sector, by municipality", 
+       subtitle = "as of 202609076, from the 5Ws",
        x = "", y = "", 
        fill = "Number of\nagencies") + 
   theme(strip.background = element_rect(fill = "black"), 
         axis.text.x = element_text(size = 5), 
-        axis.text.y = element_text(size = 5))
+        axis.text.y = element_text(size = 5), 
+        panel.grid.major = element_line(color = "gray90"),
+        panel.grid.minor = element_line(color = "gray90"))
   
-ggsave("./plots/sector_agencies_map.png", height = 7, width = 11, units = "in")
+ggsave("./plots/sector_agencies_map_blues.png", height = 7, width = 11, units = "in")
 ```
 
 
