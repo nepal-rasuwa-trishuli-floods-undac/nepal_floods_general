@@ -1,0 +1,18 @@
+adm2_pcode,district,adm3_pcode,municipality,num_un_agencies,un_agencies
+NP0328,Nuwakot,NP0328301,Bidur,9,"FAO, IOM, UNICEF, UN Women, UNDP, UNOPS, UNFPA, WFP, WHO"
+NP0328,Nuwakot,NP0328302,Belkotgadhi,3,"IOM, UNICEF, UNDP"
+NP0328,Nuwakot,NP0328402,Kispang,4,"IOM, UNICEF, UNFPA, WFP"
+NP0328,Nuwakot,NP0328403,Tarakeshwor,1,IOM
+NP0329,Rasuwa,NP0329402,Gosaikunda,6,"IOM, UNICEF, UNDP, UNFPA, WFP, WHO"
+NP0329,Rasuwa,NP0329403,Uttargaya,6,"UNICEF, FAO, IOM, UN Women, UNDP, UNFPA"
+NP0329,Rasuwa,NP0329404,Kalika,4,"IOM, UNICEF, UNDP, WFP"
+NP0330,Dhading,NP0330407,Siddhalek,1,IOM
+NP0330,Dhading,NP0330408,Benighat Rorang,3,"IOM, UNICEF, WFP"
+NP0330,Dhading,NP0330409,Gajuri,4,"IOM, UNICEF, UNFPA, WFP"
+NP0330,Dhading,NP0330410,Galchhi,4,"IOM, UNICEF, UNFPA, WFP"
+NP0436,Gorkha,NP0436409,Gandaki,1,IOM
+NP0440,Tanahu,NP0440405,Aanbu Khaireni,1,IOM
+NP0440,Tanahu,NP0440406,Devghat,1,IOM
+NP0335,Chitawan,NP0335401,Ichchha Kamana,NA,NA
+NP0436,Gorkha,NP0436408,Shahid Lakhan,NA,NA
+NP0329,Rasuwa,NP0329401,Aamachhodingmo,NA,NA

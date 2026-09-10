@@ -1,0 +1,69 @@
+province,adm1_pcode,district,adm2_pcode,municipality,adm3_pcode,ward
+Gandaki,NP04,Tanahu,NP0440,Aanbu Khaireni,NP0440405,4
+Gandaki,NP04,Tanahu,NP0440,Aanbu Khaireni,NP0440405,5
+Gandaki,NP04,Tanahu,NP0440,Devghat,NP0440406,4
+Gandaki,NP04,Tanahu,NP0440,Devghat,NP0440406,5
+Gandaki,NP04,Gorkha,NP0436,Gandaki,NP0436409,6
+Gandaki,NP04,Gorkha,NP0436,Shahid Lakhan,NP0436408,6
+Gandaki,NP04,Gorkha,NP0436,Gandaki,NP0436409,7
+Gandaki,NP04,Gorkha,NP0436,Gandaki,NP0436409,8
+Gandaki,NP04,Gorkha,NP0436,Gandaki,NP0436409,1
+Gandaki,NP04,Gorkha,NP0436,Gandaki,NP0436409,2
+Gandaki,NP04,Gorkha,NP0436,Shahid Lakhan,NP0436408,2
+Gandaki,NP04,Gorkha,NP0436,Shahid Lakhan,NP0436408,3
+Gandaki,NP04,Gorkha,NP0436,Shahid Lakhan,NP0436408,4
+Gandaki,NP04,Gorkha,NP0436,Shahid Lakhan,NP0436408,5
+Gandaki,NP04,Nawalparasi East,NP0447,Gaidakot,NP0447304,2
+Gandaki,NP04,Nawalparasi East,NP0447,Gaidakot,NP0447304,3
+Gandaki,NP04,Nawalparasi East,NP0447,Gaidakot,NP0447304,5
+Gandaki,NP04,Nawalparasi East,NP0447,Gaidakot,NP0447304,6
+Bagmati,NP03,Rasuwa,NP0329,Uttargaya,NP0329403,2
+Bagmati,NP03,Rasuwa,NP0329,Uttargaya,NP0329403,1
+Bagmati,NP03,Rasuwa,NP0329,Aamachhodingmo,NP0329401,1
+Bagmati,NP03,Rasuwa,NP0329,Kalika,NP0329404,2
+Bagmati,NP03,Rasuwa,NP0329,Uttargaya,NP0329403,4
+Bagmati,NP03,Rasuwa,NP0329,Kalika,NP0329404,1
+Bagmati,NP03,Rasuwa,NP0329,Uttargaya,NP0329403,3
+Bagmati,NP03,Rasuwa,NP0329,Gosaikunda,NP0329402,1
+Bagmati,NP03,Rasuwa,NP0329,Kalika,NP0329404,4
+Bagmati,NP03,Rasuwa,NP0329,Kalika,NP0329404,3
+Bagmati,NP03,Rasuwa,NP0329,Kalika,NP0329404,5
+Bagmati,NP03,Rasuwa,NP0329,Uttargaya,NP0329403,5
+Bagmati,NP03,Rasuwa,NP0329,Gosaikunda,NP0329402,3
+Bagmati,NP03,Rasuwa,NP0329,Gosaikunda,NP0329402,5
+Bagmati,NP03,Rasuwa,NP0329,Gosaikunda,NP0329402,2
+Bagmati,NP03,Chitawan,NP0335,Ichchha Kamana,NP0335401,3
+Bagmati,NP03,Chitawan,NP0335,Ichchha Kamana,NP0335401,4
+Bagmati,NP03,Dhading,NP0330,Benighat Rorang,NP0330408,7
+Bagmati,NP03,Dhading,NP0330,Gajuri,NP0330409,1
+Bagmati,NP03,Dhading,NP0330,Gajuri,NP0330409,2
+Bagmati,NP03,Dhading,NP0330,Galchhi,NP0330410,8
+Bagmati,NP03,Dhading,NP0330,Galchhi,NP0330410,4
+Bagmati,NP03,Dhading,NP0330,Galchhi,NP0330410,6
+Bagmati,NP03,Dhading,NP0330,Benighat Rorang,NP0330408,3
+Bagmati,NP03,Dhading,NP0330,Benighat Rorang,NP0330408,5
+Bagmati,NP03,Dhading,NP0330,Benighat Rorang,NP0330408,10
+Bagmati,NP03,Dhading,NP0330,Benighat Rorang,NP0330408,9
+Bagmati,NP03,Dhading,NP0330,Galchhi,NP0330410,1
+Bagmati,NP03,Dhading,NP0330,Galchhi,NP0330410,2
+Bagmati,NP03,Dhading,NP0330,Siddhalek,NP0330407,6
+Bagmati,NP03,Dhading,NP0330,Siddhalek,NP0330407,7
+Bagmati,NP03,Dhading,NP0330,Siddhalek,NP0330407,3
+Bagmati,NP03,Dhading,NP0330,Siddhalek,NP0330407,4
+Bagmati,NP03,Dhading,NP0330,Gajuri,NP0330409,5
+Bagmati,NP03,Dhading,NP0330,Gajuri,NP0330409,6
+Bagmati,NP03,Nuwakot,NP0328,Kispang,NP0328402,5
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,1
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,4
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,5
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,6
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,9
+Bagmati,NP03,Nuwakot,NP0328,Tarakeshwor,NP0328403,4
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,12
+Bagmati,NP03,Nuwakot,NP0328,Belkotgadhi,NP0328302,5
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,10
+Bagmati,NP03,Nuwakot,NP0328,Belkotgadhi,NP0328302,8
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,3
+Bagmati,NP03,Nuwakot,NP0328,Belkotgadhi,NP0328302,7
+Bagmati,NP03,Nuwakot,NP0328,Tarakeshwor,NP0328403,2
+Bagmati,NP03,Nuwakot,NP0328,Bidur,NP0328301,7
