@@ -15,12 +15,36 @@ library(flextable)
 library(viridis)
 library(scales)
 library(janitor)
-library(raster)
 
 `%out%` <- Negate(`%in%`)
 
 theme_set(theme_light())
 
+
+```
+# Geodata
+
+```{r}
+bagmati <- st_read("./data/shapefiles/Ward_Bagmati.shp") |> 
+  st_drop_geometry()
+
+gandaki <- st_read("./data/shapefiles/Ward_Gandaki.shp") |> 
+  st_drop_geometry()
+
+
+wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
+
+affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
+  janitor::clean_names()
+
+adm3 <- st_read("./data/shapefiles/npl_admin_boundaries.shp/npl_admin3.shp")
+
+river <- st_read("./data/shapefiles/aoi_affd_aff_py_s3_govn_pp_AOI500mBuffer.shp") 
+
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf()
+  
 nepal_admin <- read_xlsx("./data/npl_admin_boundaries.xlsx", 
                          sheet = 7) |> 
   select(adm3_name, adm3_pcode, adm2_name, adm2_pcode, adm1_name, adm1_pcode)
@@ -41,29 +65,6 @@ affected_municipalities_wards <- read_xls("./data/Affected_wardsv2.xls") |>
   rename(province = adm1_name) |> 
   relocate(province, .before = adm1_pcode) |> 
   distinct(adm3_pcode, ward)
-```
-# Geodata
-
-```{r}
-bagmati <- st_read("./data/shapefiles/Ward_Bagmati.shp") |> 
-  st_drop_geometry()
-
-gandaki <- st_read("./data/shapefiles/Ward_Gandaki.shp") |> 
-  st_drop_geometry()
-
-
-wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
-
-affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
-  janitor::clean_names()
-
-adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
-
-river <- st_read("./data/shapefiles/aoi_affd_aff_py_s3_govn_pp_AOI500mBuffer.shp") 
-
-  st_as_sf() |> 
-  ggplot() + 
-  geom_sf()
 ```
 
 
@@ -2256,8 +2257,6 @@ clean_district_municipality <- function(tbl) {
   )
 }
 
-Sidhhalek Siddhalek
-Belkotgadi Belkotgadhi
 ```
 
 
@@ -2469,7 +2468,7 @@ municipal_damage_losses <- nepal_admin |>
       mutate(building_impact_share = building_impact_share / 100) |> 
       filter(municipality != "Total") |> 
       mutate(business_exposure = 1)|> 
-      select(-district, -municipality, impacted_buildings), 
+      select(-district, -municipality, -impacted_buildings), 
     by = c("adm2_pcode", "adm3_pcode")
   ) |> 
   left_join(
@@ -2488,7 +2487,7 @@ municipal_damage_losses |>
   filter(household_damage == 1 | crop_damage == 1 | agricultural_damage == 1 |
            business_exposure == 1 | cadastral_damage == 1) |> 
   write_csv("./data/municipal_damage_loss.csv")
-  glimpse()
+
 ```
 
 ```{r}

@@ -15,11 +15,21 @@ library(flextable)
 library(viridis)
 library(scales)
 library(janitor)
-library(raster)
+library(cowplot)
+library(magick)
+library(patchwork)
 
 `%out%` <- Negate(`%in%`)
 
 theme_set(theme_light())
+
+options(scipen = 999)
+
+```
+
+# Geodata
+
+```{r}
 
 nepal_admin <- read_xlsx("./data/npl_admin_boundaries.xlsx", 
                          sheet = 7) |> 
@@ -41,18 +51,15 @@ affected_municipalities_wards <- read_xls("./data/Affected_wardsv2.xls") |>
   rename(province = adm1_name) |> 
   relocate(province, .before = adm1_pcode) |> 
   distinct(adm3_pcode, ward)
-```
-
-# Geodata
-
-```{r}
 
 wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
 
 affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
   janitor::clean_names()
 
-adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
+adm3 <- st_read("./data/shapefiles/npl_admin_boundaries.shp/npl_admin3.shp")
+
+adm2 <- st_read("./data/shapefiles/npl_admin_boundaries.shp/npl_admin2.shp")
 
 river <- st_read("./data/shapefiles/aoi_affd_aff_py_s3_govn_pp_AOI500mBuffer.shp") 
 
@@ -60,8 +67,112 @@ river <- st_read("./data/shapefiles/aoi_affd_aff_py_s3_govn_pp_AOI500mBuffer.shp
 
 ```{r}
 municipal_damage_losses <- read_csv("./data/municipal_damage_loss.csv")
+
+municipal_damage_losses |> glimpse()
 ```
 
+```{r}
+municipal_long <- municipal_damage_losses |> 
+  mutate(affected_hectares_agriculture = paddy_affected_hectares + vegetables_affected_hectares, 
+         total_baseline_hectares = paddy_baseline_hectares + vegetables_baseline_hectares, 
+         pc_affected_hectares = affected_hectares_agriculture / total_baseline_hectares, 
+         pc_affected_buildings = affected_buildings / estimated_buildings_in_damaged_corridor, 
+         pc_impacted_households = impacted_households / households_in_affected_wards_census_2021) |> 
+  select(adm2_pcode, adm3_pcode, impacted_households, 
+         pc_impacted_households, 
+         impacted_population = impacted_population_total,
+         affected_buildings, pc_affected_buildings,
+         affected_hectares_agriculture, pc_affected_hectares) |> 
+  pivot_longer(cols = impacted_households:pc_affected_hectares, 
+               names_to = "variable", 
+               values_to = "value") 
+
+
+  filter(!str_detect(variable, "pc_")) |> 
+  count(variable)
+
+```
+
+## Plotting function
+
+```{r}
+municipal_damage_losses |> 
+  filter(municipality == "Likhu")
+```
+
+
+
+```{r}
+magnitude_plot <- function(tbl, filter_value) {
+  
+  tbl |> 
+    filter(variable == filter_value) |> 
+    mutate(variable = str_replace_all(variable, "_", " "),
+           variable = str_to_title(variable)) |> 
+    right_join(adm3, 
+              by = c("adm2_pcode", "adm3_pcode")) |>
+    mutate(adm3_name_label = ifelse(!is.na(value), adm3_name, ""),
+           label = ifelse(!is.na(value),
+                          as.character(format(round(value, 1), big.mark = ",")), 
+                          "")) |>
+    replace_na(list(label = "", adm3_name_label = "")) |> 
+    st_as_sf() |> 
+    ggplot() +
+    geom_sf(aes(fill = value), linewidth = .1) +
+    geom_sf(data = river, colour = "#90e0ef", fill = "#90e0ef", alpha = .4) +
+    geom_sf_text(aes(label = paste0(adm3_name_label, "\n", label)), 
+               size = 1.5, colour = "grey20") + 
+    coord_sf(xlim = c(84.3, 85.8), ylim = c(27.63, 28.4), expand = TRUE) +
+    scale_fill_viridis(direction = -1, begin = .3, labels = comma, 
+                       na.value = "grey95") + 
+    labs(title = paste0(str_to_title(str_replace_all(filter_value, "_", " "))), 
+         fill = paste0(str_to_title(str_replace_all(filter_value, "_", "\n"))), 
+         x = "", y = "")
+}
+```
+
+
+
+```{r fig.height=9}
+municipal_long |> 
+  magnitude_plot("impacted_population") +
+
+municipal_long |> 
+  magnitude_plot("affected_buildings") + 
+  
+municipal_long |> 
+  magnitude_plot("affected_hectares_agriculture") + 
+
+  plot_layout(ncol = 1)
+```
+
+```{r}
+adm3 |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf()
+```
+
+
+```{r}
+municipal_long |> 
+  filter(!str_detect(variable, "pc_") & variable != "impacted_households") |> 
+  mutate(variable = str_replace_all(variable, "_", " "), 
+         variable = str_to_title(variable)) |> 
+  mutate(variable = fct_relevel(variable, 
+  left_join(
+    adm3, 
+    by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = value), linewidth = .1) + 
+  geom_sf_text(aes(label = paste0(adm3_name, "\n", round(value, 1))), 
+               size = 1.5) +
+  facet_wrap(~variable, ncol = 1) + 
+  scale_fill_viridis(direction = -1, begin = .2)
+  
+```
 
 
 ```{r}
@@ -72,13 +183,14 @@ affected_municipalities_wards |>
   ) |> 
   st_as_sf() |> 
   ggplot() +
-  geom_sf(fill = "lightblue") + 
+  geom_sf() + 
   geom_sf(data = adm3 |> filter(adm3_pcode %in% affected_municipalities_wards$adm3_pcode), 
           alpha = .1) +
   geom_sf_text(data = adm3 |> filter(adm3_pcode %in% affected_municipalities_wards$adm3_pcode),
                aes(label = adm3_name), 
                size = 2, 
-               colour = "red")
+               colour = "red") + 
+  geom_sf(data = river, colour = "blue", fill = "blue", alpha = .3)
 
 
 ```
