@@ -1,0 +1,21 @@
+sector,sub_sector,damages_npr_crore,losses_crore,damage_and_losses_npr_crore,damage_and_losses_usd_million,recovery_needs_short_term_0_6_months_npr_crore,recovery_needs_long_term_more_than_6_months_npr_crore,total_recovery_needs_npr_crore,total_recovery_needs_usd_million
+social,private buildings,6388.48,NA,6388.48,421.74,48,9534.724500000002,9582.724500000002,632.61
+social,public buildings and facilities,264.59,NA,264.59,17.47,11.8,411.55072,423.35072,27.95
+social,education,93.73,NA,93.73,6.1899999999999995,10.5,223.82175,234.32175,15.47
+social,health,23.66,NA,23.66,1.56,12.5,65.5,78,5.15
+social,cultural heritage,14.639999999999999,2,16.64,1.1,NA,36.595000000000006,36.595000000000006,2.42
+productive,agriculture,109.3,NA,109.3,7.22,35,107.0952,142.0952,9.38
+productive,fisheries,71.59,NA,71.59,4.73,0.4,106.9865,107.3865,7.09
+productive,livestock,144.81,NA,144.81,9.56,15,158.7684,173.7684,11.47
+productive,banking,72.4,19.59,91.99000000000001,6.07,NA,108.5955,108.5955,7.17
+productive,economic activities and livelihooods,3030.4300000000003,11589.3,14619.730000000001,965.13,NA,4545.645,4545.645,300.08
+infrastructure,"energy, hydropower and grid",13469.76,1634.6899999999998,15104.449999999999,997.13,105,38957.304000000004,39062.304000000004,2578.71
+infrastructure,household renewable energy,56.839999999999996,NA,56.839999999999996,3.75,10,154.82150000000001,164.82150000000001,10.88
+infrastructure,roads,2207.25,135,2342.25,154.62,319,5199.125000000001,5518.125000000001,364.28
+infrastructure,bridges,1135.11,NA,1135.11,74.93,155,1661.1711999999998,1816.1711999999998,119.9
+infrastructure,telecommunication,62.87,NA,62.87,4.1499999999999995,34,60.304249999999996,94.30425000000001,6.23
+infrastructure,wash,138.10999999999999,NA,138.10999999999999,9.12,51.3,155.85750000000002,207.1575,13.68
+infrastructure,irrigation and river training,164.76999999999998,NA,164.76999999999998,10.88,NA,494.3025,494.3025,32.63
+cross cutting,debris,0,NA,NA,NA,16,35.54,51.54,3.4
+cross cutting,disaster risk reduction,NA,NA,NA,NA,35,9440.31,9475.31,625.52
+cross cutting,inclusive recovery,NA,NA,NA,NA,15,NA,15,0.99

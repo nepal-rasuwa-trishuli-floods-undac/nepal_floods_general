@@ -1,0 +1,86 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{r setup}
+
+knitr::opts_chunk$set(echo = FALSE, fig.width=9, message = FALSE, warning=FALSE)
+
+library(tidyverse)
+library(sf)
+library(readxl)
+library(kableExtra)
+library(flextable)
+library(viridis)
+library(scales)
+library(janitor)
+library(raster)
+
+`%out%` <- Negate(`%in%`)
+
+theme_set(theme_light())
+
+nepal_admin <- read_xlsx("./data/npl_admin_boundaries.xlsx", 
+                         sheet = 7) |> 
+  select(adm3_name, adm3_pcode, adm2_name, adm2_pcode, adm1_name, adm1_pcode)
+
+affected_municipalities_wards <- read_xls("./data/Affected_wardsv2.xls") |> 
+  janitor::clean_names() |> 
+  select(adm1_pcode, 
+         district = adm2_en, 
+         adm2_pcode,
+         municipality = adm3_en, 
+         adm3_pcode, 
+         ward = new_ward_n) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_name, adm1_pcode), 
+    by = "adm1_pcode"
+  ) |> 
+  rename(province = adm1_name) |> 
+  relocate(province, .before = adm1_pcode) |> 
+  distinct(adm3_pcode, ward)
+```
+
+# Geodata
+
+```{r}
+
+wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
+
+affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
+  janitor::clean_names()
+
+adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
+
+river <- st_read("./data/shapefiles/aoi_affd_aff_py_s3_govn_pp_AOI500mBuffer.shp") 
+
+```
+
+```{r}
+municipal_damage_losses <- read_csv("./data/municipal_damage_loss.csv")
+```
+
+
+
+```{r}
+affected_municipalities_wards |> 
+  left_join(
+    wards, 
+    by = c("adm3_pcode", "ward" = "NEW_WARD_N")
+  ) |> 
+  st_as_sf() |> 
+  ggplot() +
+  geom_sf(fill = "lightblue") + 
+  geom_sf(data = adm3 |> filter(adm3_pcode %in% affected_municipalities_wards$adm3_pcode), 
+          alpha = .1) +
+  geom_sf_text(data = adm3 |> filter(adm3_pcode %in% affected_municipalities_wards$adm3_pcode),
+               aes(label = adm3_name), 
+               size = 2, 
+               colour = "red")
+
+
+```
+
+

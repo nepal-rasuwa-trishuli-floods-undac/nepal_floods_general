@@ -14,42 +14,18 @@ library(kableExtra)
 library(flextable)
 library(viridis)
 library(scales)
+library(janitor)
+library(raster)
 
 `%out%` <- Negate(`%in%`)
 
 theme_set(theme_light())
-```
-# Geodata
-
-```{r}
-bagmati <- st_read("./data/shapefiles/Ward_Bagmati.shp") |> 
-  st_drop_geometry()
-
-gandaki <- st_read("./data/shapefiles/Ward_Gandaki.shp") |> 
-  st_drop_geometry()
 
 nepal_admin <- read_xlsx("./data/npl_admin_boundaries.xlsx", 
                          sheet = 7) |> 
   select(adm3_name, adm3_pcode, adm2_name, adm2_pcode, adm1_name, adm1_pcode)
 
-wards <- st_read("./data/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
-
-affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
-  janitor::clean_names()
-
-adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
-``` 
-
-
-# Wards
-
-```{r}
-affected_wards_population <- read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx") |> 
-  janitor::clean_names()
-```
-
-```{r}
-read_xls("./data/Affected_wardsv2.xls") |> 
+affected_municipalities_wards <- read_xls("./data/Affected_wardsv2.xls") |> 
   janitor::clean_names() |> 
   select(adm1_pcode, 
          district = adm2_en, 
@@ -64,8 +40,396 @@ read_xls("./data/Affected_wardsv2.xls") |>
   ) |> 
   rename(province = adm1_name) |> 
   relocate(province, .before = adm1_pcode) |> 
+  distinct(adm3_pcode, ward)
+```
+# Geodata
+
+```{r}
+bagmati <- st_read("./data/shapefiles/Ward_Bagmati.shp") |> 
+  st_drop_geometry()
+
+gandaki <- st_read("./data/shapefiles/Ward_Gandaki.shp") |> 
+  st_drop_geometry()
+
+
+wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
+
+affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
+  janitor::clean_names()
+
+adm3 <- st_read("./raw_data/npl_admin_boundaries.shp/npl_admin3.shp")
+
+river <- st_read("./data/shapefiles/aoi_affd_aff_py_s3_govn_pp_AOI500mBuffer.shp") 
+
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf()
+```
+
+
+
+# Wards
+
+## Functions 
+
+```{r}
+pop_proj_clean <- function(tbl) {
+  tbl |> 
+    setNames(c("ward", 
+             "population_total", 
+             "population_male", 
+             "population_female", 
+             "total_0_4", "male_0_4", "female_0_4", 
+             "total_5_9", "male_5_9", "female_5_9",
+             "total_10_14", "male_10_14", "female_10_14",
+             "total_15_19", "male_15_19", "female_15_19",
+             "total_20_24", "male_20_24", "female_20_24",
+             "total_25_29", "male_25_29", "female_25_29",
+             "total_30_34", "male_30_34", "female_30_34",
+             "total_35_39", "male_35_39", "female_35_39",
+             "total_40_44", "male_40_44", "female_40_44",
+             "total_45_49", "male_45_49", "female_45_49",
+             "total_50_54", "male_50_54", "female_50_54",
+             "total_55_59", "male_55_59", "female_55_59",
+             "total_60_64", "male_60_64", "female_60_64",
+             "total_65_69", "male_65_69", "female_65_69",
+             "total_70_74", "male_70_74", "female_70_74",
+             "total_75_79", "male_75_79", "female_75_79",
+             "total_80_84", "male_80_84", "female_80_84",
+             "total_85_89", "male_85_89", "female_85_89",
+             "total_90_94", "male_90_94", "female_90_94",
+             "total_95plus", "male_95plus", "female_95plus"
+             )) |> 
+  filter(!is.na(ward) & !str_detect(ward, "Total")) |>
+  mutate(ward = as.numeric(ward))
+}
+
+pop_proj_select <- function(tbl) {
+  tbl |>
+    select(province, district, municipality,
+           adm1_pcode, adm2_pcode, adm3_pcode, ward,
+           everything())
+}
+```
+
+```{r}
+nepal_admin |> 
+  filter(str_detect(adm3_name, "Kamana"))
+  filter(adm3_name == "Gajuri")
+```
+
+## Population projections 2026
+
+```{r}
+affected_wards_population <- read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx") |> 
+  janitor::clean_names()
+
+read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Ichchha Kamana RM-wardwise",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Chitawan", 
+         municipality = "Ichchha Kamana", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0335", 
+         adm3_pcode = "NP0335401") |> 
+  pop_proj_select() |> 
+  glimpse()
+```
+
+This is the code to bind all the ward data together from across all the individual municipal sheets. 
+
+
+```{r}
+proj_flat_working <- rbind(
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 3,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Rasuwa", 
+         municipality = "Uttargaya", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0329", 
+         adm3_pcode = "NP0329403") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 4,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Rasuwa", 
+         municipality = "Gosaikunda", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0329", 
+         adm3_pcode = "NP0329402") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 5,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Rasuwa", 
+         municipality = "Aamachhodingmo", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0329", 
+         adm3_pcode = "NP0329401") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 6,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Rasuwa", 
+         municipality = "Kalika", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0329", 
+         adm3_pcode = "NP0329404") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 7,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Nuwakot", 
+         municipality = "Tarakeshwor", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0328", 
+         adm3_pcode = "NP0328403") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 8,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Nuwakot", 
+         municipality = "Kispang", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0328", 
+         adm3_pcode = "NP0328402") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 9,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Nuwakot", 
+         municipality = "Bidur", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0328", 
+         adm3_pcode = "NP0328301") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = 10,
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Nuwakot", 
+         municipality = "Belkotgadhi", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0328", 
+         adm3_pcode = "NP0328302") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Galchhi RM-wardwise",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Dhading", 
+         municipality = "Galchhi", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0330", 
+         adm3_pcode = "NP0330410") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Gajuri RM_wardwise",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Dhading", 
+         municipality = "Gajuri", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0330", 
+         adm3_pcode = "NP0330409") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Benighat RerangRM_wardwise",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Dhading", 
+         municipality = "Benighat Rorang", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0330", 
+         adm3_pcode = "NP0330408") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Siddhalek RM",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Dhading", 
+         municipality = "Siddhalek", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0330", 
+         adm3_pcode = "NP0330407") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Gandaki RM",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Gandaki", 
+         district = "Gorkha", 
+         municipality = "Gandaki", 
+         adm1_pcode = "NP04", 
+         adm2_pcode = "NP0436", 
+         adm3_pcode = "NP0436409") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Devghat RM-wardwise",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Gandaki", 
+         district = "Tanahu", 
+         municipality = "Devghat", 
+         adm1_pcode = "NP04", 
+         adm2_pcode = "NP0440", 
+         adm3_pcode = "NP0440406") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Aanbu Khaireni RM-ward-wise",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Gandaki", 
+         district = "Tanahu", 
+         municipality = "Aanbu Khaireni", 
+         adm1_pcode = "NP04", 
+         adm2_pcode = "NP0440", 
+         adm3_pcode = "NP0440405") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "SahidLakhan RM",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Gandaki", 
+         district = "Gorkha", 
+         municipality = "Shahid Lakhan", 
+         adm1_pcode = "NP04", 
+         adm2_pcode = "NP0436", 
+         adm3_pcode = "NP0436408") |> 
+  pop_proj_select(), 
+  
+  read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx", 
+          sheet = "Ichchha Kamana RM-wardwise",
+          skip = 2) |> 
+  pop_proj_clean() |> 
+  mutate(province = "Bagmati", 
+         district = "Chitawan", 
+         municipality = "Ichchha Kamana", 
+         adm1_pcode = "NP03", 
+         adm2_pcode = "NP0335", 
+         adm3_pcode = "NP0335401") |> 
+  pop_proj_select()
+  
+) |> 
+   left_join(
+    affected_municipalities_wards |> 
+      mutate(affected = "affected"), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  relocate(affected, .after = ward)
+
+```
+
+```{r}
+proj_flat_working |> 
+  pivot_longer(cols = population_total:female_95plus, 
+               names_to = "variable", 
+               values_to = "value") |> 
+  mutate(theme = "population projections 2026") |>
+  mutate(disaggregation = ifelse(
+    variable %in% c("population_total", "population_male", "population_female"), 
+    str_remove(variable, "population_"), 
+    str_extract(variable, "^[^_]+")),
+    variable = case_when(
+      variable == "population_male" ~ "population_overall_male", 
+      variable == "population_female" ~ "population_overall_female", 
+      variable == "population_total" ~ variable, 
+      TRUE ~ str_replace_all(variable, "total|male|female", "age_group")
+      )) |>
+  relocate(theme, .after = affected) |> 
+  relocate(disaggregation, .after = theme) |>
+  write_csv("./data/population_projections_2026_affected_wards_long.csv")
+
+```
+
+```{r}
+proj_flat_working |> 
+  rename_at(vars(population_total:female_95plus), 
+            ~paste0("projection_2026_", .x)) |> 
+  write_csv("./data/population_projections_2026_affected_wards_flat.csv")
+  glimpse()
+```
+
+
+```{r}
+read_csv("./data/FILTERED_nepal_census2021_ward_level_household_tables_bagmati_gandaki_flat.csv") |> 
+  glimpse()
+```
+
+
+```{r}
+proj_flat_working |> glimpse()
+```
+
+
+```{r}
+affected_wards <- read_xls("./data/Affected_wardsv2.xls") |> 
+  janitor::clean_names() |> 
+  select(adm1_pcode, 
+         district = adm2_en, 
+         adm2_pcode,
+         municipality = adm3_en, 
+         adm3_pcode, 
+         ward = new_ward_n) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_name, adm1_pcode), 
+    by = "adm1_pcode"
+  ) |> 
+  rename(province = adm1_name) |> 
+  relocate(province, .before = adm1_pcode) |>
+  mutate(affected = "affected")
+
   write_csv("./data/affected_ward_simple_20260910.csv")
   glimpse()
+```
+
+## Settlements
+
+```{r}
+settlements <- st_read("./data/shapefiles/npl_stle_stl_pt_s0_osm_pp_settlements.shp") |> 
+  glimpse()
+
+settlements |> 
+  st_drop_geometry() |> 
+  count(fclass)
 ```
 
 
@@ -1236,6 +1600,7 @@ bagmati_gandaki_individual |>
 
 ### Long
 
+
 ```{r}
 # Ward-level household long
 bagmati_gandaki_hhd |> 
@@ -1594,6 +1959,19 @@ read_xlsx("./data/census/WRD_Bagmati_Indv05-EconomicActivity.xlsx", skip = 2) |>
 
 ```
 
+### Working
+
+```{r}
+read_csv("./data/FILTERED_nepal_census2021_ward_level_individual_tables_bagmati_gandaki_flat.csv") |> 
+  summarise(total_households = sum(total_households, na.rm = TRUE), 
+            population_total = sum(population_total, na.rm = TRUE))
+  glimpse()
+  filter(total_households, )
+  glimpse()
+  
+  223574 / 56550
+```
+
 
 ```{r}
 read_xlsx("./data/census/WRD_Bagmati_Indv02-FiveYearsAgeGroupsAndSex.xlsx", skip = 2) |> 
@@ -1852,6 +2230,366 @@ affected_wards_population |>
   save_as_image("./plots/affected_population_municipality.png")
 ```
 
+# FODs
+
+## Functions
+
+```{r}
+clean_district_municipality <- function(tbl) {
+ 
+   tbl |> 
+    mutate(district = ifelse(district == "Chitwan", "Chitawan", district), 
+         municipality = case_when(
+           str_detect(municipality, "Ichchhyakamana") ~ "Ichchha Kamana", 
+           str_detect(municipality, "Galchi") ~ "Galchhi",
+           str_detect(municipality, "Sahid Lakhan") ~ "Shahid Lakhan", 
+           str_detect(municipality, "Tarkeshwar") ~ "Tarakeshwor",
+           str_detect(municipality, "Sidhhalek") ~ "Siddhalek", 
+           str_detect(municipality, "Belkotgadi") ~ "Belkotgadhi", 
+           TRUE ~ municipality
+         )) |> 
+    left_join(
+    nepal_admin |> 
+      distinct(adm2_name, adm2_pcode, adm3_name, adm3_pcode), 
+    by = c("district" = "adm2_name", 
+           "municipality" = "adm3_name")
+  )
+}
+
+Sidhhalek Siddhalek
+Belkotgadi Belkotgadhi
+```
+
+
+```{r}
+damage <- read_xlsx("./data/Consolidated Damage.xlsx") |> 
+  janitor::clean_names() |> 
+  glimpse()
+```
+
+```{r}
+# Household impacts 
+household_impacts <- read_xlsx("./data/RDNA tables.xlsx", 
+          sheet = "impacted_hhds") |> 
+  janitor::clean_names() |> 
+  filter(!is.na(affected_wards)) |> 
+  rename(households_in_affected_wards_census_2021 = household_in_affeced_wards_census_2021, 
+         household_size_census_2021 = househol_d_size_census_2021, 
+         municipality = district_local) |> 
+  mutate_at(vars(households_in_affected_wards_census_2021:household_size_census_2021), 
+            ~ parse_number(.x)) |> 
+  mutate_at(vars(district, municipality), ~str_trim(.x)) |> 
+  mutate(district = str_to_title(district), 
+         number_of_affected_wards = str_count(affected_wards, ",") + 1) |> 
+  relocate(number_of_affected_wards, .after = affected_wards) |> 
+  clean_district_municipality() |> 
+  left_join(
+    read_xlsx("./data/RDNA tables.xlsx", sheet = "composition_of_damage") |>
+      clean_names() |>
+      rename(district = x1, municipality = district_local_level) |>
+      mutate_at(vars(affected_buildings:rcc_other), ~ parse_number(.x)) |>
+      mutate_at(vars(district, municipality), ~ str_trim(.x)) |>
+      filter(municipality != "Total") |> 
+      clean_district_municipality() |> 
+      select(-district, -municipality), 
+  by = c("adm2_pcode", "adm3_pcode")
+  )
+
+```
+
+## Sector damage and losses
+
+
+```{r}
+sector_damage_and_losses <- read_xlsx("./data/RDNA tables.xlsx", 
+          sheet = "damage_and_losses") |> 
+  clean_names() |> 
+  rename_all(~str_replace_all(.x, "us_million", "usd_million")) |> 
+  rename_all(~str_replace_all(.x, "months_npr", "months_npr_crore")) |> 
+  rename(sub_sector = sector) |> 
+  mutate(sub_sector = str_extract(sub_sector, "[A-Za-z\\s]+"), 
+         sub_sector = str_trim(str_to_lower(sub_sector))) |> 
+  mutate(sector = case_when(
+    sub_sector %in% c("private buildings", "public buildings and facilities", 
+                      "education", "health", "cultural heritage") ~ "social", 
+    sub_sector %in% c("agriculture", "fisheries", "livestock", 
+                      "banking", "economic activities") ~ "productive", 
+    sub_sector %in% c("energy", "household renewable energy", 
+                      "roads", "bridges", "telecommunication", "wash", 
+                      "irrigation and river training") ~ "infrastructure", 
+    sub_sector %in% c("debris", "disaster risk reduction", 
+                      "inclusive recovery") ~ "cross cutting", 
+    TRUE ~ "subtotal"
+  )) |> 
+  filter(sector != "subtotal") |> 
+  mutate(sub_sector = case_when(
+    sub_sector == "energy" ~ "energy, hydropower and grid", 
+    sub_sector == "economic activities" ~ "economic activities and livelihooods", 
+    TRUE ~ sub_sector
+  )) |> 
+  mutate_at(vars(damages_npr_crore:total_recovery_needs_npr_crore), 
+            ~parse_number(.x)) |> 
+  relocate(sector, .before = sub_sector)
+
+# There are spaces after each of the numbers in the excel tables
+# This renders them unusable
+damage_and_losses %>%
+  {sum(.$total_recovery_needs_npr_crore, na.rm = TRUE)}
+
+sector_damage_and_losses |> 
+  write_csv("./data/sector_damage_and_losses.csv")
+```
+
+
+
+
+
+```{r}
+read_xlsx("./data/RDNA tables.xlsx", sheet = "crop_damage") |> 
+  clean_names() |> 
+  mutate(municipality = str_extract(municipality, "[^/]+$"), 
+         municipality = str_trim(municipality)) |> 
+  clean_district_municipality() |> 
+  filter(municipality != "Grand Total") |>
+  mutate_at(vars(paddy_baseline_hectares:vegetables_affected_hectares), 
+            ~ parse_number(.x))
+
+
+  left_join(
+    household_impacts |> 
+      select(-district, -municipality), 
+    by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  select(district, municipality, adm2_pcode, adm3_pcode, 
+         affected_wards:total_damage_including_household_assets_npr_crore,
+         everything())
+
+
+```
+
+```{r}
+
+# How is it possible that Likhu received damage? 
+
+read_xlsx("./data/RDNA tables.xlsx", sheet = "agricultural_damage") |> 
+  clean_names() |> 
+  rename(municipality = local_level) |> 
+  mutate(district = case_when(
+    str_detect(municipality, "Aanbu Khaireni|Bandipur|Devghat") ~ "Tanahu",
+    str_detect(municipality, "Belkotgadi|Bidur|Likhu") ~ "Nuwakot", 
+    str_detect(municipality, "Benighat Rorang|Gajuri|Galchhi|Sidhhalek") ~ "Dhading", 
+    str_detect(municipality, "Bharatpur|Ichchha Kamana") ~ "Chitawan", 
+    str_detect(municipality, "Gandaki|Shahid Lakhan") ~ "Gorkha", 
+    str_detect(municipality, "Gosaikunda|Uttargaya") ~ "Rasuwa",
+    TRUE ~ NA_character_
+  )) |> 
+  mutate(district = str_trim(district), 
+         municipality = str_trim(municipality)) |> 
+  clean_district_municipality() |>
+  glimpse()
+  filter(is.na(district))
+  glimpse()
+  count(local_level)
+  glimpse()
+```
+
+```{r}
+read_xlsx("./data/RDNA tables.xlsx", sheet = "business_exposure") |> 
+  clean_names() |> 
+  mutate_at(vars(district, municipality), ~ str_trim(.x)) |>
+  clean_district_municipality() |>  
+  rename(damage_corridor_buildings = corridor_buildings) |> 
+  mutate_at(vars(damage_corridor_buildings:building_impact_share), 
+            ~parse_number(.x)) |>
+  mutate(building_impact_share = building_impact_share / 100) |> 
+  filter(municipality != "Total") |> 
+  filter(is.na(adm2_pcode) | is.na(adm3_pcode))
+  glimpse()
+```
+
+
+
+## Municipal damage and losses
+
+```{r}
+municipal_damage_losses <- nepal_admin |> 
+  filter(adm2_name %in% c("Nuwakot", "Rasuwa", "Dhading", "Chitawan", "Tanahu", "Gorkha")) |> 
+  distinct(adm2_name, adm2_pcode, adm3_name, adm3_pcode) |> 
+  rename(district = adm2_name, municipality = adm3_name) |> 
+  left_join(
+    household_impacts |> 
+      mutate(household_damage = 1) |> 
+      select(-district, -municipality), 
+    by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  left_join(
+    read_xlsx("./data/RDNA tables.xlsx", sheet = "crop_damage") |> 
+      clean_names() |> 
+      mutate(municipality = str_extract(municipality, "[^/]+$"), 
+             municipality = str_trim(municipality)) |> 
+      clean_district_municipality() |> 
+      filter(municipality != "Grand Total") |>
+      mutate_at(vars(paddy_baseline_hectares:vegetables_affected_hectares), 
+                ~ parse_number(.x)) |> 
+      mutate(crop_damage = 1) |> 
+      select(-district, -municipality), 
+    by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  left_join(
+    read_xlsx("./data/RDNA tables.xlsx", sheet = "agricultural_damage") |> 
+      clean_names() |> 
+      rename(municipality = local_level) |> 
+      mutate(district = case_when(
+        str_detect(municipality, "Aanbu Khaireni|Bandipur|Devghat") ~ "Tanahu",
+        str_detect(municipality, "Belkotgadi|Bidur|Likhu") ~ "Nuwakot", 
+        str_detect(municipality, "Benighat Rorang|Gajuri|Galchhi|Sidhhalek") ~ "Dhading", 
+        str_detect(municipality, "Bharatpur|Ichchha Kamana") ~ "Chitawan", 
+        str_detect(municipality, "Gandaki|Shahid Lakhan") ~ "Gorkha", 
+        str_detect(municipality, "Gosaikunda|Uttargaya") ~ "Rasuwa",
+        TRUE ~ NA_character_
+      )) |> 
+      mutate(district = str_trim(district), 
+             municipality = str_trim(municipality)) |> 
+      clean_district_municipality() |> 
+      mutate_at(vars(total_no_of_holdings:temporary_crop_holdings_number), 
+                ~parse_number(.x)) |> 
+      mutate(agricultural_damage = 1) |> 
+      select(-district, -municipality), 
+    by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  left_join(
+    # Aligns with household impacts
+    read_xlsx("./data/RDNA tables.xlsx", sheet = "business_exposure") |> 
+      clean_names() |> 
+      mutate_at(vars(district, municipality), ~ str_trim(.x)) |>
+      clean_district_municipality() |>  
+      rename(damage_corridor_buildings = corridor_buildings) |> 
+      mutate_at(vars(damage_corridor_buildings:building_impact_share), 
+                ~parse_number(.x)) |>
+      mutate(building_impact_share = building_impact_share / 100) |> 
+      filter(municipality != "Total") |> 
+      mutate(business_exposure = 1)|> 
+      select(-district, -municipality, impacted_buildings), 
+    by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  left_join(
+    ward_cadastral |> 
+      group_by(adm2_pcode, adm3_pcode) |> 
+      summarise(
+        affected_cadastral_parcels = sum(no_of_affected_cadastral_parcels, na.rm = TRUE), 
+        affected_hectares = sum(total_ward_area_hectares, na.rm = TRUE), 
+        affected_hectares_cadastral = sum(total_affected_cadastral_area_hectares, na.rm = TRUE), 
+        .groups = "drop") |> 
+      mutate(cadastral_damage = 1), 
+    by = c("adm2_pcode", "adm3_pcode")
+  )
+
+municipal_damage_losses |> 
+  filter(household_damage == 1 | crop_damage == 1 | agricultural_damage == 1 |
+           business_exposure == 1 | cadastral_damage == 1) |> 
+  write_csv("./data/municipal_damage_loss.csv")
+  glimpse()
+```
+
+```{r}
+municipal_damage_losses |> 
+  filter(household_damage == 1 | crop_damage == 1 | agricultural_damage == 1 |
+           business_exposure == 1 | cadastral_damage == 1) |> 
+  glimpse()
+  filter(municipality == "Likhu")
+  select(impacted_buildings.x, impacted_buildings.y)
+```
+
+
+## Ward damage
+
+```{r}
+ward_cadastral <- rbind(
+  read_xlsx("./data/RDNA tables.xlsx", sheet = "rasuwa_cadastral") |> 
+  clean_names() |> 
+  rename(municipality = municipality_cbs_name) |> 
+  mutate(municipality = str_remove_all(municipality, "\\ "), 
+         municipality = str_remove_all(municipality, "Rural|RuralMunicipality|Municipality"), 
+         municipality = str_trim(municipality), 
+         municipality = case_when(
+           municipality == "Aamachaodingmo" ~ "Aamachhodingmo",
+           municipality == "Gosainkunda" ~ "Gosaikunda", 
+           TRUE ~ municipality), 
+         district = "Rasuwa") |> 
+  mutate_at(vars(ward:affected_cadastral_area_as_percent_of_ward_area), 
+            ~ parse_number(.x)) |> 
+  mutate(affected_cadastral_area_as_percent_of_ward_area = affected_cadastral_area_as_percent_of_ward_area / 100) |> 
+  clean_district_municipality() |> 
+  filter(municipality != "TOTAL"), 
+ 
+ read_xlsx("./data/RDNA tables.xlsx", sheet = "nuwakot_cadastral") |> 
+  clean_names() |> 
+  rename(municipality = municipalit_y_cbs_nam_e) |> 
+  mutate(municipality = str_remove_all(municipality, "\\ "), 
+         municipality = str_remove_all(municipality, "Rural|RuralMunicipality|Municipality"), 
+         municipality = str_trim(municipality),
+         district = "Nuwakot") |>
+  mutate_at(vars(ward:affected_cadastral_area_as_percent_of_ward_area), 
+            ~ parse_number(.x)) |> 
+  mutate(affected_cadastral_area_as_percent_of_ward_area = affected_cadastral_area_as_percent_of_ward_area / 100) |> 
+  clean_district_municipality() |> 
+  filter(municipality != "TOTAL")
+ )
+  
+```
+
+
+# Mapping
+
+```{r}
+affected_municipalities_wards |> 
+  left_join(
+    wards, 
+    by = c("adm3_pcode", "ward" = "NEW_WARD_N")
+  ) |> 
+  st_as_sf() |> 
+  ggplot() +
+  geom_sf(fill = "lightblue") + 
+  geom_sf(data = adm3 |> filter(adm3_pcode %in% affected_municipalities_wards$adm3_pcode), 
+          alpha = .1) +
+  geom_sf_text(data = adm3 |> filter(adm3_pcode %in% affected_municipalities_wards$adm3_pcode),
+               aes(label = adm3_name), 
+               size = 2, 
+               colour = "red")
+  glimpse()
+
+```
+
+Play with rasters later
+
+```{r}
+
+bbox <- st_bbox(c(xmin = 80.0667, xmax = 88.2000, ymin = 26.3667,  ymax = 30.4500), 
+                crs = st_crs(faded_country))
+
+faded_country <- st_read("./data/shapefiles/npl_carto_fea_py_mapaction_pp_faded_country.shp")
+
+st_crop(faded_country, bbox) |> 
+  glimpse()
+
+st_crop(faded_country, bbox) |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf()
+  glimpse()
+  
+X Range (West to East): 80.0667 to 88.2000Y Range (South to North): 26.3667 to 30.4500  
+
+faded_country |> glimpse()
+
+st_crs(faded_country)
+```
+
+
+```{r}
+
+```
+
 # 5Ws
 
 
@@ -1912,12 +2650,110 @@ consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY) 20260
 
 ```
 
+## Errors
+
 ```{r}
 consolidated |> 
-  group_by
-  filter(municipality == "Uttargaya") |> 
-  count(lead_agency, implementing_partner)
+  count(disaster_response_plan)
+```
+
+
+```{r}
+consolidated |> 
+  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
+  count(province)
+```
+
+
+
+```{r}
+consolidated |> filter(disaster_response_plan == "Rasuwa Flood Response") |> count(district)
+```
+
+```{r}
+consolidated |> filter(disaster_response_plan == "Rasuwa Flood Response") |> count(municipality)
+
+affected_wards |> distinct(adm2_en, adm3_en)
+```
+
+Jwalamukhi, Kathmandu, Likhu, Nagarjun, Naukunda, Nilkhantha Municipality, Shivapuri, Suryagadhi are not affected by the flooding. Are these holding centres? If not, partners need to clarify the relevance of these activities to the response 
+
+```{r}
+consolidated |> filter(disaster_response_plan == "Rasuwa Flood Response") |> 
+  count(sector)
+```
+
+```{r}
+consolidated |> 
+  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
+  filter(is.na(activity))
+```
+
+
+```{r}
+consolidated |> 
+  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
+  mutate_at(
+    vars(households_reached, individuals_reached, 
+         girls_18_yrs, boys_18_yrs, 
+         women_18_yrs, men_18_yrs, 
+         elderly_women_60_plus, 
+         elderly_men_60_plus, 
+         people_with_disabilities),
+    ~replace_na(.x, 0)
+  ) |> 
+  mutate(sadd_total = girls_18_yrs + boys_18_yrs + women_18_yrs + men_18_yrs +
+           elderly_women_60_plus + elderly_men_60_plus,
+         sadd_check = individuals_reached - sadd_total) |> 
+  mutate(sadd_check_summary = case_when(
+    sadd_check > 0 ~ "under", 
+    sadd_check == 0 ~ "correct", 
+    sadd_check < 0 ~ "over"
+  )) |> 
+  group_by(sadd_check_summary) |> 
+  summarise(n = n())
+
+
+
+```
+
+```{r}
+consolidated |> 
+  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
+  filter(response_modality == "Awareness/Advocacy") |> 
+  count(activity)
+  count(response_modality)
+```
+
+```{r}
+consolidated |>
+  count(sector)
+  count(area_of_responsibility_aor)
   glimpse()
+  count(relief_item_unit)
+  glimpse()
+```
+
+
+```{r}
+consolidated |> count(activity) |> 
+  filter(
+    activity %in% c("Data and Information Management", 
+                    "Logistics Coordination and Information Management", 
+                    "Nutrition education along food security interventions", 
+                    "Promotion and awareness on water conservation, storage and water quality/safety", 
+                    )
+  )
+```
+
+```{r}
+consolidated |> 
+  filter(
+    
+  )
+  filter(is.na(activity)) |>
+  count(sector)
+  count(activity_description)
 ```
 
 
