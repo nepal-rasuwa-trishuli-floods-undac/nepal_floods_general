@@ -356,6 +356,10 @@ proj_flat_working <- rbind(
   ) |> 
   relocate(affected, .after = ward)
 
+proj_flat_working |> 
+  rename_at(vars(population_total:female_95plus), 
+            ~paste0("projection_2026_", .x)) |> 
+  write_csv("./data/population_projections_2026_affected_wards_flat.csv")
 ```
 
 ```{r}
@@ -380,19 +384,7 @@ proj_flat_working |>
 
 ```
 
-```{r}
-proj_flat_working |> 
-  rename_at(vars(population_total:female_95plus), 
-            ~paste0("projection_2026_", .x)) |> 
-  write_csv("./data/population_projections_2026_affected_wards_flat.csv")
-  glimpse()
-```
 
-```{r}
-municipal_damage_losses |> 
-  mutate(affected_wards = str_trim(affected_wards)) |> 
-  select(district, municipality, affected_wards)
-```
 
 ## Affected wards
 
@@ -2379,31 +2371,7 @@ damage <- read_xlsx("./data/Consolidated Damage.xlsx") |>
 
 ```{r}
 # Household impacts 
-household_impacts <- read_xlsx("./data/RDNA tables.xlsx", 
-          sheet = "impacted_hhds") |> 
-  janitor::clean_names() |> 
-  filter(!is.na(affected_wards)) |> 
-  rename(households_in_affected_wards_census_2021 = household_in_affeced_wards_census_2021, 
-         household_size_census_2021 = househol_d_size_census_2021, 
-         municipality = district_local) |> 
-  mutate_at(vars(households_in_affected_wards_census_2021:household_size_census_2021), 
-            ~ parse_number(.x)) |> 
-  mutate_at(vars(district, municipality), ~str_trim(.x)) |> 
-  mutate(district = str_to_title(district), 
-         number_of_affected_wards = str_count(affected_wards, ",") + 1) |> 
-  relocate(number_of_affected_wards, .after = affected_wards) |> 
-  clean_district_municipality() |> 
-  left_join(
-    read_xlsx("./data/RDNA tables.xlsx", sheet = "composition_of_damage") |>
-      clean_names() |>
-      rename(district = x1, municipality = district_local_level) |>
-      mutate_at(vars(affected_buildings:rcc_other), ~ parse_number(.x)) |>
-      mutate_at(vars(district, municipality), ~ str_trim(.x)) |>
-      filter(municipality != "Total") |> 
-      clean_district_municipality() |> 
-      select(-district, -municipality), 
-  by = c("adm2_pcode", "adm3_pcode")
-  )
+household_impacts <- 
 
 ```
 
@@ -2507,15 +2475,40 @@ read_xlsx("./data/RDNA tables.xlsx", sheet = "agricultural_damage") |>
 
 ## Municipal damage and losses
 
+
 ```{r}
 municipal_damage_losses <- nepal_admin |> 
   filter(adm2_name %in% c("Nuwakot", "Rasuwa", "Dhading", "Chitawan", "Tanahu", "Gorkha")) |> 
   distinct(adm2_name, adm2_pcode, adm3_name, adm3_pcode) |> 
   rename(district = adm2_name, municipality = adm3_name) |> 
   left_join(
-    household_impacts |> 
-      mutate(household_damage = 1) |> 
-      select(-district, -municipality), 
+    read_xlsx("./data/RDNA tables.xlsx", 
+          sheet = "impacted_hhds") |> 
+      janitor::clean_names() |> 
+      filter(!is.na(affected_wards)) |> 
+      rename(households_in_affected_wards_census_2021 = household_in_affeced_wards_census_2021, 
+             household_size_census_2021 = househol_d_size_census_2021, 
+             municipality = district_local) |> 
+      mutate_at(vars(households_in_affected_wards_census_2021:household_size_census_2021), 
+                ~ parse_number(.x)) |> 
+      mutate_at(vars(district, municipality), ~str_trim(.x)) |> 
+      mutate(district = str_to_title(district), 
+             number_of_affected_wards = str_count(affected_wards, ",") + 1) |> 
+      relocate(number_of_affected_wards, .after = affected_wards) |> 
+      clean_district_municipality() |> 
+      select(-district, -municipality) |> 
+      mutate(household_impact = 1),
+    by = c("adm2_pcode", "adm3_pcode")
+  ) |> 
+  left_join(
+    read_xlsx("./data/RDNA tables.xlsx", sheet = "composition_of_damage") |>
+      clean_names() |>
+      rename(district = x1, municipality = district_local_level) |>
+      mutate_at(vars(affected_buildings:rcc_other), ~ parse_number(.x)) |>
+      mutate_at(vars(district, municipality), ~ str_trim(.x)) |>
+      filter(municipality != "Total") |> 
+      clean_district_municipality() |> 
+      select(-district, -municipality),
     by = c("adm2_pcode", "adm3_pcode")
   ) |> 
   left_join(

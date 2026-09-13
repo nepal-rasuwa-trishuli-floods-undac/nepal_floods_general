@@ -60,7 +60,9 @@ affected_municipalities_wards <- read_xls("./data/Affected_wardsv2.xls") |>
   relocate(province, .before = adm1_pcode) |> 
   distinct(adm3_pcode, ward)
 
-wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp")
+wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp") |> 
+  rename(ward = NEW_WARD_N) |> 
+  janitor::clean_names() 
 
 affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
   janitor::clean_names()
@@ -156,7 +158,7 @@ differences <- read_csv("./data/differences_between_flash_appeal_and_rdna_affect
 
 
 
-## Plotting functions
+## Plotting 
 
 ```{r}
 HEX
@@ -169,6 +171,7 @@ HEX
 "#e3edf6"
 ```
 
+### Magnitude and severity mapping 
 
 ```{r plotting-functions}
 magnitude_plot <- function(tbl, filter_value) {
@@ -370,12 +373,13 @@ EE####
     title = "Municipal-level plots of the Severity of the Rasuwa Floods Disaster Impacts and the Humanitarian Response", 
     caption = "Sources: Survey Department, Government of Nepal; Nepal National Disaster Risk Reducation and Management Authority; United Nations Nepal and its humanitarian partners.", 
     theme = theme(
-      plot.title = element_text(size = 20, face = 'bold'), 
-      text = element_text(family = "roboto"))
+      plot.title = element_text(size = 20, face = 'bold'))
   )
 
 ggsave("./plots/severity_disaster_impact_5ws.png", height = 11.7, width = 16.5, units = "in")
 ```
+
+
 ```{r}
 consolidated |>
   filter(municipality != "Kathmandu") |> 
@@ -395,6 +399,74 @@ consolidated |>
   mutate(pc_of_affected_reached = individuals_reached / population, 
          variable = "% of Affected Population Reached by 5W activities") |>
   select(adm2_pcode, adm3_pcode, variable, value = pc_of_affected_reached)
+```
+
+### Wards
+
+
+
+```{r}
+differences |> 
+  mutate(
+    assessment_category = case_when(
+      ocha_affected == 1 & rdna_affected == 1 ~ "Both", 
+      ocha_affected == 1 & rdna_affected == 0 ~ "Only OCHA", 
+      rdna_affected == 1 & ocha_affected == 0 ~ "Only RDNA", 
+      TRUE ~ NA_character_
+    )
+  ) |> 
+  right_join(wards, 
+             by = c("adm2_pcode", "adm3_pcode", "ward")) |> 
+  st_as_sf() |> 
+  mutate(ward_label = ifelse(!is.na(ocha_affected == 1 | rdna_affected ==1), 
+                             paste0(ward, "\n", format(projection_2026_population_total, big.mark = ",")), 
+                             ""), 
+         adm3_label = ifelse(adm3_pcode %in% (differences |> distinct(adm3_pcode) |> pull()), 
+                             municipality, 
+                             "")) |> 
+  ggplot() +
+  geom_sf(linewidth = .1, alpha = .15, fill = "grey97") +
+  geom_sf(data = adm3, alpha = .25) +
+  geom_sf_text(data = adm3 |> 
+            mutate(adm3_label = ifelse(adm3_pcode %in% (differences |> distinct(adm3_pcode) |> pull()),
+                                       adm3_name,
+                                       "")), 
+            aes(label = adm3_label)
+          ) + 
+  geom_sf(aes(fill = assessment_category), alpha = .7, colour = NA) + 
+  scale_fill_manual(values = c(
+    "Both" = "#0074b7", 
+    "Only OCHA" = "#c5dfef", 
+    "Only RDNA" = "#338c46"), 
+    na.value = "grey97", 
+    na.translate = FALSE) +
+  geom_sf(data = river, colour = "#e56a54", fill = "#e56a54", alpha = .25) +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates",
+      size = 2, color = "black",  bg.color = "white", bg.r = 0.1) +
+    coord_sf(xlim = c(84.4, 85.6), ylim = c(27.63, 28.4), expand = TRUE) + 
+  labs( x = "", y = "", 
+       fill = "") +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    title = "Affected wards and their populations, mentioned in the Flash Appeal and the Rapid Disaster Needs Assessment", 
+    subtitle = "Ward numbers and their 2026 population projections are labelled. Damage corridor in salmon.", 
+    caption = "Sources: Nepal National Disaster Risk Reducation and Management Authority; United Nations Nepal and its humanitarian partners.", 
+    theme = theme(
+      plot.title = element_text(size = 20, face = 'bold'))
+  )
+
+ggsave("./plots/assessed_wards.png", height = 11.7, width = 16.5, units = "in")  
 ```
 
 
