@@ -388,6 +388,81 @@ proj_flat_working |>
   glimpse()
 ```
 
+```{r}
+municipal_damage_losses |> 
+  mutate(affected_wards = str_trim(affected_wards)) |> 
+  select(district, municipality, affected_wards)
+```
+
+## Affected wards
+
+```{r}
+proj_flat |> glimpse()
+```
+
+
+```{r}
+proj_flat <- read_csv("./data/population_projections_2026_affected_wards_flat.csv")
+
+proj_flat |> mutate(
+  rdna_affected = case_when(
+    municipality == "Bidur" & ward %in% c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12) ~ 1, 
+    municipality == "Belkotgadhi" & ward %in% c(5, 7, 8) ~ 1, 
+    municipality == "Kispang" & ward == 5 ~ 1, 
+    municipality == "Tarakeshwor" & ward %in% c(2, 4) ~ 1, 
+    municipality == "Aamachhodingmo" & ward %in% c(1, 2, 4, 5) ~ 1, 
+    municipality == "Gosaikunda" & ward %in% c(1,2, 3, 5, 6) ~ 1, 
+    municipality == "Uttargaya" & ward %in% c(1, 2, 3, 4, 5) ~ 1, 
+    municipality == "Kalika" & ward == 1 ~ 1, 
+    municipality == "Siddhalek" & ward %in% c(3,4, 6, 7) ~ 1, 
+    municipality == "Benighat Rorang" & ward %in% c(3, 5, 7, 9,10) ~ 1, 
+    municipality == "Gajuri" & ward %in% c(1, 2, 5, 6) ~ 1, 
+    municipality == "Galchhi" & ward %in% c(1, 2, 4, 6, 8) ~ 1, 
+    municipality == "Ichchha Kamana" & ward %in% c(3,4, 5, 6) ~ 1, 
+    municipality == "Shahid Lakhan" & ward %in% c(3,4) ~ 1, 
+    municipality == "Gandaki" & ward %in% c(1, 2, 6, 7, 8) ~ 1, 
+    TRUE ~ NA_real_ 
+  )) |>
+  mutate(
+  ocha_affected = case_when(
+    municipality == "Bidur" & ward %in% c(1,4, 5,9, 10) ~ 1, 
+    municipality == "Belkotgadhi" & ward %in% c(5, 7, 8) ~ 1, 
+    municipality == "Kispang" & ward == 5 ~ 1, 
+    municipality == "Tarakeshwor" & ward %in% c(2, 4) ~ 1, 
+    municipality == "Aamachhodingmo" & ward %in% c(1) ~ 1, 
+    municipality == "Gosaikunda" & ward %in% c(1,2, 3, 5) ~ 1, 
+    municipality == "Uttargaya" & ward %in% c(1, 2, 3, 4, 5) ~ 1, 
+    municipality == "Kalika" & ward == 1 ~ 1, 
+    municipality == "Siddhalek" & ward %in% c(3,4, 6, 7) ~ 1, 
+    municipality == "Benighat Rorang" & ward %in% c(3, 5, 7, 9,10) ~ 1, 
+    municipality == "Gajuri" & ward %in% c(1, 2, 5, 6) ~ 1, 
+    municipality == "Galchhi" & ward %in% c(1, 2,4, 6, 8) ~ 1, 
+    municipality == "Ichchha Kamana" & ward %in% c(3,4) ~ 1, 
+    municipality == "Shahid Lakhan" & ward %in% c(2, 3, 5, 6) ~ 1, 
+    municipality == "Gandaki" & ward %in% c(1, 2, 6, 7, 8) ~ 1, 
+    municipality == "Devghat" & ward %in% c(4, 5) ~ 1, 
+    municipality == "Aanbu Khaireni" & ward %in% c(4, 5) ~ 1, 
+    TRUE ~ NA_real_ 
+  )) |>
+  select(-affected) |> 
+  select(district, adm2_pcode, municipality, adm3_pcode, ward,
+         projection_2026_population_total,
+         ocha_affected, rdna_affected) |> 
+  mutate(different = case_when(
+    ocha_affected == rdna_affected ~ 0, 
+    is.na(ocha_affected) & is.na(rdna_affected) ~ 0, 
+    TRUE ~ 1
+  )) |> 
+  filter(!is.na(ocha_affected) | !is.na(rdna_affected)) |> 
+  replace_na(list(ocha_affected = 0, 
+                  rdna_affected = 0)) |> 
+  summarise(population_wards_ocha_affected = sum(projection_2026_population_total[ocha_affected == 1]),
+            population_wards_rdna_affected = sum(projection_2026_population_total[rdna_affected == 1]))
+  
+  
+  write_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv")
+```
+
 
 ```{r}
 read_csv("./data/FILTERED_nepal_census2021_ward_level_household_tables_bagmati_gandaki_flat.csv") |> 
@@ -1599,6 +1674,8 @@ bagmati_gandaki_individual |>
   
 ```
 
+
+
 ### Long
 
 
@@ -1961,6 +2038,40 @@ read_xlsx("./data/census/WRD_Bagmati_Indv05-EconomicActivity.xlsx", skip = 2) |>
 ```
 
 ### Working
+
+
+```{r}
+bagmati_gandaki_individual <- read_csv("./data/nepal_census2021_ward_level_individual_tables_bagmati_gandaki_flat.csv")
+
+differences <- read_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv")
+
+differences_match <- differences |> 
+      mutate(match = paste0(adm2_pcode, adm3_pcode, ward)) |> 
+      filter(rdna_affected == 1) |> 
+  pull(match)
+
+bagmati_gandaki_individual |>
+  mutate(match = paste0(adm2_pcode, adm3_pcode, ward)) |> 
+  select(district, municipality, ward, population_total, match) |> 
+  filter(match %in% differences_match) |> 
+  group_by(district, municipality) |> 
+  summarise(population_affected_wards_census = sum(population_total)) |> 
+  left_join(
+    municipal_damage_losses |>
+      filter(!is.na(population_in_affected_wards_census_2021)) |>
+      select(district, municipality, population_rdna_presentation = population_in_affected_wards_census_2021), 
+    by = c("district", "municipality")
+  ) |> 
+  mutate(difference = population_affected_wards_census - population_rdna_presentation) |> 
+  write_csv("./data/municipal_differences_rdna_census.csv")
+
+```
+
+```{r}
+
+
+```
+
 
 ```{r}
 read_csv("./data/FILTERED_nepal_census2021_ward_level_individual_tables_bagmati_gandaki_flat.csv") |> 
@@ -2392,20 +2503,6 @@ read_xlsx("./data/RDNA tables.xlsx", sheet = "agricultural_damage") |>
   glimpse()
 ```
 
-```{r}
-read_xlsx("./data/RDNA tables.xlsx", sheet = "business_exposure") |> 
-  clean_names() |> 
-  mutate_at(vars(district, municipality), ~ str_trim(.x)) |>
-  clean_district_municipality() |>  
-  rename(damage_corridor_buildings = corridor_buildings) |> 
-  mutate_at(vars(damage_corridor_buildings:building_impact_share), 
-            ~parse_number(.x)) |>
-  mutate(building_impact_share = building_impact_share / 100) |> 
-  filter(municipality != "Total") |> 
-  filter(is.na(adm2_pcode) | is.na(adm3_pcode))
-  glimpse()
-```
-
 
 
 ## Municipal damage and losses
@@ -2489,6 +2586,14 @@ municipal_damage_losses |>
   write_csv("./data/municipal_damage_loss.csv")
 
 ```
+
+```{r}
+municipal_damage_losses |> 
+  mutate(affected_wards = str_trim(affected_wards)) |> 
+  select(district, municipality, affected_wards)
+  glimpse()
+```
+
 
 ```{r}
 municipal_damage_losses |> 
@@ -2585,18 +2690,14 @@ st_crs(faded_country)
 ```
 
 
-```{r}
-
-```
-
 # 5Ws
 
 
 
 ```{r}
-consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY) 20260909.xlsx", 
+consolidated <- read_xlsx("./data/NEPAL Consolidated Data (for dashboard) 20260910.xlsx", 
                           skip = 5,
-                          sheet = "Compiled_Data") |> 
+                          sheet = "Consolidated_Data") |> 
   janitor::clean_names() |> 
   mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
   mutate_at(c("province", "district", "municipality"), ~ str_trim(.)) |> 
@@ -2650,19 +2751,6 @@ consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY) 20260
 ```
 
 ## Errors
-
-```{r}
-consolidated |> 
-  count(disaster_response_plan)
-```
-
-
-```{r}
-consolidated |> 
-  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
-  count(province)
-```
-
 
 
 ```{r}
@@ -2970,12 +3058,6 @@ ggsave("./plots/un_agencies_municipality.png", height = 9, width = 15, units = "
   write_csv("./data/un_agencies_count_by_municiplity.csv")
   
 adm3 |> glimpse()
-```
-
-```{r}
-
-
-
 ```
 
 Chitawan NP0335 Ichchha Kamana NP0335401

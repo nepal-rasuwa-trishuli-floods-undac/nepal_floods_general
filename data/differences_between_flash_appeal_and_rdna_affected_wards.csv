@@ -1,0 +1,69 @@
+district,adm2_pcode,municipality,adm3_pcode,ward,projection_2026_population_total,ocha_affected,rdna_affected,different
+Rasuwa,NP0329,Uttargaya,NP0329403,1,1165,1,1,0
+Rasuwa,NP0329,Uttargaya,NP0329403,2,1233,1,1,0
+Rasuwa,NP0329,Uttargaya,NP0329403,3,1080,1,1,0
+Rasuwa,NP0329,Uttargaya,NP0329403,4,1986,1,1,0
+Rasuwa,NP0329,Uttargaya,NP0329403,5,2836,1,1,0
+Rasuwa,NP0329,Gosaikunda,NP0329402,1,822,1,1,0
+Rasuwa,NP0329,Gosaikunda,NP0329402,2,558,1,1,0
+Rasuwa,NP0329,Gosaikunda,NP0329402,3,495,1,1,0
+Rasuwa,NP0329,Gosaikunda,NP0329402,5,2518,1,1,0
+Rasuwa,NP0329,Gosaikunda,NP0329402,6,3099,0,1,1
+Rasuwa,NP0329,Aamachhodingmo,NP0329401,1,1455,1,1,0
+Rasuwa,NP0329,Aamachhodingmo,NP0329401,2,942,0,1,1
+Rasuwa,NP0329,Aamachhodingmo,NP0329401,4,1044,0,1,1
+Rasuwa,NP0329,Aamachhodingmo,NP0329401,5,1704,0,1,1
+Rasuwa,NP0329,Kalika,NP0329404,1,2493,1,1,0
+Nuwakot,NP0328,Tarakeshwor,NP0328403,2,2020,1,1,0
+Nuwakot,NP0328,Tarakeshwor,NP0328403,4,2157,1,1,0
+Nuwakot,NP0328,Kispang,NP0328402,5,3095,1,1,0
+Nuwakot,NP0328,Bidur,NP0328301,1,2951,1,1,0
+Nuwakot,NP0328,Bidur,NP0328301,2,5303,0,1,1
+Nuwakot,NP0328,Bidur,NP0328301,3,4860,0,1,1
+Nuwakot,NP0328,Bidur,NP0328301,4,7076,1,1,0
+Nuwakot,NP0328,Bidur,NP0328301,5,6280,1,1,0
+Nuwakot,NP0328,Bidur,NP0328301,6,3996,0,1,1
+Nuwakot,NP0328,Bidur,NP0328301,7,4032,0,1,1
+Nuwakot,NP0328,Bidur,NP0328301,8,3873,0,1,1
+Nuwakot,NP0328,Bidur,NP0328301,9,7591,1,1,0
+Nuwakot,NP0328,Bidur,NP0328301,10,3433,1,1,0
+Nuwakot,NP0328,Bidur,NP0328301,12,3603,0,1,1
+Nuwakot,NP0328,Belkotgadhi,NP0328302,5,3160,1,1,0
+Nuwakot,NP0328,Belkotgadhi,NP0328302,7,4530,1,1,0
+Nuwakot,NP0328,Belkotgadhi,NP0328302,8,2817,1,1,0
+Dhading,NP0330,Galchhi,NP0330410,1,3372,1,1,0
+Dhading,NP0330,Galchhi,NP0330410,2,2787,1,1,0
+Dhading,NP0330,Galchhi,NP0330410,4,3222,1,1,0
+Dhading,NP0330,Galchhi,NP0330410,6,2691,1,1,0
+Dhading,NP0330,Galchhi,NP0330410,8,2964,1,1,0
+Dhading,NP0330,Gajuri,NP0330409,1,5214,1,1,0
+Dhading,NP0330,Gajuri,NP0330409,2,4076,1,1,0
+Dhading,NP0330,Gajuri,NP0330409,5,3788,1,1,0
+Dhading,NP0330,Gajuri,NP0330409,6,4625,1,1,0
+Dhading,NP0330,Benighat Rorang,NP0330408,3,4532,1,1,0
+Dhading,NP0330,Benighat Rorang,NP0330408,5,3049,1,1,0
+Dhading,NP0330,Benighat Rorang,NP0330408,7,2886,1,1,0
+Dhading,NP0330,Benighat Rorang,NP0330408,9,3438,1,1,0
+Dhading,NP0330,Benighat Rorang,NP0330408,10,4652,1,1,0
+Dhading,NP0330,Siddhalek,NP0330407,3,2337,1,1,0
+Dhading,NP0330,Siddhalek,NP0330407,4,2401,1,1,0
+Dhading,NP0330,Siddhalek,NP0330407,6,2700,1,1,0
+Dhading,NP0330,Siddhalek,NP0330407,7,3731,1,1,0
+Gorkha,NP0436,Gandaki,NP0436409,1,2038,1,1,0
+Gorkha,NP0436,Gandaki,NP0436409,2,2742,1,1,0
+Gorkha,NP0436,Gandaki,NP0436409,6,3195,1,1,0
+Gorkha,NP0436,Gandaki,NP0436409,7,2479,1,1,0
+Gorkha,NP0436,Gandaki,NP0436409,8,2937,1,1,0
+Tanahu,NP0440,Devghat,NP0440406,4,1370,1,0,1
+Tanahu,NP0440,Devghat,NP0440406,5,6347,1,0,1
+Tanahu,NP0440,Aanbu Khaireni,NP0440405,4,1640,1,0,1
+Tanahu,NP0440,Aanbu Khaireni,NP0440405,5,1402,1,0,1
+Gorkha,NP0436,Shahid Lakhan,NP0436408,2,2330,1,0,1
+Gorkha,NP0436,Shahid Lakhan,NP0436408,3,2996,1,1,0
+Gorkha,NP0436,Shahid Lakhan,NP0436408,4,2310,0,1,1
+Gorkha,NP0436,Shahid Lakhan,NP0436408,5,1622,1,0,1
+Gorkha,NP0436,Shahid Lakhan,NP0436408,6,2746,1,0,1
+Chitawan,NP0335,Ichchha Kamana,NP0335401,3,2678,1,1,0
+Chitawan,NP0335,Ichchha Kamana,NP0335401,4,3630,1,1,0
+Chitawan,NP0335,Ichchha Kamana,NP0335401,5,3041,0,1,1
+Chitawan,NP0335,Ichchha Kamana,NP0335401,6,2575,0,1,1
