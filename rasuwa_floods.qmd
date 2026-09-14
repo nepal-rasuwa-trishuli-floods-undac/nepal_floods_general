@@ -416,7 +416,7 @@ proj_flat |> mutate(
     TRUE ~ NA_real_ 
   )) |>
   mutate(
-  ocha_affected = case_when(
+  flash_appeal_affected = case_when(
     municipality == "Bidur" & ward %in% c(1,4, 5,9, 10) ~ 1, 
     municipality == "Belkotgadhi" & ward %in% c(5, 7, 8) ~ 1, 
     municipality == "Kispang" & ward == 5 ~ 1, 
@@ -439,16 +439,22 @@ proj_flat |> mutate(
   select(-affected) |> 
   select(district, adm2_pcode, municipality, adm3_pcode, ward,
          projection_2026_population_total,
-         ocha_affected, rdna_affected) |> 
+         flash_appeal_affected, rdna_affected) |> 
   mutate(different = case_when(
-    ocha_affected == rdna_affected ~ 0, 
-    is.na(ocha_affected) & is.na(rdna_affected) ~ 0, 
+    flash_appeal_affected == rdna_affected ~ 0, 
+    is.na(flash_appeal_affected) & is.na(rdna_affected) ~ 0, 
     TRUE ~ 1
   )) |> 
-  filter(!is.na(ocha_affected) | !is.na(rdna_affected)) |> 
-  replace_na(list(ocha_affected = 0, 
-                  rdna_affected = 0)) |> 
-  summarise(population_wards_ocha_affected = sum(projection_2026_population_total[ocha_affected == 1]),
+  filter(!is.na(flash_appeal_affected) | !is.na(rdna_affected)) |> 
+  replace_na(list(flash_appeal_affected = 0, 
+                  rdna_affected = 0)) |>
+    summarise(population_wards_flash_appeal_affected = sum(projection_2026_population_total[flash_appeal_affected == 1]),
+            population_wards_rdna_affected = sum(projection_2026_population_total[rdna_affected == 1]))
+  
+  write_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv")
+
+
+  summarise(population_wards_flash_appeal_affected = sum(projection_2026_population_total[flash_appeal_affected == 1]),
             population_wards_rdna_affected = sum(projection_2026_population_total[rdna_affected == 1]))
   
   
@@ -2031,6 +2037,7 @@ read_xlsx("./data/census/WRD_Bagmati_Indv05-EconomicActivity.xlsx", skip = 2) |>
 
 ### Working
 
+#### Municipal differences 
 
 ```{r}
 bagmati_gandaki_individual <- read_csv("./data/nepal_census2021_ward_level_individual_tables_bagmati_gandaki_flat.csv")
@@ -2047,7 +2054,8 @@ bagmati_gandaki_individual |>
   select(district, municipality, ward, population_total, match) |> 
   filter(match %in% differences_match) |> 
   group_by(district, municipality) |> 
-  summarise(population_affected_wards_census = sum(population_total)) |> 
+  summarise(population_affected_wards_census = sum(population_total), 
+            .groups = "drop") |> 
   left_join(
     municipal_damage_losses |>
       filter(!is.na(population_in_affected_wards_census_2021)) |>
@@ -2059,10 +2067,7 @@ bagmati_gandaki_individual |>
 
 ```
 
-```{r}
 
-
-```
 
 
 ```{r}
@@ -2421,60 +2426,42 @@ sector_damage_and_losses |>
 
 
 
-
-```{r}
-read_xlsx("./data/RDNA tables.xlsx", sheet = "crop_damage") |> 
-  clean_names() |> 
-  mutate(municipality = str_extract(municipality, "[^/]+$"), 
-         municipality = str_trim(municipality)) |> 
-  clean_district_municipality() |> 
-  filter(municipality != "Grand Total") |>
-  mutate_at(vars(paddy_baseline_hectares:vegetables_affected_hectares), 
-            ~ parse_number(.x))
-
-
-  left_join(
-    household_impacts |> 
-      select(-district, -municipality), 
-    by = c("adm2_pcode", "adm3_pcode")
-  ) |> 
-  select(district, municipality, adm2_pcode, adm3_pcode, 
-         affected_wards:total_damage_including_household_assets_npr_crore,
-         everything())
-
-
-```
-
-```{r}
-
-# How is it possible that Likhu received damage? 
-
-read_xlsx("./data/RDNA tables.xlsx", sheet = "agricultural_damage") |> 
-  clean_names() |> 
-  rename(municipality = local_level) |> 
-  mutate(district = case_when(
-    str_detect(municipality, "Aanbu Khaireni|Bandipur|Devghat") ~ "Tanahu",
-    str_detect(municipality, "Belkotgadi|Bidur|Likhu") ~ "Nuwakot", 
-    str_detect(municipality, "Benighat Rorang|Gajuri|Galchhi|Sidhhalek") ~ "Dhading", 
-    str_detect(municipality, "Bharatpur|Ichchha Kamana") ~ "Chitawan", 
-    str_detect(municipality, "Gandaki|Shahid Lakhan") ~ "Gorkha", 
-    str_detect(municipality, "Gosaikunda|Uttargaya") ~ "Rasuwa",
-    TRUE ~ NA_character_
-  )) |> 
-  mutate(district = str_trim(district), 
-         municipality = str_trim(municipality)) |> 
-  clean_district_municipality() |>
-  glimpse()
-  filter(is.na(district))
-  glimpse()
-  count(local_level)
-  glimpse()
-```
-
-
-
 ## Municipal damage and losses
 
+```{r}
+ward_cadastral <- rbind(
+  read_xlsx("./data/RDNA tables.xlsx", sheet = "rasuwa_cadastral") |> 
+  clean_names() |> 
+  rename(municipality = municipality_cbs_name) |> 
+  mutate(municipality = str_remove_all(municipality, "\\ "), 
+         municipality = str_remove_all(municipality, "Rural|RuralMunicipality|Municipality"), 
+         municipality = str_trim(municipality), 
+         municipality = case_when(
+           municipality == "Aamachaodingmo" ~ "Aamachhodingmo",
+           municipality == "Gosainkunda" ~ "Gosaikunda", 
+           TRUE ~ municipality), 
+         district = "Rasuwa") |> 
+  mutate_at(vars(ward:affected_cadastral_area_as_percent_of_ward_area), 
+            ~ parse_number(.x)) |> 
+  mutate(affected_cadastral_area_as_percent_of_ward_area = affected_cadastral_area_as_percent_of_ward_area / 100) |> 
+  clean_district_municipality() |> 
+  filter(municipality != "TOTAL"), 
+ 
+ read_xlsx("./data/RDNA tables.xlsx", sheet = "nuwakot_cadastral") |> 
+  clean_names() |> 
+  rename(municipality = municipalit_y_cbs_nam_e) |> 
+  mutate(municipality = str_remove_all(municipality, "\\ "), 
+         municipality = str_remove_all(municipality, "Rural|RuralMunicipality|Municipality"), 
+         municipality = str_trim(municipality),
+         district = "Nuwakot") |>
+  mutate_at(vars(ward:affected_cadastral_area_as_percent_of_ward_area), 
+            ~ parse_number(.x)) |> 
+  mutate(affected_cadastral_area_as_percent_of_ward_area = affected_cadastral_area_as_percent_of_ward_area / 100) |> 
+  clean_district_municipality() |> 
+  filter(municipality != "TOTAL")
+ )
+  
+```
 
 ```{r}
 municipal_damage_losses <- nepal_admin |> 
@@ -2497,7 +2484,7 @@ municipal_damage_losses <- nepal_admin |>
       relocate(number_of_affected_wards, .after = affected_wards) |> 
       clean_district_municipality() |> 
       select(-district, -municipality) |> 
-      mutate(household_impact = 1),
+      mutate(household_damage = 1),
     by = c("adm2_pcode", "adm3_pcode")
   ) |> 
   left_join(
@@ -2574,18 +2561,13 @@ municipal_damage_losses <- nepal_admin |>
   )
 
 municipal_damage_losses |> 
+  mutate(affected_wards = str_trim(affected_wards)) |> 
   filter(household_damage == 1 | crop_damage == 1 | agricultural_damage == 1 |
            business_exposure == 1 | cadastral_damage == 1) |> 
   write_csv("./data/municipal_damage_loss.csv")
 
 ```
 
-```{r}
-municipal_damage_losses |> 
-  mutate(affected_wards = str_trim(affected_wards)) |> 
-  select(district, municipality, affected_wards)
-  glimpse()
-```
 
 
 ```{r}
@@ -2597,43 +2579,31 @@ municipal_damage_losses |>
   select(impacted_buildings.x, impacted_buildings.y)
 ```
 
+This was for the humanitarian snapshot 
+
+```{r}
+municipal_damage_losses |> 
+  select(district, municipality, impacted_buildings) |> 
+  filter(!is.na(impacted_buildings)) |> 
+  ggplot(aes(x = impacted_buildings, y = fct_reorder(municipality, impacted_buildings))) + 
+  geom_col(fill = "#009edb") + 
+  geom_text(aes(label = comma(impacted_buildings)),
+            hjust = "inward", 
+            size = 7) +
+  scale_x_continuous(labels = comma, breaks = seq(0, 3500, 500)) + 
+  labs(title = "Number of Impacted Buildings by Municipality", 
+       x = "", y = "") +
+  theme_void() +
+  theme(plot.title = element_text(hjust = .5, size = 18, face = "bold"), 
+        axis.text.y = element_text(size = 15, hjust = 0))
+  
+ggsave("./plots/number_of_affected_building_municipality.png", height = 7.5, width = 7.5, units = "in")
+```
+
 
 ## Ward damage
 
-```{r}
-ward_cadastral <- rbind(
-  read_xlsx("./data/RDNA tables.xlsx", sheet = "rasuwa_cadastral") |> 
-  clean_names() |> 
-  rename(municipality = municipality_cbs_name) |> 
-  mutate(municipality = str_remove_all(municipality, "\\ "), 
-         municipality = str_remove_all(municipality, "Rural|RuralMunicipality|Municipality"), 
-         municipality = str_trim(municipality), 
-         municipality = case_when(
-           municipality == "Aamachaodingmo" ~ "Aamachhodingmo",
-           municipality == "Gosainkunda" ~ "Gosaikunda", 
-           TRUE ~ municipality), 
-         district = "Rasuwa") |> 
-  mutate_at(vars(ward:affected_cadastral_area_as_percent_of_ward_area), 
-            ~ parse_number(.x)) |> 
-  mutate(affected_cadastral_area_as_percent_of_ward_area = affected_cadastral_area_as_percent_of_ward_area / 100) |> 
-  clean_district_municipality() |> 
-  filter(municipality != "TOTAL"), 
- 
- read_xlsx("./data/RDNA tables.xlsx", sheet = "nuwakot_cadastral") |> 
-  clean_names() |> 
-  rename(municipality = municipalit_y_cbs_nam_e) |> 
-  mutate(municipality = str_remove_all(municipality, "\\ "), 
-         municipality = str_remove_all(municipality, "Rural|RuralMunicipality|Municipality"), 
-         municipality = str_trim(municipality),
-         district = "Nuwakot") |>
-  mutate_at(vars(ward:affected_cadastral_area_as_percent_of_ward_area), 
-            ~ parse_number(.x)) |> 
-  mutate(affected_cadastral_area_as_percent_of_ward_area = affected_cadastral_area_as_percent_of_ward_area / 100) |> 
-  clean_district_municipality() |> 
-  filter(municipality != "TOTAL")
- )
-  
-```
+
 
 
 # Mapping

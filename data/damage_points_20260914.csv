@@ -1,0 +1,67 @@
+adm1_name,adm2_name,adm3_name,type,name,y,x,damage,ownership
+Bagmati,Dhading,Galchhi,Medical Facility,Baireni Hospital,27.801106,84.987398,Partially Damaged,Public
+Bagmati,Dhading,Benighat Rorang,Medical Facility,Charaudi BHSC,27.803445,84.749077,Partially Damaged,Public
+Bagmati,Rasuwa,Uttargaya,Medical Facility,Mailung CHU,28.053699,85.2069,Fully Damaged,Public
+Bagmati,Nuwakot,Bidur,Medical Facility,Nuwakot Hospital Pvt Ltd,27.921761,85.148232,Partially Damaged,Private
+Bagmati,Rasuwa,Gosaikunda,Medical Facility,Panta Medical Hall,28.162001,85.3367,Fully Damaged,Private
+Bagmati,Rasuwa,Gosaikunda,Medical Facility,Syafrubesi HP,28.1653,85.3412,Fully Damaged,Public
+Bagmati,Rasuwa,Gosaikunda,Medical Facility,Timure HP,28.242348,85.358448,Fully Damaged,Public
+Bagmati,Rasuwa,Gosaikunda,Medical Facility,Timure POE,28.255946,85.367223,Fully Damaged,Public
+Bagamati,Dhading,Benighat Rorang,School,Tin Kanya Bagesori  Basic School,27.808539,84.831258,Not Known,Public
+Bagamati,Dhading,Benighat Rorang,School,Chandrodaya Secondary School,27.808578,84.773872,Not Known,Public
+Bagamati,Dhading,Benighat Rorang,School,Bright Future Eng. Boarding School,27.812662,84.82932,Not Known,Private
+Bagamati,Dhading,Benighat Rorang,School,Rising Star English Boarding School,27.801307,84.739651,Not Known,Private
+Bagamati,Dhading,Benighat Rorang,School,Shankhadevi Secondary School,27.805847,84.704951,Not Known,Public
+Bagamati,Nuwakot,Bidur,School,Tribhuvan Trishuli Secondary School,27.923659,85.150008,Not Known,Public
+Bagamati,Nuwakot,Bidur,School,Trishuli Samudaik Boarding School,27.924068,85.149765,Not Known,Private
+Bagamati,Nuwakot,Bidur,School,Ramchandra Basic School,27.970926,85.184504,Not Known,Public
+Gandaki,Gorkha,Gandaki,School,Shree Chitra Devi Basic School,27.812555,84.756744,Not Known,Public
+Gandaki,Gorkha,Gandaki,School,Madrassa Islamiya Faijul Ulum,27.812555,84.756744,Not Known,Public
+Bagamati,Rasuwa,Gosaikunda,School,Nepal Rastriya Basic School,27.954357,85.164079,Not Known,Public
+Bagamati,Rasuwa,Gosaikunda,School,Gosaikunda Ebs,28.163177,85.338007,Not Known,Private
+Bagamati,Chitwan,Ichchhakamana,School,Rastriya Adharbhut Bidhyalaya (1-5) Dhusa,27.842138,84.662191000000007,Not Known,Public
+Bagamati,Chitwan,Ichchhakamana,School,Rastriya Aadharbhut Bidhyalaya (1-8) Fisling,27.841911,84.662285,Not Known,Public
+Bagamati,Nuwakot,Tarakeshwor,School,Ganesh Man Singh Smriti Basic School,27.84905,85.027469,Not Known,Public
+Bagamati,Rasuwa,Uttargaya,School,Chipleti Basic School,28.05715,85.207741,Not Known,Public
+Bagamati,Rasuwa,Uttargaya,School,Malika Devi Basic School,28.006543,85.184865,Not Known,Public
+Bagamati,Rasuwa,Uttargaya,School,Simle Basic School,28.024925,85.186356,Not Known,Public
+Bagamati,Rasuwa,Gosaikunda,Hydropower,Langtang Khola Hydroelectric Project,28.163819,85.340784,Fully damaged,Not Known
+Bagamati,Rasuwa,Gosaikunda,Hydropower,Rasuwagadhi Hydropower Project,28.276074,85.377817,Fully damaged,Not Known
+Bagamati,Rasuwa,Aamachhodingmo,Hydropower,Chilime Hydropower Project,28.181824,85.340949,Fully damaged,Not Known
+Bagamati,Rasuwa,Kalika,Hydropower,Mailung Khola Hydropower Project,28.073218,85.209901,Fully damaged,Not Known
+Bagamati,Nuwakot,Bidur,Hydropower,Devighat Hydropower Project,27.888956,85.134764,Fully damaged,Not Known
+Bagamati,Rasuwa,Uttargaya,Hydropower,Upper Trishuli-3A Hydroelectric Project,28.058128,85.207092,Fully damaged,Not Known
+Bagamati,Rasuwa,Uttargaya,Hydropower,Upper Trishuli-1 Hydropower Project,28.073123,85.207918,Fully damaged,Not Known
+Bagamati,Rasuwa,Uttargaya,Hydropower,Upper Trishuli-3A Hydroelectric Project,28.023696,85.186308,Fully damaged,Not Known
+Bagamati,Rasuwa,Uttargaya,Hydropower,Upper Trishuli-3B Hydroelectric Project DAM,27.993923,85.183154,Fully damaged,Not Known
+Bagamati,Nuwakot,Bidur,Hydropower,Trishuli Hydropower-DAM,27.962593,85.170283,Fully damaged,Not Known
+Bagamati,Nuwakot,Bidur,Hydropower,Trishuli Hydropower Project-Powerhouse,27.921547,85.145824,Fully damaged,Not Known
+Bagamati,Nuwakot,Kispang,Hydropower,Trishuli 3B Hub Substation,28.011527,85.182491,Fully damaged,Not Known
+Bagamati,Rasuwa,Gosaikunda,Hydropower,Rasuwa Bhotekoshi,28.204722,85.354167,Not Known,Not Known
+Bagmati,Nuwakot,Belkotgadhi,Holding Centre,Mahadev Secondary School,27.852121618373978,85.06032631523733,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Ranabhubaneswori Secondary Schoold / Ward Office,27.86240509796465,85.1077467704199,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Ajuryeda Alternative Hospital,27.866504789911847,85.11914165355138,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Chandrajyoti Secondary School,27.86978248848618,85.1239400398655,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Tamang Plaza,27.90373252727242,85.14432376302645,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,unknown,27.913535654487482,85.14322092191831,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Bhairum Secondary School,27.922978303357212,85.13947571461257,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,unknown,27.925372359056883,85.1399329484268,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,unknown,27.924057169660284,85.14618009806065,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,"Durbar Health Post, Bidur-2",27.916596723557674,85.1660654877386,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Indrayani Basic School,27.94101763291951,85.1571404378199,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Sundari Kyaurini Secondary School,27.93713285798964,85.1607773303732,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,Sulakshana Secondary School,27.947791372057726,85.15850314870828,NA,NA
+Bagmati,Nuwakot,Bidur,Holding Centre,unknown,27.973047974683634,85.15209845034536,NA,NA
+Bagmati,Nuwakot,Kispang,Holding Centre,"Karki Manakamana Basic School, Karkigaun",27.988247145892366,85.17434878345658,NA,NA
+Bagmati,Nuwakot,Kispang,Holding Centre,unknown,28.009544480439285,85.15045446359962,NA,NA
+Bagmati,Rasuwa,Kalika,Holding Centre,Hamalayan Campus (Kalikastan),27.996872938849002,85.20477281317002,NA,NA
+Bagmati,Rasuwa,Kalika,Holding Centre,"Nilkantha Secondary School, Bgatitar",27.993646614860477,85.22431570560997,NA,NA
+Bagmati,Rasuwa,Kalika,Holding Centre,Ramche School,28.048077988521754,85.21797094426411,NA,NA
+Bagmati,Rasuwa,Uttargaya,Holding Centre,Dadagaun,28.04773377879689,85.1881942343315,NA,NA
+Bagmati,Rasuwa,Uttargaya,Holding Centre,Mailung (Hydro Area),28.074474250708384,85.20598011593724,NA,NA
+Bagmati,Rasuwa,Aamachhodingmo,Holding Centre,Haku,28.115250259461817,85.26405908518976,NA,NA
+Bagmati,Rasuwa,Gosaikunda,Holding Centre,unknown,28.110814063977497,85.29216612108328,NA,NA
+Bagmati,Rasuwa,Gosaikunda,Holding Centre,Dhunche City Hall Center,28.11027976828517,85.29886536707218,NA,NA
+Bagmati,Rasuwa,Aamachhodingmo,Holding Centre,Ronga,28.182329199897378,85.33912977057041,NA,NA
+Bagmati,Rasuwa,Gosaikunda,Holding Centre,Safrubesi (Syafru School),28.161695453755858,85.33195060032872,NA,NA
+Bagmati,Rasuwa,Gosaikunda,Holding Centre,Khamjing,28.199537973662228,85.3672860404469,NA,NA
