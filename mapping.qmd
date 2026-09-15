@@ -256,6 +256,15 @@ HEX
 "#64bdea"
 "#c5dfef"
 "#e3edf6"
+
+"#003425"
+"#004d35"
+"#006747"
+"#338c46"
+"#72bf44"
+"#cee3a0"
+"#e6efd0"
+
 ```
 
 ## Magnitude and severity mapping 
