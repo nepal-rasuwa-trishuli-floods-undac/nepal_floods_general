@@ -290,9 +290,13 @@ The response to the 2026 Nepal Floods is being implemented by 90 Agencies (inclu
 These are some of the key points of this report: 
 
 -Municipal aggregations are limited utility in response planning and analysis, proving to be too gross a measure for a response along a narrow corridor. 
+
 -There are very noticeable differences between the wards that were used to calculate the affected population and the wards identified as affected by the NDRRMA Rapid Disaster Needs Assessment. It is recommended to revise the Estimated Affected Population in the Flash Appeal. 
+
 -Only `r round(has_ward$pc * 100, 2)`% of all beneficiary frequencies (inclusive of double counting) in the 5Ws are reported at ward level. This percentage is likely to increase as the response goes along, though significant omissions from the first week of the response will remain. 
--Numerous wards in Bidur Municipality have been saturated with aid. Wards both further upstream and downstream have received much less assistance. Downstreams (past Dhading) should be re-evaluated for inclusion in response plans. 
+
+-Numerous wards in Bidur Municipality have been saturated with aid. Wards both further upstream and downstream have received much less assistance. Downstreams (past Dhading) should be re-evaluated for inclusion in response plans.
+
 -Affected wards in Nuwakot district have received much more comprehensive aid than other locations, with multiple sectors/Clusters present in most wards. 
 
 <br><br><br>
@@ -375,7 +379,9 @@ affected_reached_summary_table |>
 From the table above, we note that: 
 
 -The number of impacted buildings does not align with the Estimated Affected Population. The clearest example of this would be to compare Gosaikunda and Benighat Rorang. 
+
 -The Estimated Affected Population is several municipalities like Kalika and Aamachhodingmo is very low and has already been greatly exceeded by the 5Ws reached. 
+
 -Multiple municipalities not in the Flash Appeal have been reached by partners. Some may be due to the presence of displaced populations (such as Kathmandu), but others such as Myagang are distant from the flooding, as can be seen from the map below. 
 
 <br>
@@ -404,7 +410,46 @@ The plot below shows the differences between the affected wards which were inclu
 [![](./plots/affected_wards.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/affected_wards.png)
 
 <br>
-Though there is substantial overlap, reconciliation is still needed to allow for better response monitoring of partners' achievements in these areas. 
+Though there is substantial overlap, as can be seen from the table below, reconciliation is still needed to allow for better response monitoring of partners' achievements in these areas. The table below uses beneficiary frequencies, which include double counting. 
+
+<br>
+
+```{r}
+consolidated |> 
+  filter(response_modality != "Awareness/Advocacy") |> 
+  filter(is.finite(individuals_reached)) |> 
+  filter(ward < 20) |> 
+  group_by(adm3_pcode, ward) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE), 
+            .groups = "drop") |> 
+  full_join(
+    differences |> 
+      select(adm3_pcode, ward, flash_appeal_affected, rdna_affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  replace_na(list(
+    flash_appeal_affected = 0, 
+    rdna_affected = 0
+  )) |> filter(!is.na(individuals_reached)) |> 
+  mutate(ward_category = case_when(
+    flash_appeal_affected == 0 & rdna_affected == 0 ~ "Outside Both", 
+    flash_appeal_affected == 0 & rdna_affected == 1 ~ "Only RDNA", 
+    flash_appeal_affected == 1 & rdna_affected == 0 ~ "Only Flash Appeal", 
+    flash_appeal_affected == 1 & rdna_affected == 1 ~ "Inside Both", 
+    TRUE ~ NA_character_
+  )) |> 
+  group_by(ward_category) |> 
+  summarise(individuals_reached = sum(individuals_reached)) |> 
+  mutate(pc = round(individuals_reached / sum(individuals_reached) * 100, 2), 
+         individuals_reached = round(individuals_reached)) |> 
+  rename(`Ward category` = ward_category, 
+         `Beneficiary frequencies (5Ws)` = individuals_reached, 
+         `% of total` = pc) |> 
+  kable(caption = "Beneficiary frequencies by type of ward") |> 
+  kable_classic(full_width = F) |> 
+  kable_styling(bootstrap_options = "striped") 
+```
+
 
 <br><br><br>
 
@@ -423,6 +468,8 @@ Immediately, anecdotal communications about the over-saturation of aid in Bidur 
 <br>
 
 [![](./plots/ward_gaps_sum.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/ward_gaps_sum.png)
+
+
 
 <br><br><br>
 
@@ -461,5 +508,33 @@ ward_summary |>
                                    sum(!is.na(wash_individuals_reached))) |> 
   ungroup() |> 
   count(shelter_wash)
+```
+
+<br><br><br>
+
+# Assessment coverage
+
+```{r}
+register <- read_xlsx("./data/Nepal - Assessment registry - Rasuwa Flood.xlsx", skip = 3) |> 
+  setNames(c("lead_organisation", "participating_organisation", 
+             "assessment", "description", "sector", 
+             "province", "district", "municipality", "ward", 
+             "representative_at_level", "status", "status_update", 
+             "data_collection_method", "availability_report", "email_contact", 
+             "permission_public", "report_link", "dashboard_link", 
+             "comments"))
+
+register |> 
+  mutate(sector = str_remove_all(sector, "Protection / Child Protection|Protection / Child Protection, Protection / GBV,|Health / SRH,|Protection / GBV,|Multi-Sector")) |> 
+  separate_longer_delim(sector, delim = "/") |> 
+  separate_longer_delim(sector, delim = ",") |> 
+  filter(sector != "") |> 
+  count(sector)
+  
+  separate_longer_delim(province, delim = ",") |> 
+  separate_longer_delim(district, delim = ",") |> 
+  separate_longer_delim(municipality, delim = ",") |> 
+  count(assessment, municipality, sector) |> 
+  arrange(desc(n))
 ```
 
