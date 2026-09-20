@@ -1,0 +1,16 @@
+district,adm2_pcode,municipality,adm3_pcode,affected_wards,number_of_affected_wards,population_in_affected_wards_census_2021,households_in_affected_wards_census_2021,impacted_buildings,CCCM_individuals_reached,ETC_individuals_reached,Early Recovery_individuals_reached,Education_individuals_reached,Food Security_individuals_reached,Health & Nutrition_individuals_reached,Logistics_individuals_reached,Multi-purpose Cash_individuals_reached,Protection_individuals_reached,Shelter_individuals_reached,WASH_individuals_reached
+Nuwakot,NP0328,Bidur,NP0328301,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12",11,54144,13817,3026,2001,0,0,12541,19129,5967,1008,0,12172,23740.27,68710.6
+Nuwakot,NP0328,Belkotgadhi,NP0328302,"5, 7, 8",3,10585,2662,212,242,0,0,0,1603,868,NA,NA,1584,1818,345
+Nuwakot,NP0328,Kispang,NP0328402,5,1,6137,1704,696,56,NA,NA,0,728,465,0,NA,533,606,393
+Nuwakot,NP0328,Tarakeshwor,NP0328403,"2, 4",2,4552,1266,43,NA,NA,NA,0,0,0,NA,NA,357,475,0
+Rasuwa,NP0329,Aamachhodingmo,NP0329401,"1, 2, 4, 5",4,5320,1314,57,NA,NA,NA,NA,4020,0,NA,NA,16,0,NA
+Rasuwa,NP0329,Gosaikunda,NP0329402,"1,2, 3, 5, 6",5,6542,1645,1043,NA,0,0,0,9312,0,0,NA,522,2199,40436
+Rasuwa,NP0329,Uttargaya,NP0329403,"1, 2, 3, 4, 5",5,8555,2188,567,730,0,0,218,7647,599,389,NA,1266,12508.5,5657
+Rasuwa,NP0329,Kalika,NP0329404,1,1,7143,1724,112,6,NA,0,NA,1194,24,NA,0,480,415,62
+Dhading,NP0330,Siddhalek,NP0330407,"3,4, 6, 7",4,9757,2405,228,NA,NA,NA,71,NA,0,NA,NA,1078,0,NA
+Dhading,NP0330,Benighat Rorang,NP0330408,"3, 5, 7, 9,10",5,19134,4517,1037,NA,NA,NA,377,NA,0,0,0,25,5050,1150
+Dhading,NP0330,Gajuri,NP0330409,"1, 2, 5, 6",4,18225,4543,107,292,NA,NA,471,2698,84,184,NA,1243,1532,522
+Dhading,NP0330,Galchhi,NP0330410,"1, 2, 4, 6, 8",5,19507,4873,79,123,NA,NA,819,1680,74,NA,0,918,2070,14567
+Chitawan,NP0335,Ichchha Kamana,NP0335401,"3,4, 5, 6",4,13829,3078,100,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+Gorkha,NP0436,Shahid Lakhan,NP0436408,"3, 4",2,6061,1604,15,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+Gorkha,NP0436,Gandaki,NP0436409,"1, 2, 6, 7, 8",5,15110,3759,248,NA,NA,NA,NA,NA,0,NA,NA,NA,0,NA

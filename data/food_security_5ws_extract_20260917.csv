@@ -1,0 +1,33 @@
+province,district,municipality,ward,adm1_pcode,adm2_pcode,adm3_pcode,individuals_targeted_max,individuals_targeted_sum,individuals_reached_max,individuals_reached_sum,num_agencies,agencies
+Bagmati,Dhading,Gajuri,NA,NP03,NP0330,NP0330409,2098,2698,2098,2698,1,WFP
+Bagmati,Dhading,Galchhi,8,NP03,NP0330,NP0330410,500,500,500,500,1,DCA
+Bagmati,Dhading,Galchhi,NA,NP03,NP0330,NP0330410,1180,1180,1180,1180,1,WFP
+Bagmati,Dhading,NA,NA,NP03,NP0330,NA,600,600,666,666,NA,NA
+Bagmati,Kathmandu,Kathmandu,2,NP03,NP0327,NP0327101,0,0,100,500,1,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,4,NP03,NP0327,NP0327101,0,0,12,120,1,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,15,NP03,NP0327,NP0327101,0,0,50,200,1,Maiti Nepal
+Bagmati,Nuwakot,Belkotgadhi,7,NP03,NP0328,NP0328302,104,104,699,803,2,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,NA,NP03,NP0328,NP0328302,800,800,800,800,2,"CARE, CDC"
+Bagmati,Nuwakot,Bidur,1,NP03,NP0328,NP0328301,0,0,253,2024,1,Maiti Nepal
+Bagmati,Nuwakot,Bidur,2,NP03,NP0328,NP0328301,174,1787,240,2300,2,"WCK, CSRC"
+Bagmati,Nuwakot,Bidur,3,NP03,NP0328,NP0328301,0,0,60,540,1,Maiti Nepal
+Bagmati,Nuwakot,Bidur,7,NP03,NP0328,NP0328301,5000,5000,900,900,2,"WVI, GNN"
+Bagmati,Nuwakot,Bidur,NA,NP03,NP0328,NP0328301,6992,14715,6992,13365,8,"Adara, FAO, KOSHISH, MC, SCoN, UN Women, ROYM, WFP"
+Bagmati,Nuwakot,Kispang,5,NP03,NP0328,NP0328402,36,72,36,72,1,GNI
+Bagmati,Nuwakot,Kispang,NA,NP03,NP0328,NP0328402,656,656,656,656,1,WFP
+Bagmati,Nuwakot,Tarakeshwor,7,NP03,NP0328,NP0328403,0,0,0,0,2,"PLAN, DEPROSC"
+Bagmati,Nuwakot,NA,NA,NP03,NP0328,NA,1100,1100,1100,2100,NA,NA
+Bagmati,Rasuwa,Aamachhodingmo,NA,NP03,NP0329,NP0329401,4020,4020,4020,4020,1,WFP
+Bagmati,Rasuwa,Gosaikunda,2,NP03,NP0329,NP0329402,0,0,0,0,1,SCoN
+Bagmati,Rasuwa,Gosaikunda,5,NP03,NP0329,NP0329402,0,0,546,546,3,"PLAN, DEPROSC, SCoN"
+Bagmati,Rasuwa,Gosaikunda,6,NP03,NP0329,NP0329402,0,0,0,0,2,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Gosaikunda,NA,NP03,NP0329,NP0329402,3959,8766,3959,8766,4,"AWO, CARDSN, SCoN, WFP"
+Bagmati,Rasuwa,Kalika,NA,NP03,NP0329,NP0329404,658,1204,648,1194,5,"PLAN, DEPROSC, WFP, WHH, RRN"
+Bagmati,Rasuwa,Naukunda,NA,NP03,NP0329,NP0329405,450,450,393,393,2,"WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,1,NP03,NP0329,NP0329403,800,800,796,796,2,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,2,NP03,NP0329,NP0329403,398,398,385,385,2,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,3,NP03,NP0329,NP0329403,398,398,0,0,2,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,4,NP03,NP0329,NP0329403,0,0,0,0,2,"Fastenaktion, CSRC"
+Bagmati,Rasuwa,Uttargaya,5,NP03,NP0329,NP0329403,874,2439,874,2099,5,"ActionAid, WJR, CSRC, PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,NA,NP03,NP0329,NP0329403,5000,13308,1260,4367,13,"CARE, CSRC, FAO, LUMANTI, PIN, PLAN, DEPROSC, UN Women, ROYM, WHH, RRN, WVI, KIRDARC"
+Bagmati,Rasuwa,NA,NA,NP03,NP0329,NA,1315,1315,1315,1315,NA,NA

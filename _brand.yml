@@ -1,0 +1,15 @@
+# Source - https://stackoverflow.com/a
+# Posted by Jan
+# Retrieved 2025-12-02, License - CC BY-SA 4.0
+
+color:
+  palette:
+    blue: "#ddeaf1"
+  background: white
+logo:
+  medium:
+    light: brand/combined_logos_stacked.png
+    dark: brand/combined_logos_stacked.png
+
+# Honestly, the problem is that I still don't know how to change 
+# the background colour any way besides using html on the qmd itself

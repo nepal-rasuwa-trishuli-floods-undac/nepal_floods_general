@@ -1,0 +1,49 @@
+project:
+  type: website
+  output-dir: docs
+  render: 
+    - index.qmd
+
+website:
+  navbar:
+    title: "Nepal Rasuwa Floods"
+    logo: brand/combined_logos_stacked.png
+    logo-href: "https://reliefweb.int/disaster/ff-2026-000162-npl"
+    left:
+        - href: "https://drive.google.com/drive/folders/1_ud5bJy5DrL6t8ZdaIPZbYvGNPt5a3-q?usp=sharing"
+          text: IM Products
+        - href: index.qmd
+          text: Response Analysis
+        
+    right:
+        - icon: github
+          href: "https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general"
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+    toc-location: left
+    toc-depth: 4
+    toc-expand: true
+    code-fold: true
+    code-tools: true
+    code-overflow: wrap
+    code-summary: "Show code"
+    page-layout: full
+    self-contained-math: true
+    embed-resources: true
+    link-external-icon: true
+    link-external-newwindow: true
+    html-table-processing: none
+  
+
+editor: source
+
+brand: brand/_brand.yml
+
+
+

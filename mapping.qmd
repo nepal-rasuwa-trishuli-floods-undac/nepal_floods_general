@@ -68,7 +68,8 @@ affected_municipalities_wards <- read_xls("./data/Affected_wardsv2.xls") |>
 
 wards <- st_read("./data/shapefiles/npl_admn_ad4_py_s1_ocha_hp_wards.shp") |> 
   rename(ward = NEW_WARD_N) |> 
-  janitor::clean_names() 
+  janitor::clean_names() |> 
+  mutate(district = str_to_title(district))
 
 affected_wards <- read_xls("./data/Affected_wardsV2.xls") |> 
   janitor::clean_names()
@@ -110,9 +111,9 @@ municipal_long <- municipal_damage_losses |>
                names_to = "variable", 
                values_to = "value") 
 
-consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation 20260911.xlsx",
-                          skip = 5,
-                          sheet = "Compiled_Data") |> 
+consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY) 20260917.xlsx", 
+                          skip = 5, 
+                          sheet = "Compiled_Data") |>
   janitor::clean_names() |> 
   mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
   mutate_at(c("province", "district", "municipality"), ~ str_trim(.)) |> 
@@ -143,6 +144,7 @@ consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation 20260911.xlsx",
     str_detect(municipality, "Devghat") ~ "Devghat", 
     str_detect(municipality, "Gandaki") ~ "Gandaki", 
     str_detect(municipality, "Belkotgadhi") ~ "Belkotgadhi", 
+    str_detect(municipality, "Langtang") ~ "Langtang",
     municipality == "Aanbukhaireni" ~ "Aanbu Khaireni",
     TRUE ~ municipality)) |> 
   left_join(
@@ -162,7 +164,7 @@ consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation 20260911.xlsx",
     by = c("adm1_pcode", "adm2_pcode", "municipality" = "adm3_name")
   ) |> 
   rename(individuals_reached = total_number_of_beneficiaries_reached_people_individuals) |> 
-  filter(disaster_response_plan == "Rasuwa Flood Response") 
+  filter(disaster_response_plan == "Rasuwa Flood Response")
 
 # census_individual <- read_csv("./data/nepal_census2021_ward_level_individual_tables_bagmati_gandaki_long.csv")
 
@@ -172,6 +174,19 @@ differences <- read_csv("./data/differences_between_flash_appeal_and_rdna_affect
 damage_points <- read_xlsx("./data/Consolidated Damage.xlsx") |> 
   clean_names() |> 
   rename(x = long, y = lat)
+
+differences <- read_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv")
+
+census_flat <- cbind(
+  read_csv("./data/nepal_census2021_ward_level_household_tables_bagmati_gandaki_flat.csv") |> 
+    mutate(match1 = paste0(adm2_pcode, adm3_pcode, ward)),
+  read_csv("./data/nepal_census2021_ward_level_individual_tables_bagmati_gandaki_flat.csv") |> 
+    mutate(match2 = paste0(adm2_pcode, adm3_pcode, ward)) |> 
+    select(-c(province:ward), -total_households, -rdna_affected)
+)
+
+affected_municipalities_17 <- read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx") |> 
+  clean_names()
 ```
 
 
@@ -195,9 +210,6 @@ holding_centres_complete <- holding_centres_join |>
   ) |> 
   clean_names()
 
-  st_coordinates(geometry)
-  glimpse()
-  
 ```
 
 ```{r}
@@ -551,7 +563,7 @@ BB####
 ") + 
   plot_annotation(
     title = "Affected wards and their populations, mentioned in the Flash Appeal and the Rapid Disaster Needs Assessment", 
-    subtitle = "Ward numbers and their 2026 population projections are labelled. Flood Extent.", 
+    subtitle = "Ward numbers and their 2026 population projections are labelled.", 
     caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners.", 
     theme = theme(
       plot.title = element_text(size = 20, face = 'bold'))
@@ -590,11 +602,6 @@ differences |>
                                        "")), 
             aes(label = adm3_label)
           ) + 
-  # Affected wards 
-  geom_sf(aes(fill = rdna_affected), alpha = .7, colour = NA) +
-  scale_fill_manual(values = c("Affected" = "#c5dfef"), 
-    na.value = "grey97", 
-    na.translate = FALSE) +
   geom_sf(data = river, colour = "#002e6e", fill = "#002e6e", alpha = .5) +
   # Damage points 
   geom_point(data = damage_points, 
@@ -633,14 +640,484 @@ ggsave("./plots/affected_wards_infrastructure.png", height = 11.7, width = 16.5,
 
 ```
 
+# Gaps
 
 
-## Humanitarian snapshot map
+## Ward
+
+### Sum individuals
 
 ```{r}
-municipal_damage_losses |> 
-  count(district)
+ward_reached_sum <- consolidated |> 
+  filter(response_modality != "Awareness/Advocacy") |> 
+  filter(is.finite(individuals_reached)) |> 
+  filter(ward < 20) |> 
+  group_by(adm3_pcode, ward) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE)) |> 
+  full_join(
+    differences |> 
+      select(adm3_pcode, ward, flash_appeal_affected, rdna_affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  # This is because we don't have the countrywide tables
+  mutate(flash_appeal_affected = ifelse(flash_appeal_affected == 1, "Affected", NA_character_)) |>
+  right_join(
+    wards, 
+    by = c("adm3_pcode", "ward")
+  )  |> 
+  mutate(ward_label = as.character(ward), 
+         ward_label = ifelse(
+           !is.na(flash_appeal_affected) | individuals_reached > 0, 
+           ward_label,
+           ""
+         )) |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = individuals_reached), colour = "grey80") +
+  geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha")),
+                 aes(label = adm3_name),
+              alpha = .25) +
+  
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = "grey97") +
+    # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey80", 
+      na.translate = FALSE) + 
+  coord_sf(xlim = c(84.4, 85.6), ylim = c(27.63, 28.35)) + 
+  labs(x = "", y = "", 
+       fill = "Beneficiary\nFrequencies",
+       colour = "Flash\nAppeal", 
+       title = "Beneficiary Frequencies Reached by 5W Activities in Flash Appeal Areas (With Double Counting)", 
+       subtitle = "33.5% of beneficiary frequencies were reported at ward level.") +
+  theme(plot.title = element_text(size = 20, face = "bold")) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+  )
+
+ggsave("./plots/ward_reached_sum.png", ward_reached_sum, height = 11.7, width = 16.5, units = "in")  
 ```
+
+### % of ward population
+
+```{r}
+ward_gaps <- consolidated |> 
+  filter(response_modality != "Awareness/Advocacy") |> 
+  filter(is.finite(individuals_reached)) |> 
+  filter(ward < 20) |> 
+  group_by(adm3_pcode, ward) |> 
+  summarise(individuals_reached = max(individuals_reached, na.rm = TRUE)) |> 
+  full_join(
+    differences |> 
+      select(adm3_pcode, ward, flash_appeal_affected, rdna_affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(read_csv("./data/population_projections_2026_affected_wards_flat.csv") |> 
+              select(adm3_pcode, ward, population_2026 = projection_2026_population_total), 
+            by = c("adm3_pcode", "ward")) |> 
+  left_join(
+    census_flat |> 
+      select(population_2021 = population_total, adm3_pcode, ward),
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  # This is because we don't have the countrywide tables
+  mutate(population = ifelse(!is.na(population_2026), population_2026, population_2021),
+         pc_reached = individuals_reached / population, 
+         flash_appeal_affected = ifelse(flash_appeal_affected == 1, "Affected", NA_character_)) |>
+  right_join(
+    wards, 
+    by = c("adm3_pcode", "ward")
+  )  |> 
+  mutate(ward_label = as.character(ward), 
+         ward_label = ifelse(
+           !is.na(flash_appeal_affected) | individuals_reached > 0, 
+           ward_label,
+           ""
+         )) |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = pc_reached), colour = "grey80") +
+  geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha")),
+                 aes(label = adm3_name),
+              alpha = .25) +
+  
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = percent, na.value = "grey97") +
+    # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey80", 
+      na.translate = FALSE) + 
+  coord_sf(xlim = c(84.4, 85.6), ylim = c(27.63, 28.35)) + 
+  labs(x = "", y = "", 
+       fill = "% of Ward\nPopulation\nReached",
+       colour = "Flash\nAppeal", 
+       title = "Percentage of Ward Population Reached by 5W Activities in Flash Appeal Areas (No Double Counting)", 
+       subtitle = "Ward-level reached is the SUM of any activity in the ward; 33.5% of beneficiary frequencies were reported at ward level.") +
+  theme(plot.title = element_text(size = 20, face = "bold")) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+  )
+
+ggsave("./plots/ward_gaps.png", ward_gaps, height = 11.7, width = 16.5, units = "in")  
+```
+
+```{r}
+ward_gaps_sum <- consolidated |> 
+  filter(response_modality != "Awareness/Advocacy") |> 
+  filter(is.finite(individuals_reached)) |> 
+  filter(ward < 20) |> 
+  group_by(adm3_pcode, ward) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE)) |> 
+  full_join(
+    differences |> 
+      select(adm3_pcode, ward, flash_appeal_affected, rdna_affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(read_csv("./data/population_projections_2026_affected_wards_flat.csv") |> 
+              select(adm3_pcode, ward, population_2026 = projection_2026_population_total), 
+            by = c("adm3_pcode", "ward")) |> 
+  left_join(
+    census_flat |> 
+      select(population_2021 = population_total, adm3_pcode, ward),
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  # This is because we don't have the countrywide tables
+  mutate(population = ifelse(!is.na(population_2026), population_2026, population_2021),
+         pc_reached = individuals_reached / population, 
+         flash_appeal_affected = ifelse(flash_appeal_affected == 1, "Affected", NA_character_)) |>
+  right_join(
+    wards, 
+    by = c("adm3_pcode", "ward")
+  )  |> 
+  mutate(ward_label = as.character(ward), 
+         ward_label = ifelse(
+           !is.na(flash_appeal_affected) | individuals_reached > 0, 
+           ward_label,
+           ""
+         )) |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = pc_reached), colour = "grey80") +
+  geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha")),
+                 aes(label = adm3_name),
+              alpha = .25) +
+  geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = percent, na.value = "grey97") +
+    # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey80", 
+      na.translate = FALSE) + 
+  coord_sf(xlim = c(84.4, 85.6), ylim = c(27.63, 28.35)) + 
+  labs(x = "", y = "", 
+       fill = "% of Ward\nPopulation\nReached",
+       colour = "Flash\nAppeal", 
+       title = "Percentage of Ward Population Reached by 5W Activities in Flash Appeal Areas (No Double Counting)", 
+       subtitle = "To avoid double counting, ward-level reached is the MAX of any activity in the ward; 33.5% of beneficiary frequencies were reported at ward level.") +
+  theme(plot.title = element_text(size = 20, face = "bold")) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+  )
+
+ggsave("./plots/ward_gaps_sum.png", ward_gaps_sum, height = 11.7, width = 16.5, units = "in")  
+```
+
+### Sectors
+
+```{r}
+ward_summary <- read_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv") |> 
+  select(-different) |> 
+  left_join(impacted_buildings |> 
+      select(adm3_pcode, ward, impacted_buildings), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(
+    read_csv("./data/nepal_census2021_ward_level_household_tables_bagmati_gandaki_flat.csv") |> 
+      select(adm3_pcode, ward, 
+             total_households 
+             ), 
+    by = c("adm3_pcode", "ward")
+  ) |>
+  left_join(
+    consolidated |> 
+    filter(response_modality != "Awareness/Advocacy") |> 
+    filter(!is.na(sector)) |> 
+    mutate(sector = ifelse(str_detect(sector, "Protection"), "Protection", sector), 
+           sector = ifelse(str_detect(sector, "Health|Nutrition"), "Health & Nutrition", sector)) |> 
+    filter(ward < 20 & individuals_reached > 0) |> 
+    group_by(adm3_pcode, ward, sector) |> 
+    summarise(individuals_reached = sum(individuals_reached), .groups = "drop") |> 
+    pivot_wider(names_from = sector, 
+                values_from = individuals_reached, 
+                names_glue = "{sector}_{.value}"), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  clean_names() |> 
+  rowwise() |> 
+  mutate(num_sectors = 
+           sum(!is.na(across(c(food_security_individuals_reached:logistics_individuals_reached)))), 
+         num_sectors = ifelse(num_sectors == 0, NA_real_, num_sectors)) |> 
+  ungroup() 
+```
+
+```{r}
+ward_sectors <- ward_summary |>
+  # This is because we don't have the countrywide tables
+  mutate(flash_appeal_affected = ifelse(flash_appeal_affected == 1, "Affected", NA_character_)) |>
+  right_join(
+    wards, 
+    by = c("adm3_pcode", "ward")
+  )  |> 
+  mutate(ward_label = as.character(num_sectors), 
+         ward_label = ifelse(
+           !is.na(flash_appeal_affected) | !is.na(rdna_affected), 
+           num_sectors,
+           ""
+         )) |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = num_sectors), colour = "grey80") +
+  geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha")),
+                 aes(label = adm3_name),
+              alpha = .25) +
+  
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = "grey97") +
+    # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey80", 
+      na.translate = FALSE) + 
+  coord_sf(xlim = c(84.4, 85.6), ylim = c(27.63, 28.35)) + 
+  labs(x = "", y = "", 
+       fill = "Number\nof Sectors",
+       colour = "Flash\nAppeal", 
+       title = "Number of Sectors/Clusters present in Flash Appeal Areas", 
+       subtitle = "33.5% of beneficiary frequencies were reported at ward level.") +
+  theme(plot.title = element_text(size = 20, face = "bold")) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+  )
+
+ggsave("./plots/ward_sectors.png", ward_sectors, height = 11.7, width = 16.5, units = "in")  
+```
+
+
+## Impacted buildings
+
+```{r}
+impacted_buildings |> 
+    left_join(wards_joined, 
+    by = c("adm2_pcode", "adm3_pcode", "ward")) |>
+    filter(adm2_en == district_name) |>
+    mutate(ward_label = ifelse(!is.na(impacted_buildings), 
+                                      paste0(ward, "\n", impacted_buildings))) |> 
+    st_as_sf() |> 
+    ggplot() +
+    geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+    geom_sf_text(data = adm3 |> filter(adm2_name == district_name), 
+              aes(label = adm3_name),
+              alpha = .5
+            ) +
+    # Ward populations and affected wards
+    geom_sf(aes(colour = rdna, fill = impacted_buildings), linewidth = .5, alpha = .8) +
+    # River
+    geom_sf(data = river, colour = "#002e6e", fill = "#002e6e", alpha = .6) +
+    # Settlements
+    geom_sf(data = settlements_holding_centre |> filter(adm2_en == district_name) |>  
+              mutate(fclass = str_to_title(fclass), 
+                     fclass = fct_relevel(fclass, c("Hamlet", "Village", "Suburb", "Town", 
+                                                    "Holding Centre"))), 
+            aes(geometry = geometry, shape = fclass), colour = "#ffc800", alpha = .5) +
+    geom_text(data = capitals |> filter(district == district_name), aes(x = x, y = y, label = name), 
+            size = 2.5, colour = "#ed1847", alpha = .8) +
+    scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey97", 
+      na.translate = FALSE) +
+    scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma) +
+    scale_shape_manual(values = c("Hamlet" = 20, 
+                                  "Village" = 16, 
+                                  "Suburb" = 15, 
+                                  "Town" = 17, 
+                                  "Holding Centre" = 7)) +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  # coord_sf(xlim = c(85.1, 85.8), ylim = c(27.95, 28.4), expand = TRUE) +
+  labs(x = "", y = "", 
+       title = paste0("Impacted buildings in ", district_name), 
+      # subtitle = "1,779 buildings impacted in Rasuwa. District Headqaurters labelled in red.",
+      # Don't feel like making the subtitle programmatic
+       shape = "Settlement\nType",
+       fill = "Impacted\nBuildings", 
+       colour = "RDNA", 
+       caption = "Source: NDRRMA Rapid Disaster Needs Assessment") +
+    guides(fill = guide_colorbar(override.aes = list(alpha = 1),
+                                 order = 1), 
+           shape = guide_legend(override.aes = list(alpha = 1),
+                                order = 2), 
+           colour = guide_legend(order = 3))
+```
+
+```{r}
+consolidated |> 
+  filter(response_modality != "Awareness/Advocacy") |> 
+  mutate(has_ward = ifelse(ward < 20 & !is.na(ward), "yes", "no")) |> 
+  group_by(has_ward) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE))  %>%
+  {sum(.$individuals_reached, na.rm = TRUE)}
+```
+
+```{r}
+affected_municipalities_17 |> glimpse()
+```
+## Municipal
+
+Municipal-level analyses are not helpful for operational-level planning or advocacy purposes. 
+
+Additionally, a municipality is too large of an administrative area for this response, which is localised around the affected wards in the damage corridor along the river. 
+
+
+
+```{r}
+municipal_gaps_max <- consolidated |> 
+  filter(response_modality != "Awareness/Advocacy") |> 
+  filter(is.finite(individuals_reached)) |> 
+  group_by(adm3_pcode) |> 
+  summarise(individuals_reached = max(individuals_reached, na.rm = TRUE)) |> 
+  full_join(
+    affected_municipalities_17 |> 
+      select(adm3_pcode, estimated_affected_population), 
+    by = "adm3_pcode"
+  ) |> 
+  mutate(flash_appeal_affected = ifelse(!is.na(estimated_affected_population), 
+                                        "Affected", 
+                                        NA_character_)) |> 
+  replace_na(list(individuals_reached = 0)) |> 
+  mutate(pc_reached = case_when(
+    !is.na(estimated_affected_population) ~ individuals_reached / estimated_affected_population, 
+    is.na(estimated_affected_population) & !is.na(individuals_reached) ~ 1, 
+    TRUE ~ NA_real_
+  )) |> 
+  right_join(
+    adm3, 
+    by = "adm3_pcode")  |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = pc_reached), colour = "grey80") +
+  geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha") | 
+                          adm3_name == "Kathmandu"),
+                 aes(label = adm3_name),
+               colour = "grey80", 
+              alpha = .75) +
+  geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = percent, na.value = "grey97",
+                        trans = "log10") +
+    # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey80", 
+      na.translate = FALSE) + 
+  coord_sf(xlim = c(84.4, 85.7), ylim = c(27.63, 28.35)) + 
+  labs(x = "", y = "", 
+       fill = "% of Affected\nPopulation\nReached",
+       colour = "Flash\nAppeal", 
+       title = "Percentage of Affected Population Reached by 5W Activities in Flash Appeal Areas, by Municipality (No Double Counting)", 
+       subtitle = "To avoid double counting, municipal-level reached is the MAX of any activity in the ward.") +
+  theme(plot.title = element_text(size = 18, face = "bold")) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+  )
+
+ggsave("./plots/municipal_gaps_max.png", municipal_gaps_max, height = 11.7, width = 16.5, units = "in")  
+  
+```
+
+## Humanitarian snapshot map
 
 
 ```{r}
