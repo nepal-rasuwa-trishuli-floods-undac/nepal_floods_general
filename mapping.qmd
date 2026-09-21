@@ -703,7 +703,7 @@ ward_reached_sum <- consolidated |>
                  aes(label = adm3_name),
               alpha = .25) +
   
-  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = "grey97") +
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = "grey99") +
     # River
   geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
   geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
@@ -720,7 +720,7 @@ ward_reached_sum <- consolidated |>
        fill = "Beneficiary\nFrequencies",
        colour = "Flash\nAppeal", 
        title = "Beneficiary Frequencies Reached by 5W Activities in Flash Appeal Areas (With Double Counting)", 
-       subtitle = "33.5% of beneficiary frequencies were reported at ward level.") +
+       subtitle = "33.5% of beneficiary frequencies were reported at ward level. Ward numbers listed.") +
   theme(plot.title = element_text(size = 20, face = "bold")) +
   
   combined_logos +
@@ -863,7 +863,7 @@ ward_gaps_sum <- consolidated |>
                  aes(label = adm3_name),
               alpha = .25) +
   geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
-  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = percent, na.value = "grey97") +
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = percent, na.value = "grey98") +
     # River
   geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
   geom_shadowtext(
@@ -959,7 +959,7 @@ ward_sectors <- ward_summary |>
                  aes(label = adm3_name),
               alpha = .25) +
   
-  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = "grey97") +
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = "grey99") +
   # River
   geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
   geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
@@ -976,7 +976,7 @@ ward_sectors <- ward_summary |>
        fill = "Number\nof Sectors",
        colour = "Flash\nAppeal", 
        title = "Number of Sectors/Clusters present in Flash Appeal Areas", 
-       subtitle = "33.5% of beneficiary frequencies were reported at ward level.") +
+       subtitle = "33.5% of beneficiary frequencies were reported at ward level. Number of sectors listed.") +
   theme(plot.title = element_text(size = 20, face = "bold")) +
   
   combined_logos +
@@ -995,11 +995,6 @@ ggsave("./plots/ward_sectors.png", ward_sectors, height = 11.7, width = 16.5, un
 ```
 
 ## Clustering
-
-```{r}
-census_flat |> 
-  select(contains("house_quality"))
-```
 
 
 ```{r}
@@ -1066,9 +1061,6 @@ clustered <- to_cluster |>
   )
 ```
 
-```{r}
-
-```
 
 
 ```{r}
@@ -1122,8 +1114,10 @@ wards_clustered <- clustered |>
        fill = "Group",
        colour = "Flash\nAppeal",
        title = "Affected wards by Sub-context", 
-       subtitle = "K-means clustering was used to split the affected wards into 4 groups based on flood damage and demographic and vulnerability indicators") +
+       subtitle = "K-means clustering was used to split the affected wards into 4 groups based on flood damage and demographic and vulnerability indicators. Ward numbers listed.") +
   theme(plot.title = element_text(size = 20, face = "bold")) +
+  guides(fill = guide_legend(order = 1), 
+         colour = guide_legend(order = 2)) +
   
   combined_logos +
 
@@ -1348,10 +1342,10 @@ municipal_gaps_max <- consolidated |>
                                          "Chitawan", "Tanahu", "Gorkha") | 
                           adm3_name == "Kathmandu"),
                  aes(label = adm3_name),
-               colour = "grey80", 
+               colour = "grey50", 
               alpha = .75) +
   geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
-  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = percent, na.value = "grey97",
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = percent, na.value = "grey99",
                         trans = "log10") +
     # River
   geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
@@ -1363,7 +1357,7 @@ municipal_gaps_max <- consolidated |>
        fill = "% of Affected\nPopulation\nReached",
        colour = "Flash\nAppeal", 
        title = "Percentage of Affected Population Reached by 5W Activities in Flash Appeal Areas, by Municipality (No Double Counting)", 
-       subtitle = "To avoid double counting, municipal-level reached is the MAX of any activity in the ward.") +
+       subtitle = "To avoid double counting, municipal-level reached is the MAX of any activity in the municipality. Areas with no affected population are marked as 100% reached.") +
   theme(plot.title = element_text(size = 18, face = "bold")) +
   
   combined_logos +

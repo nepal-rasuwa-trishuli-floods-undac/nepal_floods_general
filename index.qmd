@@ -772,7 +772,7 @@ The affected wards have been been clustered into 4 groups:
 
 **D**: Less impacted, entirely rural wards with high agricultural employment. 
 
-**A** and **B** should be prioritised, with different programme sets given their greatly different population densities and rates of urbanisation. The types of reconstruction and infrastructure needs in both areas will also vary greatly. 
+**A** and **B** should be prioritised, with different programme sets, given their greatly different population densities and rates of urbanisation. The types of reconstruction and infrastructure needs in both areas will also vary greatly. 
 
 Activities in **C** should be seek seek to bridge recovery with longer-term development and poverty alleviation interventions given high percentage of poor persons in these areas. 
 
@@ -783,6 +783,22 @@ These groups are plotted in the map below:
 [![Click map for full-size version](./plots/wards_clustered.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/wards_clustered.png)
 
 <br>
+
+The specific indicators used in the clustering were:
+
+  + Total population
+  + Population density
+  + Sex ratio
+  + Average household size
+  + Total dependency ratio
+  + % Rural
+  + Disability prevalence rate
+  + Agricultural employment % 
+  + % Poorest quintile
+  + % Inadequate house quality
+  + % Unimproved drinking water
+  + % Unimproved sanitation
+  + Impacted buildings
 
 The dataset containing these groups may be downloaded [here](https://drive.google.com/drive/folders/1dHDzi-gLe0ldOduwGwVUUcas7Qar2CEK?usp=drive_link). 
 
