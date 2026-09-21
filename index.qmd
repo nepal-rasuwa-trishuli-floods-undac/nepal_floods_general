@@ -752,7 +752,7 @@ clustered |>
          `Impacted Buildings` = impacted_buildings, 
          Population) |> 
   
-  kable(caption = "K-means Clusters and Means of Selected Indicators") |> 
+  kable(caption = "K-means Clusters, Means of Selected Indicators and Total Ward Population") |> 
   kable_classic(full_width = T) |> 
   kable_styling(bootstrap_options = "striped")
 
