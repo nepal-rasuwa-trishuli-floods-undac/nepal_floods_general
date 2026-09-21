@@ -381,13 +381,13 @@ consolidated |>
                names_to = "variable",
                values_to = "value") |> 
   mutate(variable = case_when(
-    variable == "estimated_affected_population" ~ "Affected Population", 
+    variable == "estimated_affected_population" ~ "Affected Population (Flash Appeal)", 
     variable == "impacted_buildings" ~ "Impacted Buildings",
     variable == "individuals_reached" ~ "Individuals Reached (5Ws)", 
     TRUE ~ NA_character_
   )) |> 
   mutate(variable = fct_relevel(variable, c("Impacted Buildings", 
-                                            "Affected Population", 
+                                            "Affected Population (Flash Appeal)", 
                                             "Individuals Reached (5Ws)"))) |> 
   ggplot(aes(x = fct_relevel(municipality, 
                                     c("Bidur", "Gosaikunda", "Benighat Rorang", "Kispang", "Uttargaya",
@@ -485,7 +485,7 @@ affected_reached_summary_table |>
 
 <br>
 
-The NDRRMA's stated affected population of 32,963 is solely derived from the number of persons affected by impacted buildings. However, the calculations for the Flash Appeal was calculated backwards from the total population of the affected wards, and took into consideration factors such as the incidence of poverty, chronic diseases and disabilities, but did not take into account the varying levels of damage across and applied a flat percentage across all affected areas, leading to overly small caseloads for some highly-impacted areas and relatively larger caseloads for some less impacted areas further downstream. 
+The NDRRMA's stated affected population of 32,963 is solely derived from the number of persons affected by impacted buildings. However, the calculations for the Flash Appeal was calculated backwards from the total population of the affected wards -- and took into consideration factors such as the incidence of poverty, chronic diseases and disabilities -- but did not take into account the varying levels of damage across and applied a flat percentage across all affected areas, leading to overly small caseloads for some highly-impacted areas and relatively larger caseloads for some less impacted areas further downstream. 
 
 This is especially evident when we review 5Ws reached as a percentage of the Flash Appeal affected population in the plot below. 
 
@@ -509,7 +509,7 @@ A revision of the Estimated Affected Population for the Flash Appeal is recommen
 
 The ward is a more appropriate administrative level for analysis than the municipality. The municipalities of Bidur, Galchhi, Gosaikunda and Uttargaya are bisected by the Trishuli river and without ward-level data, it is not possible to tell which side of the river activities are occurring on. 
 
-The plot below shows the differences between the affected wards which were included in calculations of the affected population for the Flash Appeal and the wards where either household or agricultural damage was reported in the NDRRMA Rapid Disaster Needs Assessment. 
+The plot below shows the differences between the wards which were included in calculations of the affected population for the Flash Appeal and the wards where either household or agricultural damage was reported in the NDRRMA Rapid Disaster Needs Assessment. 
 
 <br>
 
@@ -548,7 +548,8 @@ consolidated |>
   group_by(ward_category) |> 
   summarise(individuals_reached = sum(individuals_reached)) |> 
   mutate(pc = round(individuals_reached / sum(individuals_reached) * 100, 2), 
-         individuals_reached = round(individuals_reached)) |> 
+         individuals_reached = round(individuals_reached), 
+         individuals_reached = format(individuals_reached, big.mark = ",")) |> 
   rename(`Ward category` = ward_category, 
          `Beneficiary frequencies (5Ws)` = individuals_reached, 
          `% of total` = pc) |> 
@@ -570,7 +571,7 @@ Admittedly, the IM function's revision of the 5Ws to require ward-level data cou
 
 Bearing these limitations mind, the plot below shows ward-level 5W achievements. We have used the sum of all beneficiary frequencies reached, without regard for double counting, as it gives a more accurate picture of how agencies have allocated their resources to date. 
 
-Immediately, anecdotal communications about the over-saturation of aid in Bidur are given weight. Additionally, affected wards upstream have also been clearly prioritised; WFP itself has said that they will not respond any further downstream than Dhading. 
+Immediately, anecdotal communications about the over-saturation of aid in Bidur are given weight. Although affected wards upstream have not been clearly prioritised over downstream ones, WFP itself has said that they will not respond any further downstream than Dhading. 
 
 <br>
 
