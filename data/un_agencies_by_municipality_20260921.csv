@@ -1,0 +1,16 @@
+adm2_pcode,district,adm3_pcode,municipality,num_un_agencies,un_agencies
+NP0328,Nuwakot,NP0328301,Bidur,9,"UNICEF, UNFPA, FAO, IOM, UN Women, UNDP, UNOPS, WFP, WHO"
+NP0328,Nuwakot,NP0328302,Belkotgadhi,3,"UNICEF, IOM, UNDP"
+NP0328,Nuwakot,NP0328402,Kispang,5,"FAO, IOM, UNICEF, UNFPA, WFP"
+NP0328,Nuwakot,NP0328403,Tarakeshwor,2,"IOM, UNICEF"
+NP0329,Rasuwa,NP0329401,Aamachhodingmo,2,"UNFPA, WFP"
+NP0329,Rasuwa,NP0329402,Gosaikunda,7,"UNFPA, FAO, IOM, UNDP, UNICEF, WFP, WHO"
+NP0329,Rasuwa,NP0329403,Uttargaya,6,"UNICEF, UNFPA, FAO, IOM, UN Women, UNDP"
+NP0329,Rasuwa,NP0329404,Kalika,4,"UNICEF, IOM, UNDP, WFP"
+NP0330,Dhading,NP0330407,Siddhalek,2,"IOM, UNICEF"
+NP0330,Dhading,NP0330408,Benighat Rorang,3,"UNICEF, IOM, WFP"
+NP0330,Dhading,NP0330409,Gajuri,5,"UNICEF, FAO, IOM, UNFPA, WFP"
+NP0330,Dhading,NP0330410,Galchhi,5,"UNICEF, FAO, IOM, UNFPA, WFP"
+NP0436,Gorkha,NP0436409,Gandaki,1,IOM
+NP0440,Tanahu,NP0440405,Aanbu Khaireni,1,IOM
+NP0440,Tanahu,NP0440406,Devghat,1,IOM

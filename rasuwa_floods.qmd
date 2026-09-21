@@ -2736,6 +2736,140 @@ st_crs(faded_country)
 
 # 5Ws
 
+## NDRRMA Summary 
+
+```{r}
+read_xlsx("./data/Nepal_Relief_items_20260919_Sudarat.xlsx") |>
+  glimpse()
+```
+
+```{r}
+consolidated |> 
+  filter(response_modality != "Awareness/Advocacy") |> 
+  group_by(province, district, municipality, sector, relief_items = relief_items_standard_in_kind_items, 
+           relief_item_unit) |> 
+  summarise(
+    number_of_relief_items_planned = sum(number_of_relief_items_planned, na.rm = TRUE), 
+    number_of_relief_items_distributed = sum(number_of_relief_items_distributed, na.rm = TRUE), 
+    households_targeted = sum(households_targeted, na.rm = TRUE), 
+    people_targeted = sum(people_targeted_individuals, na.rm = TRUE), 
+    households_reached = sum(households_reached, na.rm = TRUE), 
+    total_people_reached = sum(individuals_reached, na.rm = TRUE),
+    .groups = "drop") |> 
+  left_join(
+    consolidated |> 
+      mutate(duplicate = ifelse(implementing_partner == lead_agency, 1, 0)) |>
+      mutate(implementing_partner = ifelse(duplicate == 1, NA_character_, implementing_partner)) |>
+      pivot_longer(lead_agency:implementing_partner,
+                   names_to = "role",
+                   values_to = "agencies") |>
+      filter(!is.na(agencies)) |>
+      filter(!is.na(sector)) |>
+      rename(relief_items = relief_items_standard_in_kind_items) |>
+      distinct(province,
+               district,
+               municipality,
+               sector,
+               relief_items,
+               relief_item_unit,
+               agencies) |>
+      group_by(province,
+               district,
+               municipality,
+               sector,
+               relief_items,
+               relief_item_unit) |>
+      summarise(agencies = paste0(agencies, collapse = ", ")),
+    by = c("province", "district", "municipality", "sector", 
+           "relief_items", "relief_item_unit")
+  ) |> 
+  filter(!is.na(agencies)) |> 
+  glimpse()
+
+  writexl::write_xlsx("./data/sudarat_relief_items_table_20260921.xlsx")
+  write_csv("./data/sudarat_relief_items_table_20260921.csv")
+```
+
+```{r}
+consolidated |> 
+mutate(duplicate = ifelse(
+    implementing_partner == lead_agency, 
+    1, 0
+  )) |> 
+  mutate(implementing_partner = ifelse(
+    duplicate == 1, NA_character_, implementing_partner
+  )) |> 
+  pivot_longer(
+    lead_agency:implementing_partner, 
+    names_to = "role",
+    values_to = "agencies"
+  ) |> 
+  filter(!is.na(agencies)) |>  
+  filter(!is.na(sector)) |> 
+  rename(relief_items = relief_items_standard_in_kind_items) |> 
+  distinct(province, district, municipality, sector, relief_items, 
+           relief_item_unit, agencies) |>
+  group_by(
+    province, district, municipality, sector, relief_items, relief_item_unit
+  ) |> 
+  summarise(agencies = paste0(agencies, collapse = ", ")) 
+```
+
+
+```{r}
+consolidated |> glimpse()
+```
+
+
+```{r}
+consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Sep 2026.xlsx", 
+                          skip = 5, 
+                          sheet = "Compiled_Data") |> 
+  clean_names() |> 
+  filter(disaster_response_plan %in% c("Rasuwa Flood Response", "Rasuwa Flood Respnese")) |> 
+  mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
+  mutate_at(c("province", "district", "municipality"), ~ str_trim(.)) |> 
+  mutate(municipality = str_remove_all(municipality, " Gaunpalika"), 
+         municipality = str_remove_all(municipality, " Municipality")) |>
+  mutate(municipality = case_when(
+    municipality == "Benighat" ~ "Benighat Rorang", 
+    municipality == "Galchi Rural Municipality" ~ "Galchhi", 
+    municipality == "Gandaki" ~ "Gandaki", 
+    municipality == "Bheri Malika Municipality" ~ "Bheri Malika", 
+    municipality == "Nalgad Municipality" ~ "Nalgad", 
+    municipality == "Kathmandu Metropolitian City" ~ "Kathmandu", 
+    municipality == "Nagarjun Municipality" ~ "Nagarjun", 
+    municipality == "Belkotgadhi Municipality|Belkotgadhi Nagarpalika" ~ "Belkotgadhi", 
+    str_detect(municipality, "Langtang") ~ "Langtang", 
+    str_detect(municipality, "Bidur") ~ "Bidur", 
+    municipality == "Kispang Municipality" ~ "Kispang", 
+    municipality == "Tarkeshwor" ~ "Tarakeshwor", 
+    municipality == "Rasuwa Dao, Dhunche" ~ "Gosaikunda",
+    str_detect(municipality, "Devghat") ~ "Devghat", 
+    str_detect(municipality, "Gandaki") ~ "Gandaki", 
+    str_detect(municipality, "Belkotgadhi") ~ "Belkotgadhi", 
+    str_detect(municipality, "Langtang") ~ "Langtang",
+    municipality == "Aanbukhaireni" ~ "Aanbu Khaireni",
+    TRUE ~ municipality)) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_name, adm1_pcode), 
+    by = c("province" = "adm1_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_pcode, adm2_name, adm2_pcode), 
+    by = c("adm1_pcode", "district" = "adm2_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      filter(adm3_pcode != "NP0328596") |> 
+      distinct(adm2_pcode, adm3_name, adm3_pcode), 
+    by = c("adm2_pcode", "municipality" = "adm3_name")
+  )
+```
+
+
 ```{r}
 consolidated2 <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY) 20260917.xlsx", 
                           skip = 5, 

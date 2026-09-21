@@ -37,6 +37,8 @@ theme_set(theme_light())
 
 options(scipen = 999)
 
+range_wna <- function(x){(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))}
+
 ```
 
 # Data
@@ -111,7 +113,7 @@ municipal_long <- municipal_damage_losses |>
                names_to = "variable", 
                values_to = "value") 
 
-consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY) 20260917.xlsx", 
+consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Sep 2026.xlsx", 
                           skip = 5, 
                           sheet = "Compiled_Data") |>
   janitor::clean_names() |> 
@@ -187,6 +189,26 @@ census_flat <- cbind(
 
 affected_municipalities_17 <- read_xlsx("./data/Copy of Affected Palikas and Wards_ward_wise_population_projection 2026 (1).xlsx") |> 
   clean_names()
+
+register <- read_xlsx("./data/Nepal - Assessment registry - Rasuwa Flood.xlsx", skip = 3) |> 
+  setNames(c("lead_organisation", "participating_organisation", 
+             "assessment", "description", "sector", 
+             "province", "district", "municipality", "ward", 
+             "representative_at_level", "status", "status_update", 
+             "data_collection_method", "availability_report", "email_contact", 
+             "permission_public", "report_link", "dashboard_link", 
+             "comments"))
+
+impacted_buildings <- read_xlsx("./data/impacted_buildings.xlsx") |> 
+  mutate(municipality = ifelse(municipality == "Ichcha Kamana", 
+                               "Ichchha Kamana", 
+                               municipality)) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm3_name, adm1_pcode, adm2_pcode, adm3_pcode), 
+    by = c("municipality" = "adm3_name")
+  ) |> 
+  filter(adm3_pcode != "NP0327301" & adm3_pcode != "NP0335301")
 ```
 
 
@@ -710,7 +732,7 @@ AAAAAA
 BB####
 ") + 
   plot_annotation(
-    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners; 5Ws 20260921."
   )
 
 ggsave("./plots/ward_reached_sum.png", ward_reached_sum, height = 11.7, width = 16.5, units = "in")  
@@ -938,7 +960,7 @@ ward_sectors <- ward_summary |>
               alpha = .25) +
   
   scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = "grey97") +
-    # River
+  # River
   geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
   geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
   geom_shadowtext(
@@ -966,11 +988,254 @@ AAAAAA
 BB####
 ") + 
   plot_annotation(
-    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners; 5Ws 20260921."
   )
 
 ggsave("./plots/ward_sectors.png", ward_sectors, height = 11.7, width = 16.5, units = "in")  
 ```
+
+## Clustering
+
+```{r}
+census_flat |> 
+  select(contains("house_quality"))
+```
+
+
+```{r}
+to_cluster <- census_flat |> 
+  mutate(improved_drinking_water = drinking_water_tap_piped_within_premises +
+           drinking_water_tap_piped_outside_premises +
+           drinking_water_tubewell_handpump +
+           drinking_water_covered_well_kuwa, 
+         no_toilet_public_toilet = toilet_no_toilet + toilet_public, 
+         house_quality_inadequate_least_adequate_pc = house_quality_inadequate_pc + house_quality_least_adequate_pc
+           ) |>
+  mutate(unimproved_sanitation_pc = no_toilet_public_toilet / total_households * 100, 
+         unimproved_drinking_water_pc = (total_households - improved_drinking_water) / total_households * 100) |> 
+  select(
+    adm3_pcode, ward,
+    # population_total, 
+    population_density, 
+    sex_ratio, 
+    average_household_size, 
+    total_dependency_ratio, 
+    population_pc_rural, 
+    disability_prevlance_rate, 
+    agricultural_employment_pc_total, 
+    wealth_quintile_poorest_quintile_pc, 
+    house_quality_inadequate_least_adequate_pc,
+    unimproved_sanitation_pc, 
+    unimproved_drinking_water_pc
+  ) |> 
+  right_join(
+    differences |>
+      left_join(
+        impacted_buildings |>
+          select(impacted_buildings, adm3_pcode, ward),
+        by = c("adm3_pcode", "ward")) |> 
+      select(adm3_pcode, ward, 
+             population_total = projection_2026_population_total, 
+             impacted_buildings), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  replace_na(list(impacted_buildings = 0))
+```
+
+```{r}
+# k-means clustering and output
+set.seed(123)
+
+km <- to_cluster |>
+  select(-adm3_pcode, -ward) |>
+  mutate_at(
+    vars(population_density:impacted_buildings), 
+    ~ range_wna(.x)
+  ) |> 
+  kmeans(4, nstart = 25)
+
+clustered <- to_cluster |> 
+  cbind(cluster = km$cluster) |> 
+  mutate(
+    cluster = case_when(
+      cluster == 4 ~ "A", 
+      cluster == 3 ~ "B",
+      cluster == 2 ~ "C", 
+      cluster == 1 ~ "D"
+    )
+  )
+```
+
+```{r}
+
+```
+
+
+```{r}
+wards_clustered <- clustered |>
+  left_join(
+    differences |> 
+      select(ward, adm3_pcode, flash_appeal_affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  mutate(flash_appeal_affected = ifelse(flash_appeal_affected == 1, "Affected", NA_character_)) |>
+  mutate(ward_label = as.character(ward), 
+         ward_label = ifelse(
+           !is.na(cluster),
+           ward_label,
+           ""
+         )) |> 
+  right_join(
+    wards, 
+    by = c("adm3_pcode", "ward")
+  )  |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = cluster), colour = "grey80") +
+  geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha")),
+                 aes(label = adm3_name),
+              alpha = .25) +
+  scale_fill_manual(values = c(
+    "A" = "#ffc800",
+    "B" = "#cf9220", 
+    "C" = "#763f98", 
+    "D" = "#bd8cbf"), 
+    na.value = "grey97", 
+    na.translate = FALSE
+    ) +
+  # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey80", 
+      na.translate = FALSE) + 
+  coord_sf(xlim = c(84.4, 85.6), ylim = c(27.63, 28.35)) + 
+  labs(x = "", y = "", 
+       fill = "Group",
+       colour = "Flash\nAppeal",
+       title = "Affected wards by Sub-context", 
+       subtitle = "K-means clustering was used to split the affected wards into 4 groups based on flood damage and demographic and vulnerability indicators") +
+  theme(plot.title = element_text(size = 20, face = "bold")) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+  )
+
+ggsave("./plots/wards_clustered.png", wards_clustered, height = 11.7, width = 16.5, units = "in")  
+```
+
+
+
+
+
+## Assessments
+
+```{r}
+register <- read_xlsx("./data/Nepal - Assessment registry - Rasuwa Flood.xlsx", skip = 3) |> 
+  setNames(c("lead_organisation", "participating_organisation", 
+             "assessment", "description", "sector", 
+             "province", "district", "municipality", "ward", 
+             "representative_at_level", "status", "status_update", 
+             "data_collection_method", "availability_report", "email_contact", 
+             "permission_public", "report_link", "dashboard_link", 
+             "comments"))
+
+register |> 
+  mutate(sector = str_remove_all(sector, "Protection / Child Protection|Protection / Child Protection, Protection / GBV,|Health / SRH,|Protection / GBV,|Multi-Sector")) |> 
+  separate_longer_delim(sector, delim = "/") |> 
+  separate_longer_delim(sector, delim = ",") |> 
+  filter(sector != "") |> 
+  count(sector)
+
+assessment_locations <- register |>   
+  mutate(municipality = ifelse(!is.na(district) & is.na(municipality), 
+                               "unspecified", 
+                               municipality)) |> 
+  separate_longer_delim(district, delim = ",") |> 
+  separate_longer_delim(municipality, delim = ",") |> 
+  mutate_at(vars(district, municipality), ~ str_trim(.x)) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm2_name, adm2_pcode, adm3_name, adm3_pcode), 
+    by = c("district" = "adm2_name", "municipality" = "adm3_name")
+  )  |> 
+  filter(district != "Kathmandu" & municipality != "Tarakeshwor") |> 
+  mutate(adm2_pcode = case_when(
+    district == "Chitawan" ~ "NP0335", 
+    district == "Dhading" ~ "NP0330", 
+    district == "Gorkha" ~ "NP0436", 
+    district == "Nuwakot" ~ "NP0328", 
+    district == "Rasuwa" ~ "NP0329", 
+    district == "Tanahu" ~ "NP0440",
+    TRUE ~ district
+  )) |> 
+  filter(!is.na(adm3_pcode) | municipality == "unspecified")
+
+
+```
+
+
+```{r}
+assessment_map <- assessment_locations |>  
+  count(district, municipality, adm2_pcode, adm3_pcode) |> 
+  right_join(
+    adm3, 
+    by = "adm3_pcode"
+  ) |> 
+  st_as_sf() |> 
+  ggplot() +
+  geom_sf(data = assessment_locations |>
+            count(district, municipality, adm2_pcode, adm3_pcode) |>
+            filter(municipality == "unspecified") |>  
+            right_join(adm2, by = "adm2_pcode") |> 
+            st_as_sf(), 
+          aes(fill = n), linewidth = .7, colour = "grey80", alpha = .5) + 
+  geom_sf(aes(fill = n), linewidth = .5, colour = "grey60", alpha =.5) +
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma, na.value = NA) +
+  geom_sf_text(data = adm2, aes(label = adm2_name), colour = "grey50", alpha = .7, size = 8) +
+  geom_sf_text(aes(label = municipality), colour = "grey30", alpha = .85, size = 6) +
+  # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  scale_colour_manual(na.value = "white") + 
+  coord_sf(xlim = c(84.2, 85.75), ylim = c(27.5, 28.4)) + 
+  labs(title = "Number of Needs Assessments by Location",
+       subtitle = "Some assessments in the registry only mentioned the whole district instead of specifying municipalities", 
+       x = "", y = "", 
+       fill = "Number of\nAssessments") +
+  theme(plot.title = element_text(size = 20, face = "bold")) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners; Assessment Registry 20260920."
+  )
+
+ggsave("./plots/assessment_map.png", assessment_map, height = 11.7, width = 16.5, units = "in")   
+```
+
+
 
 
 ## Impacted buildings

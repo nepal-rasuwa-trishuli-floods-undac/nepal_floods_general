@@ -1,0 +1,583 @@
+province,district,municipality,sector,relief_items,relief_item_unit,number_of_relief_items_planned,number_of_relief_items_distributed,households_targeted,people_targeted,households_reached,total_people_reached,agencies
+Bagmati,Bidur,Bidur,NA,NA,KG,0,0,0,0,0,0,NA
+Bagmati,Chitawan,NA,WASH,NA,NA,0,0,0,0,0,0,DWSSM
+Bagmati,Dhading,Benighat Rorang,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN"
+Bagmati,Dhading,Benighat Rorang,Education,ECD Kits,Number,3,3,0,0,0,37,UNICEF
+Bagmati,Dhading,Benighat Rorang,Education,Learning Packs,Number,160,160,0,0,0,307,UNICEF
+Bagmati,Dhading,Benighat Rorang,Education,TLC,Number,8,8,0,0,0,172,UNICEF
+Bagmati,Dhading,Benighat Rorang,Education,NA,Number,0,0,0,0,0,0,CFJNO
+Bagmati,Dhading,Benighat Rorang,Education,NA,NA,0,0,0,0,0,259,"UNESCO, SCI, UNICEF"
+Bagmati,Dhading,Benighat Rorang,Health,Medical supplies,Number,0,1590,0,0,0,0,IOM
+Bagmati,Dhading,Benighat Rorang,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Dhading,Benighat Rorang,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Dhading,Benighat Rorang,Multi-purpose Cash,NA,NA,0,0,150,605,0,0,"UNICEF, LG"
+Bagmati,Dhading,Benighat Rorang,Protection - MHPSS,NA,NA,0,0,27,118,27,167,"CBM, KOSHISH, UNICEF, CMC"
+Bagmati,Dhading,Benighat Rorang,Shelter,Blankets synthetic high therm resistance,Number,1000,1000,1000,5000,1000,5000,UNICEF
+Bagmati,Dhading,Benighat Rorang,Shelter,Shelter Kit,Number,10,10,10,50,10,44,DCA
+Bagmati,Dhading,Benighat Rorang,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Dhading,Benighat Rorang,WASH,"PIYUSH LIQUID, 60 ML bottle",Number,150,150,150,150,150,150,UNICEF
+Bagmati,Dhading,Benighat Rorang,WASH,"WASH & Dignity Kit, first response, 1 HH, no Purif Tab",Number,200,200,200,1000,200,1000,UNICEF
+Bagmati,Dhading,Gajuri,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN, IOM"
+Bagmati,Dhading,Gajuri,Education,Learning Packs,Kits,0,471,0,70,114,471,SCI
+Bagmati,Dhading,Gajuri,Education,Learning Packs,NA,0,0,0,0,0,0,Chhori
+Bagmati,Dhading,Gajuri,Education,NA,Number,11,11,0,107,0,107,UMN
+Bagmati,Dhading,Gajuri,Food Security,Food baskets,MT,17.53,17.53,480,2098,480,2098,WFP
+Bagmati,Dhading,Gajuri,Food Security,In-kind food assistance,Box,25,25,137,600,137,600,WFP
+Bagmati,Dhading,Gajuri,Food Security,In-kind food assistance,PAC,100,100,100,437,100,437,FAO
+Bagmati,Dhading,Gajuri,Food Security,NA,Number,26,26,82,284,82,284,UMN
+Bagmati,Dhading,Gajuri,Health,Medical supplies,Number,0,2010,0,0,0,0,IOM
+Bagmati,Dhading,Gajuri,Health,NA,Number,0,0,0,0,0,84,"UNICEF, TPO"
+Bagmati,Dhading,Gajuri,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Dhading,Gajuri,Health - SRH,Dignity kits and RMNCAH equipment,Items,0,52,0,0,0,0,"UNFPA, ADRA"
+Bagmati,Dhading,Gajuri,Health - SRH,Temporary health clinic,Set,0,1,0,0,0,0,"UNFPA, ADRA"
+Bagmati,Dhading,Gajuri,Logistics,Kitchen Set,Kits,42,42,42,184,42,184,ADRA
+Bagmati,Dhading,Gajuri,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Dhading,Gajuri,Protection - Child Protection,Recreational Kit,Box,1,1,0,80,18,80,"FORUT, CWIN"
+Bagmati,Dhading,Gajuri,Protection - Child Protection,NA,NA,0,0,0,0,20.13729977116704,88,"Tdh, CAN, UNICEF, NRCS"
+Bagmati,Dhading,Gajuri,Protection - GBV,Dignified Hygiene Kit,Kits,0,164,0,0,164,650,NRCS
+Bagmati,Dhading,Gajuri,Protection - GBV,Dignity Kit,Kits,0,257,0,0,0,257,"UNFPA, NRCS"
+Bagmati,Dhading,Gajuri,Protection - GBV,Dignity Kit,NA,0,20,0,0,0,0,TdH
+Bagmati,Dhading,Gajuri,Protection - GBV,Kishori Kit,Kits,0,0,0,0,0,0,LOOM
+Bagmati,Dhading,Gajuri,Protection - MHPSS,NA,NA,0,0,6,21,24,187,"CBM, KOSHISH, UNICEF, CMC, Tdh, CAN, TPO"
+Bagmati,Dhading,Gajuri,Shelter,NFI Kits,Kits,45,114,45,0,114,498,SCI
+Bagmati,Dhading,Gajuri,Shelter,NFI Set,Set,0,135,0,0,135,650,NRCS
+Bagmati,Dhading,Gajuri,Shelter,NFI set,Set,0,45,0,0,45,200,NRCS
+Bagmati,Dhading,Gajuri,Shelter,Shelter Kit,Kits,42,42,42,184,42,184,ADRA
+Bagmati,Dhading,Gajuri,Shelter,NA,Number,20,20,85,340,85,340,UMN
+Bagmati,Dhading,Gajuri,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Dhading,Gajuri,WASH,Mobile Plastic Toilet,Number,10,10,10,5000,0,0,UNICEF
+Bagmati,Dhading,Gajuri,WASH,PIYUSH LIQUID,Number,500,500,500,5000,0,0,UNICEF
+Bagmati,Dhading,Gajuri,WASH,"Poster, Food Hygiene",Number,500,500,500,5000,0,0,UNICEF
+Bagmati,Dhading,Gajuri,WASH,WASH&DignityKit,Number,300,300,300,5000,0,0,UNICEF
+Bagmati,Dhading,Gajuri,WASH,Water quality test kit,Number,200,200,200,5000,0,0,UNICEF
+Bagmati,Dhading,Gajuri,WASH,"Water tank,collapsible",Number,2,2,2,5000,0,0,UNICEF
+Bagmati,Dhading,Gajuri,WASH,NA,Number,3,3,40,160,40,160,UMN
+Bagmati,Dhading,Gajuri,WASH,NA,NA,0,0,729,2922,129,577,"CYN, DCA, ACN, DWSSM, UNICEF"
+Bagmati,Dhading,Galchhi,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN, IOM"
+Bagmati,Dhading,Galchhi,Education,ECD Kits,Number,2,2,0,0,0,33,UNICEF
+Bagmati,Dhading,Galchhi,Education,Learning Packs,Kits,0,77,0,75,0,77,SCI
+Bagmati,Dhading,Galchhi,Education,Learning Packs,Number,544,544,0,0,0,533,UNICEF
+Bagmati,Dhading,Galchhi,Education,TLC,Number,3,3,0,0,0,27,UNICEF
+Bagmati,Dhading,Galchhi,Education,NA,NA,0,0,0,0,0,250,"UNESCO, SCI, UNICEF"
+Bagmati,Dhading,Galchhi,Food Security,Food baskets,MT,9.72,9.72,270,1180,270,1180,WFP
+Bagmati,Dhading,Galchhi,Food Security,In-kind food assistance,PAC,150,57,150,720,150,657,"DCA, FAO"
+Bagmati,Dhading,Galchhi,Health,Medical supplies,Number,0,1910,0,0,0,0,IOM
+Bagmati,Dhading,Galchhi,Health,NA,Number,0,0,0,0,0,124,"UNICEF, TPO"
+Bagmati,Dhading,Galchhi,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Dhading,Galchhi,Multi-purpose Cash,NA,NA,0,0,331,1630,0,0,"UNICEF, LG"
+Bagmati,Dhading,Galchhi,Nutrition,NA,NA,0,0,0,0,0,0,UNICEF
+Bagmati,Dhading,Galchhi,Protection - GBV,Dignified Hygiene Kit,Kits,0,142,0,0,142,560,NRCS
+Bagmati,Dhading,Galchhi,Protection - GBV,Dignity Kit,Kits,100,105,0,83,0,105,"UNFPA, NRCS"
+Bagmati,Dhading,Galchhi,Protection - GBV,NA,NA,0,0,80,260,52,138,"UNFPA, WOREC, Worec"
+Bagmati,Dhading,Galchhi,Protection - MHPSS,NA,NA,0,0,20,79,22,286,"CBM, KOSHISH, UNICEF, CMC, TPO"
+Bagmati,Dhading,Galchhi,Shelter,NFI Kits,Kits,0,0,0,900,137,570,SCI
+Bagmati,Dhading,Galchhi,Shelter,NFI Kits,Number,150,150,34,150,34,150,ActionAid
+Bagmati,Dhading,Galchhi,Shelter,NFI Set,Set,0,315,0,0,290,1200,NRCS
+Bagmati,Dhading,Galchhi,Shelter,Shelter Kit,Number,150,150,34,150,34,150,ActionAid
+Bagmati,Dhading,Galchhi,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Dhading,Galchhi,WASH,"Bleaching powder, water treatment",Number,5,5,5,22,5,22,UNICEF
+Bagmati,Dhading,Galchhi,WASH,Bucket,Items,500,500,500,500,500,500,UNICEF
+Bagmati,Dhading,Galchhi,WASH,"Bucket, plastic, w/lid, 20 L",Number,150,150,150,5000,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,"Bucket, plastic, with lid, 10 L",Number,150,150,150,5000,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,Chlorination Flex Poster,Number,20,20,0,0,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,"Cholera Prevention poster, size A4",Number,500,500,0,0,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,Food hygiene flex poster,Number,20,20,0,0,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,Hygiene Kit - Special with Cloth Bag,Number,138,138,138,5000,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,Hygiene Kits,Kits,1103,3255,5500,2500,3220,5135,"HAPSA, NRCS, UNICEF"
+Bagmati,Dhading,Galchhi,WASH,Hygiene Kits,Number,500,500,0,0,0,0,ActionAid
+Bagmati,Dhading,Galchhi,WASH,Hygiene Kits,Set,150,150,150,0,150,150,ActionAid
+Bagmati,Dhading,Galchhi,WASH,Pipes and Fittings,Water system,7,8,0,0,1363,6061,NRCS
+Bagmati,Dhading,Galchhi,WASH,Pipes and Fittings,NA,1,1,0,0,196,1599,NRCS
+Bagmati,Dhading,Galchhi,WASH,Plastic mugs,Number,500,500,500,500,500,500,UNICEF
+Bagmati,Dhading,Galchhi,WASH,"Plastic mugs, 1L",Number,150,150,150,5000,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,"Poster, Food Hygiene",Number,500,500,0,0,0,0,UNICEF
+Bagmati,Dhading,Galchhi,WASH,"WASH in Emergency Flipchart, size A4",Number,20,20,0,0,0,100,UNICEF
+Bagmati,Dhading,Galchhi,WASH,"Water Purifier (tabs, chlorine etc)",Number,500,500,500,500,500,500,UNICEF
+Bagmati,Dhading,Siddhalek,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN"
+Bagmati,Dhading,Siddhalek,Education,ECD Kits,Number,1,1,0,0,0,57,UNICEF
+Bagmati,Dhading,Siddhalek,Education,TLC,Number,1,1,0,0,0,14,UNICEF
+Bagmati,Dhading,Siddhalek,Education,NA,NA,0,0,0,0,0,19,UNICEF
+Bagmati,Dhading,Siddhalek,Health,Medical supplies,Number,0,1750,0,0,0,0,IOM
+Bagmati,Dhading,Siddhalek,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Dhading,Siddhalek,Protection - Child Protection,Recreational Kit,Box,3,3,0,1078,247,1078,"FORUT, CWIN"
+Bagmati,Dhading,Siddhalek,Protection - MHPSS,NA,NA,0,0,0,0,0,19,"CBM, KOSHISH, UNICEF, TPO"
+Bagmati,Dhading,Siddhalek,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Dhading,NA,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Kathmandu,Kathmandu,CCCM,NA,NA,0,0,0,0,0,0,IOM
+Bagmati,Kathmandu,Kathmandu,Food Security,In-kind food assistance,Box,0,2,0,0,0,50,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Food Security,In-kind food assistance,KG,0,465,0,0,0,424,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Food Security,In-kind food assistance,Packet,0,24,0,0,0,48,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Food Security,In-kind food assistance,Piece,0,36,0,0,0,12,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Food Security,In-kind food assistance,Sack,0,48,0,0,0,162,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Food Security,In-kind food assistance,kg,0,58,0,0,0,124,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Health,Emergency Health Kit (basic),Packet,0,6,0,0,0,12,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Health,Emergency Health Kit (basic),Strip,0,3,0,0,0,12,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,Health,Emergency Health Kit (supplementary),KG,500,500,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,Emergency Health Kit (supplementary),Number,200,200,0,200,0,200,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,Emergency Health Kit (supplementary),PAC,10,10,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,Liquid Phenol 1000ML and Formalin 50 Ltr,Items,2,2,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,Non-Communicable Disaeases (NCD) Kit,PAC,8,8,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,Permanent Marker,Number,4,4,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,"Register, Pen, Measuring tape",Items,1,1,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,Tooth extracor & Scalpel/ Blade,Number,7,7,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,Health,NA,NA,0,0,84,300,84,300,"SDC, CMC"
+Bagmati,Kathmandu,Kathmandu,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Kathmandu,Kathmandu,Protection - Child Protection,Winterization kit,Set,200,0,0,0,0,0,UNICEF
+Bagmati,Kathmandu,Kathmandu,Protection - MHPSS,NA,NA,0,0,63,106,66,104,"UNICEF, CMC, AWO, UNFPA, CWIN"
+Bagmati,Kathmandu,Kathmandu,Shelter,NFI Kits,Number,1,1,0,0,0,0,PLAN
+Bagmati,Kathmandu,Kathmandu,WASH,Hygiene Kits,Packet,0,55,0,0,0,65,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,WASH,Hygiene Kits,Piece,0,226,0,0,0,236,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,WASH,Latrine Slabs/Latrine & Bath Kits,Piece,0,6,0,0,0,24,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,WASH,Latrine Slabs/Latrine & Bath Kits,Sachet,0,30,0,0,0,12,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,WASH,Water container/bladder,Piece,0,3,0,0,0,12,Maiti Nepal
+Bagmati,Kathmandu,Kathmandu,NA,NA,Cylinder,0,5,0,0,0,50,NA
+Bagmati,Kathmandu,Kathmandu,NA,NA,Pairs,0,5,0,0,0,12,NA
+Bagmati,Kathmandu,Kathmandu,NA,NA,Piece,0,142,0,0,0,72,NA
+Bagmati,Kathmandu,Kathmandu,NA,NA,Set,0,7,0,0,0,12,NA
+Bagmati,Kathmandu,NA,Early Recovery,NA,NA,0,0,0,0,0,0,UNDP
+Bagmati,Kathmandu,NA,Protection - MHPSS,NA,NA,0,0,0,0,0,69,"UNICEF, TPO"
+Bagmati,Kathmandu,NA,WASH,Hygiene Kits,Kits,0,200,5000,0,0,0,HAPSA
+Bagmati,Nuwakot,Belkotgadhi,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN, IOM"
+Bagmati,Nuwakot,Belkotgadhi,Early Recovery,NA,NA,0,0,0,0,0,0,UNDP
+Bagmati,Nuwakot,Belkotgadhi,Education,ECD Kits,Box,1,1,0,30,0,47,SCoN
+Bagmati,Nuwakot,Belkotgadhi,Education,Learning Packs,Box,1,1,0,30,0,47,SCoN
+Bagmati,Nuwakot,Belkotgadhi,Education,Learning Packs,Kits,220,220,0,220,0,220,SCI
+Bagmati,Nuwakot,Belkotgadhi,Education,NA,Number,30,0,0,30,0,0,SCoN
+Bagmati,Nuwakot,Belkotgadhi,Food Security,Food baskets,PAC,565,415,565,2465,565,2465,"CARE, CDC, PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Food Security,In-kind food assistance,KG,1530,1530,26,104,26,104,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Food Security,In-kind food assistance,PAC,79,79,79,392,79,392,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Health,Medical supplies,Number,0,1900,0,0,0,0,IOM
+Bagmati,Nuwakot,Belkotgadhi,Health,NA,Number,0,0,0,0,0,972,"UNICEF, CWIN, TPO"
+Bagmati,Nuwakot,Belkotgadhi,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Nuwakot,Belkotgadhi,Health - SRH,Study materials for adolescents,Set,20,20,0,30,0,30,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Multi-purpose Cash,NA,NA,0,0,79,0,0,0,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Nutrition,NA,NA,0,0,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Belkotgadhi,Protection - Child Protection,Recreational Kit,Set,1,1,0,33,0,33,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Protection - Child Protection,Winterization kit,Set,368,0,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Belkotgadhi,Protection - Child Protection,NA,NA,0,0,0,0,23.56979405034324,103,"UNICEF, NRCS"
+Bagmati,Nuwakot,Belkotgadhi,Protection - GBV,Dignity Kit,Kits,65,65,65,313,65,313,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Protection - GBV,NA,NA,0,0,100,535,35,147,"CARE, WOREC, PLAN, DEPROSC, SCI, UNICEF"
+Bagmati,Nuwakot,Belkotgadhi,Protection - MHPSS,NA,NA,0,0,55,135,48,1053,"CARE, WOREC, CBM, KOSHISH, UNICEF, CWIN, TPO"
+Bagmati,Nuwakot,Belkotgadhi,Shelter,Blanket - Summer,PAC,200,100,200,800,100,100,"CARE, CDC"
+Bagmati,Nuwakot,Belkotgadhi,Shelter,Kitchen Kit,Kits,79,79,79,392,79,392,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Shelter,Shelter Kit,Kits,265,65,265,313,65,313,"HFH, PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Shelter,Shelter Kit,Set,170,170,170,680,170,680,"CARE, CDC"
+Bagmati,Nuwakot,Belkotgadhi,Shelter,Shelter and NFI KIt,Kits,79,79,79,392,79,392,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Belkotgadhi,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Nuwakot,Belkotgadhi,WASH,Hygiene Kits,Kits,644,644,144,705,144,705,"CRS, Caritas, PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN, IOM"
+Bagmati,Nuwakot,Bidur,ETC,Portable generator,Number,3,3,0,0,0,0,WFP
+Bagmati,Nuwakot,Bidur,ETC,Power Banks,Number,10,10,0,0,0,0,WFP
+Bagmati,Nuwakot,Bidur,ETC,NA,NA,0,0,0,150,0,150,FAIRMED
+Bagmati,Nuwakot,Bidur,Early Recovery,daily meal,Meals,0,0,0,400,94,0,Rainbow
+Bagmati,Nuwakot,Bidur,Early Recovery,NA,NA,0,0,100,400,0,0,"PLAN, DEPROSC, UNDP, Urjaa"
+Bagmati,Nuwakot,Bidur,Education,ECD Kits,Box,3,3,0,90,0,114,SCoN
+Bagmati,Nuwakot,Bidur,Education,ECD Kits,Kits,0,3,0,100,0,96,SCI
+Bagmati,Nuwakot,Bidur,Education,ECD Kits,Number,6,6,0,0,0,98,UNICEF
+Bagmati,Nuwakot,Bidur,Education,Learning Packs,Box,3,3,0,90,0,114,SCoN
+Bagmati,Nuwakot,Bidur,Education,Learning Packs,Kits,1600,186,366,2000,495,2028,"Adara, Adara Nepal, SCI"
+Bagmati,Nuwakot,Bidur,Education,Learning Packs,Number,9567,9567,1916.4,9290,1916.4,9887,"GNI, SFN, UNICEF"
+Bagmati,Nuwakot,Bidur,Education,Learning Packs,PAC,643,0,0,782,0,582,"FAIRMED, PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,Education,Learning Packs,Set,1,0,0,9,0,9,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,Education,Learning Packs,NA,0,148,28,178,28,176,"SCI, SFN"
+Bagmati,Nuwakot,Bidur,Education,Recreational Kit,Kits,0,1,0,45,0,45,SCI
+Bagmati,Nuwakot,Bidur,Education,TLC,Number,36,36,0,0,0,245,UNICEF
+Bagmati,Nuwakot,Bidur,Education,NA,Kits,0,1,0,290,0,288,SCI
+Bagmati,Nuwakot,Bidur,Education,NA,Number,97,7,0,188,0,98,"SCoN, UMN"
+Bagmati,Nuwakot,Bidur,Education,NA,PAC,338,0,0,337,0,0,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,Education,NA,NA,0,0,14,838,14,218,"SDC, CMC, PLAN, DEPROSC, SCI, UNICEF"
+Bagmati,Nuwakot,Bidur,Food Security,BP5 emergency compact food,Box,80,80,439,1920,439,1920,WFP
+Bagmati,Nuwakot,Bidur,Food Security,Food baskets,MT,26.388,26.388,733,3203,733,3203,WFP
+Bagmati,Nuwakot,Bidur,Food Security,Food baskets,PAC,1850,250,1850,8242,1850,8242,"Adara, MC"
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,Items,80,0,80,480,80,480,REACT
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,KG,0,2078,0,0,0,939,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,Meals,7406,0,790,1879,770,2413,"WCK, CSRC"
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,PAC,425,225,375,985,175,985,"FAIRMED, FAO"
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,Packet,0,2504,0,0,0,1252,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,Piece,0,3756,0,0,0,313,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,Sack,0,60,0,0,0,60,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Food Security,In-kind food assistance,Set,1100,280,1100,5000,280,900,"SCoN, WVI, GNN"
+Bagmati,Nuwakot,Bidur,Food Security,Veterinary medicine and disinfectants,KG,0,5000,0,0,0,0,FAO
+Bagmati,Nuwakot,Bidur,Food Security,NA,Number,13,13,116,464,116,464,UMN
+Bagmati,Nuwakot,Bidur,Food Security,NA,NA,0,0,0,250,0,0,"UN Women, ROYM, NIWF"
+Bagmati,Nuwakot,Bidur,Health,Assistive Devices,Number,1200,250,0,0,0,0,"HI, DHRF"
+Bagmati,Nuwakot,Bidur,Health,Dead Body Bags,Number,0,300,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Emergency Health Kit (basic),Kits,200,0,200,400,0,134,UNICEF
+Bagmati,Nuwakot,Bidur,Health,Emergency Health Kit (basic),Number,501,0,1500,5000,0,1000,UNICEF
+Bagmati,Nuwakot,Bidur,Health,Emergency Health Kit (basic),Packet,0,1385,0,0,0,313,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Health,Emergency Health Kit (basic),Strip,0,819,0,0,0,313,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Health,Emergency Health Kit (supplementary),Number,590,590,0,500,0,500,"Plan, DEPROSC"
+Bagmati,Nuwakot,Bidur,Health,Gloves,Box,0,600,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Gloves,Pairs,0,1000,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Gumboot,Pairs,0,35,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Hand Sanitizer,Number,0,210,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Heavy Duty Gloves,Pairs,0,70,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Interagency Emergency Health Kit (IEHK),Set,0,1,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Medical supplies,Number,0,2030,0,0,100,0,"IOM, NRCS"
+Bagmati,Nuwakot,Bidur,Health,Medical supplies,NA,0,0,0,600,0,200,FAIRMED
+Bagmati,Nuwakot,Bidur,Health,N95 Mask,Number,0,5500,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,PPE,Number,0,50,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,PPE,Set,0,35,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Phenyl,N/A,0,25,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Sprayer Machine,Set,0,2,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Surgical Mask,Box,0,120,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Surgical Mask,Number,0,1000,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Tent,Set,0,10,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,Test Kits,Kits,0,2250,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,Health,NA,Number,0,0,0,0,0,827,"UNICEF, TPO, CWIN"
+Bagmati,Nuwakot,Bidur,Health,NA,NA,0,0,210,1229,210,2543,"CBM, HRDC, SDC, CMC, FAIRMED, UNICEF, CWIN, TPO, WHO"
+Bagmati,Nuwakot,Bidur,Health - SRH,Study materials for adolescents,Set,55,55,0,96,0,96,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,Health - SRH,NA,NA,0,0,0,1292,0,606,"FAIRMED, UNFPA, SPN"
+Bagmati,Nuwakot,Bidur,Logistics,NA,NA,0,0,0,0,0,0,"Adara, UNOPS, WFP"
+Bagmati,Nuwakot,Bidur,Multi-Purpose Cash,NA,NA,0,0,0,0,151,781,NRCS
+Bagmati,Nuwakot,Bidur,Multi-purpose Cash,NA,NA,0,0,1710,0,0,0,"CARE, GYC, PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,Nutrition,NA,NA,0,0,0,26,0,28,"PLAN, DEPROSC, UNICEF"
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,Baby-pack (0-2 year),Kits,200,45,0,200,10,45,"CRS, Caritas"
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,Recreational Kit,Items,2,2,0,25,0,25,"UNICEF, CWIN"
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,Recreational Kit,Kits,0,1,0,90,0,90,SCI
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,Recreational Kit,Set,1669,1672,366,1923,366,1918,"Adara, UNICEF, CWIN, PLAN, DEPROSC, SCI"
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,Student Kit,Number,9217,9217,0,2000,0,2000,GNI
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,Tent,Items,20,20,0,0,0,0,TdH
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,Winterization kit,Set,1441,25,0,25,0,25,"UNICEF, CWIN"
+Bagmati,Nuwakot,Bidur,Protection - Child Protection,NA,NA,0,20,0,555,123.06864988558328,766,"CRS, Caritas, GNI, SCI, Save the children, TdH, UNICEF, NRCS, WVI, GNN"
+Bagmati,Nuwakot,Bidur,Protection - GBV,Dignified Hygiene Kit,Kits,0,30,0,0,30,150,NRCS
+Bagmati,Nuwakot,Bidur,Protection - GBV,Dignified Hygiene Kit,Number,0,4,0,0,4,15,NRCS
+Bagmati,Nuwakot,Bidur,Protection - GBV,Dignity Kit,Items,750,565,300,550,262,417,"CIN, CRS, Caritas"
+Bagmati,Nuwakot,Bidur,Protection - GBV,Dignity Kit,Kits,2125,1326,1000,5878,400,2846,"MC, LOOM, UNFPA, NRCS, VSO, CN, WVI, GNN"
+Bagmati,Nuwakot,Bidur,Protection - GBV,Dignity Kit,Number,120,0,120,120,0,0,SFN
+Bagmati,Nuwakot,Bidur,Protection - GBV,Dignity Kit,Set,327,299,299,953,227,953,"PLAN, DEPROSC, LOOM"
+Bagmati,Nuwakot,Bidur,Protection - GBV,NA,NA,0,0,11.4,128,31.4,188,"CARE, WOREC, UNFPA, CMC, PLAN, DEPROSC, SCI"
+Bagmati,Nuwakot,Bidur,Protection - MHPSS,NA,Set,0,0,65,0,0,0,"CARE, WOREC"
+Bagmati,Nuwakot,Bidur,Protection - MHPSS,NA,NA,0,0,917,3979,475,3723,"CARE, WOREC, CBM, KOSHISH, CIN, UNICEF, CMC, UNFPA, CWIN, FAIRMED, GNI, KMC, PLAN, DEPROSC, SCI, Save the children, SFN, TPO"
+Bagmati,Nuwakot,Bidur,Shelter,Blanket,Number,0,90,0,0,90,150,NRCS
+Bagmati,Nuwakot,Bidur,Shelter,Blanket - High thermal (synthetic) - for winterization,Number,100,100,0,100,0,100,ActionAid
+Bagmati,Nuwakot,Bidur,Shelter,Blanket - High thermal (synthetic) - for winterization,Piece,0,500,0,0,0,253,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Shelter,Blanket - Summer,Number,100,100,100,0,100,0,SCoN
+Bagmati,Nuwakot,Bidur,Shelter,Kitchen Kit,Set,1000,125,1000,4370,125,546.25,"WVI, GNN"
+Bagmati,Nuwakot,Bidur,Shelter,Kitchen Set,Set,663,563,763,1976,563,1976.3200000000002,"ActionAid, FAIRMED, LWF, PLAN, DEPROSC, SCoN"
+Bagmati,Nuwakot,Bidur,Shelter,Kitchen Set,NA,100,100,100,437,100,437,"PW, TN"
+Bagmati,Nuwakot,Bidur,Shelter,Mattress,Number,0,126,0,0,126,240,NRCS
+Bagmati,Nuwakot,Bidur,Shelter,NFI - Shelter Kit,Kits,1000,125,1000,5000,125,625,"WVI, GNN"
+Bagmati,Nuwakot,Bidur,Shelter,NFI Kits,Kits,0,0,276,2300,608,3808,SCI
+Bagmati,Nuwakot,Bidur,Shelter,NFI Kits,Meter,0,520,0,0,0,253,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Shelter,NFI Kits,Piece,0,260,0,0,10,296.7,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Shelter,NFI Kits,Set,300,300,300,1000,300,1100,"ActionAid, MC"
+Bagmati,Nuwakot,Bidur,Shelter,Shelter Kit,Kits,1112,510,2083,4487,522,2168,"ADRA, HFH, SCI"
+Bagmati,Nuwakot,Bidur,Shelter,Shelter Kit,Number,120,120,20,200,20,187,"ActionAid, DCA"
+Bagmati,Nuwakot,Bidur,Shelter,Shelter Kit,Piece,0,305,0,0,0,313,Maiti Nepal
+Bagmati,Nuwakot,Bidur,Shelter,Shelter Kit,Set,300,200,300,1500,202,1010,MC
+Bagmati,Nuwakot,Bidur,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Items,300,300,300,1311,300,1311,LWF
+Bagmati,Nuwakot,Bidur,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Kits,700,1500,700,3150,700,3076,IRW
+Bagmati,Nuwakot,Bidur,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Number,1150,209,1150,4589,1210,4724,"NRCS, SCoN, UNICEF"
+Bagmati,Nuwakot,Bidur,Shelter,NA,Number,24,24,136,565,136,565,UMN
+Bagmati,Nuwakot,Bidur,Shelter,NA,NA,0,0,202,486,200,1157,"CBM, KOSHISH, DCA, GEI ASIA, SCI"
+Bagmati,Nuwakot,Bidur,WASH,100 KVA Stabilizer,Set,4,2,50,250,50,250,"WVI, GNN"
+Bagmati,Nuwakot,Bidur,WASH,Amobea ra pani booklet (Nepali),Number,0,1500,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Bucket,Piece,0,60,0,0,0,60,Maiti Nepal
+Bagmati,Nuwakot,Bidur,WASH,Bucket 10L,Number,0,3000,3000,13110,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Buckets,Number,0,2000,2000,2000,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Chlorine Tablets,Number,1000,1000,300,0,0,300,MC
+Bagmati,Nuwakot,Bidur,WASH,Chlorine Tablets,NA,0,0,0,0,0,0,"Oxfam, BWSN"
+Bagmati,Nuwakot,Bidur,WASH,"Cholera Prevention poster,size A4,500pag",NA,0,5600,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Cholera prevention poster (A4),Number,1000,0,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"Food hygiene flex poster, 2x3ft, 300gsm",NA,0,100,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Hygiene Kit - Special with Cloth Bag,Kits,0,3000,3000,13110,3000,13110,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Hygiene Kits,Kits,2670,4881,24420,18886,9971,15486,"GNI, HAPSA, MC, UNICEF, WVI, GNN"
+Bagmati,Nuwakot,Bidur,WASH,Hygiene Kits,PAC,1800,1800,200,800,200,200,"Adara, CYN"
+Bagmati,Nuwakot,Bidur,WASH,Hygiene Kits,Packet,0,1232,0,0,0,353,Maiti Nepal
+Bagmati,Nuwakot,Bidur,WASH,Hygiene Kits,Piece,0,2791,0,0,0,836,Maiti Nepal
+Bagmati,Nuwakot,Bidur,WASH,Hygiene Kits,Set,547,339,527,953,319,3243,"FAIRMED, PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,WASH,Hygiene Kits,NA,4,0,80,480,122,664,"Chhori, CIN, REACT"
+Bagmati,Nuwakot,Bidur,WASH,Jerrycan,Number,1000,2000,3000,6370,3000,2000,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Latrine Slabs/Latrine & Bath Kits,Piece,0,3156,0,0,0,879,Maiti Nepal
+Bagmati,Nuwakot,Bidur,WASH,Latrine Slabs/Latrine & Bath Kits,Sachet,0,3130,0,0,0,313,Maiti Nepal
+Bagmati,Nuwakot,Bidur,WASH,Latrine Slabs/Latrine & Bath Kits,Set,0,12,0,0,250,1094,"WAN, ENPHO"
+Bagmati,Nuwakot,Bidur,WASH,Mobile Plastic Toilet,Number,125,125,125,5000,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Mobile plastic portable toilet,Number,0,100,100,100,100,100,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Mugs,Number,0,2000,2000,2000,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,NFI Kits,Set,100,100,100,429,100,429,ActionAid
+Bagmati,Nuwakot,Bidur,WASH,"PIYUSH LIQUID, 60 ML bottle",NA,0,2250,2250,2250,2250,2250,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Pipes and Fittings,Kits,0,603,0,0,613,2679,NRCS
+Bagmati,Nuwakot,Bidur,WASH,Pipes and Fittings,Meter,1500,1500,30,131.1,30,131.1,"WVI, GNN"
+Bagmati,Nuwakot,Bidur,WASH,Pipes and Fittings,Water system,5,5,0,0,936,4212,NRCS
+Bagmati,Nuwakot,Bidur,WASH,Pipes and Fittings,Water system installation,6,4,0,0,2365,4509,NRCS
+Bagmati,Nuwakot,Bidur,WASH,"Plastic mugs, 1L",NA,0,2300,2300,2300,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"Poster, Food Hygiene",NA,0,3800,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"Squatting plate,plastic",Number,125,125,125,5000,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"Squatting plate,plastic,w/o pan,120x80cm",NA,0,100,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Number,0,1447,1447,6323,1447,6323,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"WASH FLEX SODIS, HANDWASHING FLEX",Number,0,100,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"WASH in Emergency Flipchart, size A4",Number,0,130,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"Water Purifier (tabs, chlorine etc)",Number,100,104104,2100,2000,2100,4000,"WAN, ENPHO, SCoN, UNICEF, WHO, LG"
+Bagmati,Nuwakot,Bidur,WASH,Water Testing Kits and Consumables,Number,100,100,0,0,0,0,"WAN, ENPHO"
+Bagmati,Nuwakot,Bidur,WASH,Water container/bladder,Drum,70,70,150,2934.999999999999,150,653.5,"WVI, GNN"
+Bagmati,Nuwakot,Bidur,WASH,Water container/bladder,Number,28013,13,0,700,0,0,"Plan, DEPROSC, PLAN"
+Bagmati,Nuwakot,Bidur,WASH,Water container/bladder,Piece,0,313,0,0,0,313,Maiti Nepal
+Bagmati,Nuwakot,Bidur,WASH,Water container/bladder,Set,17,17,0,558,0,558,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Bidur,WASH,Water filter,Box,0,25,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Bidur,WASH,Water filter,Number,3,0,5000,20000,0,0,GEI ASIA
+Bagmati,Nuwakot,Bidur,WASH,Water purifier - Aqua Tab,Items,1000,180,1000,5000,180,900,"WVI, GNN"
+Bagmati,Nuwakot,Bidur,WASH,Water purifiers/Piyush,Number,60,60,75,375,75,375,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,"Waterborne disease prv flex poster,2x3ft",NA,0,30,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Bidur,WASH,NA,PAC,50,0,50,0,0,0,"CARE, CDC"
+Bagmati,Nuwakot,Bidur,WASH,NA,Piece,0,60,0,0,0,60,Maiti Nepal
+Bagmati,Nuwakot,Bidur,WASH,NA,Set,100,100,100,0,100,0,SCoN
+Bagmati,Nuwakot,Bidur,WASH,NA,NA,0,0,645,11032,45,2489,"CYN, CIN, FAIRMED, PLAN, DEPROSC, SCI, DWSSM, WWN"
+Bagmati,Nuwakot,Bidur,NA,Medical supplies,Number,0,0,66,288,66,288,NA
+Bagmati,Nuwakot,Bidur,NA,NA,Pairs,0,250,0,0,0,250,NA
+Bagmati,Nuwakot,Bidur,NA,NA,Piece,0,15185,0,0,0,2348,NA
+Bagmati,Nuwakot,Bidur,NA,NA,Set,0,521,0,0,0,410,NA
+Bagmati,Nuwakot,Bidur,NA,NA,NA,0,0,0,40,0,75,NA
+Bagmati,Nuwakot,Gosaikunda,Health,Dead Body Bags,Number,0,50,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Gosaikunda,Health,Interagency Emergency Health Kit (IEHK),Set,0,1,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Gosaikunda,Health,Test Kits,Kits,0,750,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Gosaikunda,WASH,Water filter,Box,0,25,0,0,0,0,"WHO, LG"
+Bagmati,Nuwakot,Kakani,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Nuwakot,Kathmandu,NA,NA,Piece,0,13,0,0,0,200,NA
+Bagmati,Nuwakot,Kispang,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN, IOM"
+Bagmati,Nuwakot,Kispang,Education,ECD Kits,Box,1,1,0,30,0,49,SCoN
+Bagmati,Nuwakot,Kispang,Education,Learning Packs,Box,1,1,0,30,0,49,SCoN
+Bagmati,Nuwakot,Kispang,Education,NA,Number,30,0,0,30,0,0,SCoN
+Bagmati,Nuwakot,Kispang,Food Security,Food baskets,MT,5.4,5.4,150,656,150,656,WFP
+Bagmati,Nuwakot,Kispang,Food Security,In-kind food assistance,Items,245,200,245,1470,245,1470,REACT
+Bagmati,Nuwakot,Kispang,Food Security,In-kind food assistance,PAC,87,75,87,366,87,366,"FAO, GNI"
+Bagmati,Nuwakot,Kispang,Food Security,In-kind food assistance,Set,12,12,12,36,12,36,GNI
+Bagmati,Nuwakot,Kispang,Health,Medical supplies,Number,0,2080,0,0,0,0,IOM
+Bagmati,Nuwakot,Kispang,Health,NA,Number,0,0,0,0,0,207,"UNICEF, TPO"
+Bagmati,Nuwakot,Kispang,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Nuwakot,Kispang,Health - SRH,NA,NA,0,0,0,0,0,284,"UNFPA, SPN"
+Bagmati,Nuwakot,Kispang,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Nuwakot,Kispang,Multi-purpose Cash,NA,NA,0,0,120,0,0,0,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Kispang,Protection - Child Protection,Winterization kit,Set,304,0,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Kispang,Protection - GBV,Dignity Kit,Kits,1150,309,1000,5089,220,309,"UNFPA, NRCS, WVI, GNN"
+Bagmati,Nuwakot,Kispang,Protection - MHPSS,NA,NA,0,0,0,0,0,250,"CBM, KOSHISH, UNICEF, TPO"
+Bagmati,Nuwakot,Kispang,Shelter,Kitchen Kit,Set,110,40,600,5000,220,220,"WVI, GNN"
+Bagmati,Nuwakot,Kispang,Shelter,Shelter Kit,Kits,50,50,386,0,50,386,SCI
+Bagmati,Nuwakot,Kispang,Shelter,Shelter Set,Set,450,172,600,5000,220,220,"WVI, GNN"
+Bagmati,Nuwakot,Kispang,Shelter,NA,Number,9,9,200,800,200,800,UMN
+Bagmati,Nuwakot,Kispang,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Nuwakot,Kispang,WASH,Hygiene Kits,Kits,1245,510,6245,6470,2472,4293,"HAPSA, REACT, WVI, GNN"
+Bagmati,Nuwakot,Likhu,Protection - GBV,Dignified Hygiene Kit,Kits,0,3,0,0,3,10,NRCS
+Bagmati,Nuwakot,Myagang,Protection - GBV,NA,NA,0,0,0,0,0,0,"UNICEF, WOREC"
+Bagmati,Nuwakot,Shivapuri,Protection - GBV,NA,NA,0,0,0,0,0,0,"SCI, UNICEF, WOREC"
+Bagmati,Nuwakot,Suryagadhi,Shelter,Blanket,Number,0,15,0,0,15,30,NRCS
+Bagmati,Nuwakot,Suryagadhi,Shelter,Mattress,Number,0,25,0,0,25,50,NRCS
+Bagmati,Nuwakot,Suryagadhi,Shelter,Shelter Kit,Kits,50,60,386,0,60,230,SCI
+Bagmati,Nuwakot,Tarakeshwor,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN"
+Bagmati,Nuwakot,Tarakeshwor,Education,Learning Packs,PAC,26,0,0,26,0,19,PLAN
+Bagmati,Nuwakot,Tarakeshwor,Education,NA,NA,0,0,0,0,0,0,"SCI, UNESCO"
+Bagmati,Nuwakot,Tarakeshwor,Food Security,Food baskets,PAC,264,264,264,1408,264,1408,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Tarakeshwor,Health,Medical supplies,Number,0,2190,0,0,0,0,IOM
+Bagmati,Nuwakot,Tarakeshwor,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Nuwakot,Tarakeshwor,Protection - Child Protection,Winterization kit,Set,280,0,0,0,0,0,UNICEF
+Bagmati,Nuwakot,Tarakeshwor,Protection - Child Protection,NA,NA,0,0,0,0,21.0526315789472,92,"SCI, UNICEF, NRCS"
+Bagmati,Nuwakot,Tarakeshwor,Protection - GBV,Dignity Kit,Set,250,8,8,0,0,8,LOOM
+Bagmati,Nuwakot,Tarakeshwor,Protection - GBV,NA,NA,0,0,0,265,0,0,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Tarakeshwor,Protection - MHPSS,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Nuwakot,Tarakeshwor,Shelter,NFI Kits,Kits,0,0,10,50,81,414,SCI
+Bagmati,Nuwakot,Tarakeshwor,Shelter,Shelter Kit,NA,0,0,0,0,13,61,SCI
+Bagmati,Nuwakot,Tarakeshwor,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Nuwakot,Tarakeshwor,WASH,Hygiene Kits,Kits,529,264,529,1408,529,1408,"PLAN, DEPROSC"
+Bagmati,Nuwakot,Tarkeshwar,Education,NA,NA,0,0,0,0,0,0,"UNESCO, SCI"
+Bagmati,Nuwakot,NA,Education,Learning Packs,Set,90,0,90,90,0,0,PLAN
+Bagmati,Nuwakot,NA,Food Security,Ready to eat Food,Number,0,1000,0,0,300,1000,NRCS
+Bagmati,Nuwakot,NA,Food Security,Veterinary medicine and disinfectants,Items,0,25,0,0,0,0,FAO
+Bagmati,Nuwakot,NA,Health,First Aid Kit,Kits,0,6,0,0,6,60,NRCS
+Bagmati,Nuwakot,NA,Health,Medical supplies,Number,2,0,0,0,0,0,GEI ASIA
+Bagmati,Nuwakot,NA,Health,NA,NA,0,0,0,0,0,0,GEI ASIA
+Bagmati,Nuwakot,NA,Nutrition,Nutrition sensitive food,PAC,750,0,0,750,0,0,"PLAN, DEPROSC"
+Bagmati,Nuwakot,NA,Protection - Child Protection,NA,NA,0,0,0,0,0,0,"CRS, Caritas"
+Bagmati,Nuwakot,NA,Protection - GBV,Dignified Hygiene Kit,Kits,0,78,0,0,78,300,NRCS
+Bagmati,Nuwakot,NA,Protection - GBV,Dignity Kit,Kits,1000,730,0,1000,0,0,"UNFPA, NRCS"
+Bagmati,Nuwakot,NA,Protection - MHPSS,NA,NA,0,0,0,0,0,0,"CRS, Caritas"
+Bagmati,Nuwakot,NA,Shelter,Blanket,Number,0,712,0,0,712,1400,NRCS
+Bagmati,Nuwakot,NA,Shelter,Mattress,Number,0,295,0,0,295,650,NRCS
+Bagmati,Nuwakot,NA,Shelter,NFI Set,Set,0,200,0,0,200,1000,NRCS
+Bagmati,Nuwakot,NA,Shelter,Solar Light,Number,0,52,0,0,52,115,NRCS
+Bagmati,Nuwakot,NA,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Number,0,258,0,0,258,910,NRCS
+Bagmati,Nuwakot,NA,Shelter,Tent,Number,0,23,0,0,23,100,NRCS
+Bagmati,"Nuwakot, Rasuwa",NA,Health,NA,NA,0,0,0,0,0,0,UNOPS
+Bagmati,Rasuwa,Aamachhodingmo,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN"
+Bagmati,Rasuwa,Aamachhodingmo,Food Security,Food baskets,MT,33.12,33.12,920,4020,920,4020,WFP
+Bagmati,Rasuwa,Aamachhodingmo,Food Security,Food baskets,PAC,220,220,220,440,0,0,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Aamachhodingmo,Food Security,In-kind food assistance,Items,588,0,588,3528,588,3528,REACT
+Bagmati,Rasuwa,Aamachhodingmo,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Rasuwa,Aamachhodingmo,Protection - MHPSS,NA,NA,0,0,4,11,4,19,"UNFPA, CMC"
+Bagmati,Rasuwa,Aamachhodingmo,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Rasuwa,Aamachhodingmo,WASH,Hygiene Kits,Kits,588,0,588,3528,588,3528,REACT
+Bagmati,Rasuwa,Gosaikunda,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN"
+Bagmati,Rasuwa,Gosaikunda,ETC,Portable generator,Number,2,2,0,0,0,0,WFP
+Bagmati,Rasuwa,Gosaikunda,ETC,Power Banks,Number,10,10,0,0,0,0,WFP
+Bagmati,Rasuwa,Gosaikunda,Early Recovery,Office Supplies,Set,1,1,0,0,0,0,"WVI, KIRDARC"
+Bagmati,Rasuwa,Gosaikunda,Early Recovery,NA,NA,0,0,0,0,0,0,UNDP
+Bagmati,Rasuwa,Gosaikunda,Education,ECD Kits,Box,3,3,0,99,0,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,Education,Learning Packs,Box,3,3,0,99,0,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,Food Security,BP5 emergency compact food,Box,113,113,620,2712,620,2712,WFP
+Bagmati,Rasuwa,Gosaikunda,Food Security,Food baskets,MT,32.616,32.616,906,3959,906,3959,WFP
+Bagmati,Rasuwa,Gosaikunda,Food Security,Food baskets,PAC,100,100,100,420,100,420,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Gosaikunda,Food Security,Food baskets,Tons,32.5,32.5,500,2095,500,2095,"AWO, CARDSN"
+Bagmati,Rasuwa,Gosaikunda,Food Security,In-kind food assistance,Number,100,100,100,0,125,546,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Gosaikunda,Food Security,In-kind food assistance,PAC,250,250,250,1095,250,1095,FAO
+Bagmati,Rasuwa,Gosaikunda,Food Security,In-kind food assistance,Set,174,174,174,0,174,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,Health,Medical supplies,Set,0,2,0,0,0,0,IOM
+Bagmati,Rasuwa,Gosaikunda,Health,Test Kits,Kits,0,1500,0,0,0,0,"WHO, LG"
+Bagmati,Rasuwa,Gosaikunda,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC, WHO"
+Bagmati,Rasuwa,Gosaikunda,Health - SRH,Dignity Kits,Set,40,0,40,40,0,0,GEI ASIA
+Bagmati,Rasuwa,Gosaikunda,Health - SRH,New born Kits,Set,80,0,80,80,0,0,GEI ASIA
+Bagmati,Rasuwa,Gosaikunda,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Rasuwa,Gosaikunda,Multi-purpose Cash,NA,NA,0,0,328,0,0,0,"HELVETAS, PLAN, DEPROSC"
+Bagmati,Rasuwa,Gosaikunda,Protection - Child Protection,Winterization kit,Set,480,0,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,Protection - GBV,NA,NA,0,0,0,0,0,40,"WHO, LG"
+Bagmati,Rasuwa,Gosaikunda,Protection - MHPSS,NA,NA,0,0,109,467,109,572,"UNFPA, CMC, AWO"
+Bagmati,Rasuwa,Gosaikunda,Shelter,Blanket - High thermal (synthetic) - for winterization,Number,812,812,812,812,812,812,UNICEF
+Bagmati,Rasuwa,Gosaikunda,Shelter,In-kind food assistance,Set,100,100,100,0,100,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,Shelter,Kitchen Set,Set,74,74,74,0,74,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,Shelter,NFI Kits,Kits,300,331,300,1257,331,1387,"AWO, CARDSN"
+Bagmati,Rasuwa,Gosaikunda,Shelter,Shelter Kit,Number,1000,0,1000,5000,0,0,"WHH, RRN"
+Bagmati,Rasuwa,Gosaikunda,Shelter,NA,Number,9,9,229,916,229,916,UMN
+Bagmati,Rasuwa,Gosaikunda,Shelter,NA,NA,0,0,60,0,0,0,"CBM, KOSHISH, HELVETAS"
+Bagmati,Rasuwa,Gosaikunda,WASH,Acquatabs,Box,4,0,0,0,0,0,"WVI, KIRDARC"
+Bagmati,Rasuwa,Gosaikunda,WASH,Amobea ra pani booklet (Nepali),Number,1000,1000,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Blanket - High thermal (synthetic) - for winterization,Number,1680,1680,1680,7341,1680,7368,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Bucket,Number,100,100,100,0,100,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,WASH,Bucket,NA,333,333,333,1328,333,1328,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Bucket 10L,Number,3000,3000,3000,13110,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Buckets,Number,1500,500,800,800,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"Chlorination Flex Poster, 2x3 ft, 300gsm",Number,20,20,20,100,20,100,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Chlorine Solution,Number,500,500,500,500,500,500,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Cholera Prevention poster - size A4,Number,3000,3000,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Cholera prevention poster,Number,1000,1000,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"Food hygiene flex poster, 2x3ft, 300gsm",Number,100,100,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Hygiene Kit - Special with Cloth Bag,Kits,2000,2000,2000,8740,2000,8740,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Hygiene Kits,Kits,2700,2981,12900,10988,7134,10988,"HAPSA, UNICEF"
+Bagmati,Rasuwa,Gosaikunda,WASH,Hygiene Kits,Number,1000,162,1000,5000,162,664,"WHH, ASN"
+Bagmati,Rasuwa,Gosaikunda,WASH,Hygiene Kits,Set,310,0,310,190,270,1131,"GEI ASIA, PLAN, DEPROSC"
+Bagmati,Rasuwa,Gosaikunda,WASH,Hygiene Kits,NA,333,333,333,1328,333,1328,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Jerrycan,Number,1000,1000,1000,1000,1000,1000,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Mobile plastic portable toilet,Number,100,100,100,100,100,100,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Mugs,Number,1500,1500,1500,2500,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"PIYUSH LIQUID, 60 ML bottle",Number,1400,1400,1400,1400,1400,1400,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Piyush,Number,0,1000,1000,1000,1000,1000,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"Plastic mugs, 1L",NA,2000,2000,2000,2000,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"Poster, Food Hygiene",Number,3000,3000,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Soap (Hand Washing),Number,100,100,100,0,100,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,WASH,"Squatting plate,plastic,w/o pan,120x80cm",Number,100,100,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Number,473,1817,1817,7940,1817,7940,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"WASH in Emergency Flipchart, size A4",Number,100,100,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"Water Purifier (tabs, chlorine etc)",Number,100,100,100,0,100,0,SCoN
+Bagmati,Rasuwa,Gosaikunda,WASH,"Water Purifier (tabs, chlorine etc)",NA,333,333,333,1328,333,1328,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,Water purifiers/Piyush,Number,1300,1300,1300,1300,1300,1300,UNICEF
+Bagmati,Rasuwa,Gosaikunda,WASH,"Waterborne disease prv flex poster,2x3ft",Number,30,30,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Kalika,CCCM,NA,NA,0,0,0,0,0,0,"CBM, NFDN, IOM"
+Bagmati,Rasuwa,Kalika,Early Recovery,NA,NA,0,0,0,0,0,0,UNDP
+Bagmati,Rasuwa,Kalika,Food Security,Food baskets,MT,4.5,4.5,125,546,125,546,WFP
+Bagmati,Rasuwa,Kalika,Food Security,Food baskets,Number,0,162,162,658,162,648,"WHH, RRN"
+Bagmati,Rasuwa,Kalika,Food Security,Food baskets,PAC,180,180,180,0,180,754,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Kalika,Health,Medical supplies,Number,0,1705,0,0,0,0,IOM
+Bagmati,Rasuwa,Kalika,Health,NA,Number,0,0,0,0,0,71,"UNICEF, CWIN, TPO"
+Bagmati,Rasuwa,Kalika,Health,NA,NA,0,0,0,0,0,0,"CBM, HRDC"
+Bagmati,Rasuwa,Kalika,Multi-purpose Cash,NA,NA,0,0,418,960,0,0,"PLAN, DEPROSC, UNICEF, LG"
+Bagmati,Rasuwa,Kalika,Protection - Child Protection,Winterization kit,Set,524,0,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Kalika,Protection - Child Protection,NA,NA,0,0,0,22,0,22,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Kalika,Protection - GBV,NA,NA,0,0,0,180,0,0,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Kalika,Protection - MHPSS,NA,NA,0,0,13,116,57,375,"CBM, KOSHISH, UNICEF, CMC, PLAN, DEPROSC, TPO"
+Bagmati,Rasuwa,Kalika,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Kits,95,95,95,427.5,95,415,IRW
+Bagmati,Rasuwa,Kalika,Shelter,NA,Number,9,9,4,16,4,16,UMN
+Bagmati,Rasuwa,Kalika,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Rasuwa,Kalika,WASH,Hygiene Kits,Set,180,0,180,700,180,755,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Kalika,WASH,NA,NA,0,0,0,103,0,103,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Langtang,Logistics,NA,NA,0,0,0,0,0,0,WFP
+Bagmati,Rasuwa,Naukunda,Food Security,Food Items,PAC,90,90,90,450,90,393,"WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,CCCM,NA,NA,0,0,0,0,92,344,"CBM, NFDN, IOM, PIN, CSRC"
+Bagmati,Rasuwa,Uttargaya,ETC,NA,NA,0,0,0,0,0,0,"Fastenaktion, CSRC"
+Bagmati,Rasuwa,Uttargaya,Early Recovery,Office Supplies,set,1,1,0,0,0,0,"WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,Early Recovery,NA,NA,0,0,100,400,0,0,"PLAN, DEPROSC, UNDP"
+Bagmati,Rasuwa,Uttargaya,Education,ECD Kits,Box,2,2,0,60,0,60,SCoN
+Bagmati,Rasuwa,Uttargaya,Education,Learning Packs,Box,2,2,0,60,0,60,SCoN
+Bagmati,Rasuwa,Uttargaya,Education,Learning Packs,Number,98,98,98,98,98,98,SFN
+Bagmati,Rasuwa,Uttargaya,Education,NA,Number,60,0,0,60,0,0,SCoN
+Bagmati,Rasuwa,Uttargaya,Food Security,Food baskets,Kits,10,10,10,44,10,44,ADRA
+Bagmati,Rasuwa,Uttargaya,Food Security,Food baskets,Number,0,490,366,1600,674,2809,"LUMANTI, LG, WHH, RRN"
+Bagmati,Rasuwa,Uttargaya,Food Security,Food baskets,PAC,429,299,429,1500,429,1500,"CARE, CSRC, PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Food Security,In-kind food assistance,Items,200,0,200,1200,200,1200,REACT
+Bagmati,Rasuwa,Uttargaya,Food Security,In-kind food assistance,KG,2573,2573,575,2422,600,2522,"ActionAid, Fastenaktion, CSRC, WJR, PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Food Security,In-kind food assistance,Number,200,125,125,524,125,524,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Food Security,In-kind food assistance,PAC,956,956,250,1024,250,1024,"WJR, CSRC, PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Food Security,"In-kind food assistance (Rice, daal, soya, oil, salt, sugar, beaten rice)",KG,450,450,450,450,0,450,"PIN, CSRC"
+Bagmati,Rasuwa,Uttargaya,Food Security,Number of food relief packages distributed,Number,1000,300,1000,5000,300,1260,"WHH, RRN"
+Bagmati,Rasuwa,Uttargaya,Food Security,Veterinary medicine and disinfectants,Items,0,25,0,0,0,0,FAO
+Bagmati,Rasuwa,Uttargaya,Food Security,NA,PAC,400,400,400,1596,400,1181,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,Food Security,NA,NA,0,0,0,200,0,0,"UN Women, ROYM"
+Bagmati,Rasuwa,Uttargaya,Health,Emergency Health Kit (supplementary),Number,36,36,0,0,0,0,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Health,Medical supplies,Number,0,0,92,400,92,400,"LUMANTI, LG"
+Bagmati,Rasuwa,Uttargaya,Health,Medical supplies,Set,0,5,0,0,0,0,IOM
+Bagmati,Rasuwa,Uttargaya,Health,NA,Number,0,0,0,0,0,25,"UNICEF, TPO"
+Bagmati,Rasuwa,Uttargaya,Health,NA,NA,0,0,57,136,57,136,"CBM, HRDC, SDC, CMC"
+Bagmati,Rasuwa,Uttargaya,Health - SRH,Newborn baby kits,Kits,90,82,0,82,0,0,UNFPA
+Bagmati,Rasuwa,Uttargaya,Logistics,Kitchen Set,Kits,10,10,10,44,10,44,ADRA
+Bagmati,Rasuwa,Uttargaya,Multi-purpose Cash,NA,NA,0,0,750,0,0,0,"HELVETAS, PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Nutrition,Multiple Micronutrient Powders,NA,0,0,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Uttargaya,Nutrition,NA,NA,0,0,0,600,0,0,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Protection - Child Protection,Recreational Kit,Number,0,78,0,0,18,78,"CRS, Caritas"
+Bagmati,Rasuwa,Uttargaya,Protection - Child Protection,Winterization kit,Set,814,0,0,0,0,0,UNICEF
+Bagmati,Rasuwa,Uttargaya,Protection - Child Protection,NA,NA,0,0,0,40,28.1464530892448,157,"PLAN, DEPROSC, UNICEF, NRCS, WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,Protection - GBV,Dignity Kit,Kits,1542,724,1524,5524,300,724,"PIN, CSRC, PLAN, DEPROSC, WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,Protection - GBV,Dignity Kit,Number,2130,0,2130,2130,0,0,SFN
+Bagmati,Rasuwa,Uttargaya,Protection - GBV,Dignity Kit,Set,50,50,50,50,50,50,"Fastenaktion, CSRC"
+Bagmati,Rasuwa,Uttargaya,Protection - GBV,NA,NA,0,0,35,80,8,23,"UNFPA, WOREC"
+Bagmati,Rasuwa,Uttargaya,Protection - MHPSS,NA,NA,350,0,51,214,96,527,"GCYCN, BN, CBM, KOSHISH, CIN, UNICEF, CMC, UNFPA, CWIN, PLAN, DEPROSC, TPO"
+Bagmati,Rasuwa,Uttargaya,Shelter,Bed sheets,Number,4,4,4,4,0,4,"WJR, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,Blanket - High thermal (synthetic) - for winterization,Items,500,500,0,0,114,500,"CRS, Caritas"
+Bagmati,Rasuwa,Uttargaya,Shelter,Blanket - High thermal (synthetic) - for winterization,Number,200,200,46,200,46,200,ActionAid
+Bagmati,Rasuwa,Uttargaya,Shelter,Blanket - High thermal (synthetic) - for winterization,Set,1250,745,1250,5000,745,2009,"HELVETAS, CSRC, WHH, RRN"
+Bagmati,Rasuwa,Uttargaya,Shelter,Blanket - Summer,Number,410,200,302,610,92,400,"LUMANTI, LG, SFN"
+Bagmati,Rasuwa,Uttargaya,Shelter,Blanket - Summer,Set,170,42,85,170,85,170,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,Kitchen Set,Number,54,0,54,54,0,0,SFN
+Bagmati,Rasuwa,Uttargaya,Shelter,Kitchen Set,Set,520,300,520,0,300,0,"ActionAid, GEI ASIA, HELVETAS, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,NFI Kits,Items,900,900,0,400,205,900,"CRS, Caritas, HELVETAS, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,NFI Kits,Kits,850,224,224,1099,30,1062,"PIN, CSRC, SCI"
+Bagmati,Rasuwa,Uttargaya,Shelter,NFI Kits,Number,2168,2168,525,980,525,1825,"ActionAid, HELVETAS, CSRC, LUMANTI, LG, PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Shelter,NFI Kits,Set,543,403,140,400,0,400,"ActionAid, HELVETAS, CSRC, PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Shelter,Shelter Kit,Kits,1151,495,1200,6000,495,0,"HFH, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,Shelter Kit,PAC,300,300,300,1300,300,1256,"PLAN, DEPROSC"
+Bagmati,Rasuwa,Uttargaya,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Kits,1205,1205,1205,4699.5,1205,4700,IRW
+Bagmati,Rasuwa,Uttargaya,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Number,67,67,92,400,92,400,"LUMANTI, LG"
+Bagmati,Rasuwa,Uttargaya,Shelter,NA,Items,100,65,100,0,65,227.5,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,NA,PAC,100,100,100,350,100,345,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,NA,Set,50,0,50,0,5,16,"CARE, CSRC"
+Bagmati,Rasuwa,Uttargaya,Shelter,NA,NA,0,0,0,0,0,0,"CBM, KOSHISH"
+Bagmati,Rasuwa,Uttargaya,WASH,Bucket,Kits,240,240,240,240,0,240,"PIN, CSRC"
+Bagmati,Rasuwa,Uttargaya,WASH,Bucket,Number,579,579,175,1215,175,1215,"LUMANTI, LG, UNICEF"
+Bagmati,Rasuwa,Uttargaya,WASH,Chlorine Powder,Number,1040,1040,92,800,92,800,"LUMANTI, LG"
+Bagmati,Rasuwa,Uttargaya,WASH,Hygiene Kits,Kits,1000,525,11000,5000,4434,874,"HAPSA, WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,WASH,Hygiene Kits,Number,750,750,184,1550,934,1550,"WJR, CSRC, LUMANTI, LG"
+Bagmati,Rasuwa,Uttargaya,WASH,Hygiene Kits,PAC,1750,780,1250,5600,310,899,"CARE, CSRC, WJR, WAN, ENPHO, WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,WASH,Hygiene Kits,Set,1450,1150,1450,6300,1150,1649,"HELVETAS, CSRC, PLAN, DEPROSC, WVI, KIRDARC"
+Bagmati,Rasuwa,Uttargaya,WASH,Hygiene Kits,NA,0,0,200,1200,200,1200,REACT
+Bagmati,Rasuwa,Uttargaya,WASH,Latrine Slabs/Latrine & Bath Kits,Kits,15,15,350,350,0,350,"PIN, CSRC"
+Bagmati,Rasuwa,Uttargaya,WASH,Latrine Slabs/Latrine & Bath Kits,Set,0,0,0,64,0,64,UNICEF
+Bagmati,Rasuwa,Uttargaya,WASH,Pipes and Fittings,NA,2,2,27,156,27,156,UNICEF
+Bagmati,Rasuwa,Uttargaya,WASH,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Number,100,100,137,600,137,600,"LUMANTI, LG"
+Bagmati,Rasuwa,Uttargaya,WASH,Water Kits,Pcs,200,200,224,224,0,224,"PIN, CSRC"
+Bagmati,Rasuwa,Uttargaya,WASH,"Water Purifier (tabs, chlorine etc)",Number,400,400,0,0,0,400,"WJR, CSRC"
+Bagmati,Rasuwa,Uttargaya,WASH,Water container/bladder,Number,5,5,92,1000,92,1000,"LUMANTI, LG"
+Bagmati,Rasuwa,Uttargaya,WASH,NA,NA,0,0,0,177,0,86,"CIN, LUMANTI, LG, PLAN, DEPROSC"
+Bagmati,Rasuwa,NA,Health,Bednets,Number,433,0,433,866,0,0,UNICEF
+Bagmati,Rasuwa,NA,Health,Emergency Health Kit (basic),Kits,500,0,500,1000,0,0,UNICEF
+Bagmati,Rasuwa,NA,Health,Medical supplies,Number,2,0,0,0,0,0,GEI ASIA
+Bagmati,Rasuwa,NA,Health,Medical tent,Number,2,0,2000,10000,0,0,UNICEF
+Bagmati,Rasuwa,NA,Health,NA,Number,0,0,0,0,0,96,"UNICEF, CWIN"
+Bagmati,Rasuwa,NA,Health,NA,NA,0,0,0,0,0,0,GEI ASIA
+Bagmati,Rasuwa,NA,Nutrition,Nutrition sensitive food,PAC,500,0,0,500,0,0,"PLAN, DEPROSC"
+Bagmati,Rasuwa,NA,Protection - Child Protection,NA,NA,0,0,0,0,0,0,"CRS, Caritas"
+Bagmati,Rasuwa,NA,Protection - GBV,Dignity Kit,Kits,1125,300,0,425,0,0,UNFPA
+Bagmati,Rasuwa,NA,Protection - GBV,Kishori Kit,Kits,400,0,0,400,0,0,UNFPA
+Bagmati,Rasuwa,NA,Protection - MHPSS,NA,NA,0,0,0,0,0,0,"CRS, Caritas"
+Bagmati,Rasuwa,NA,Shelter,Solar Light,Number,0,30,0,0,30,150,NRCS
+Bagmati,Rasuwa,NA,Shelter,Tarpaulin - 12 x 18 ft - 220-250 gsm (temp shelter),Number,300,0,0,1500,0,0,UNFPA
+Bagmati,Rasuwa,NA,WASH,Hygiene Kits,Kits,500,500,0,0,0,0,"CRS, Caritas"
+Bagmati,Rasuwa,NA,WASH,NA,NA,0,0,0,0,0,0,DWSSM
+Gandaki,Gorkha,Gandaki,Health,Medical supplies,Number,0,1930,0,0,0,0,IOM
+Gandaki,Gorkha,Gandaki,Shelter,Shelter Kit,Kits,49,0,49,195,0,0,"HFH, CSRC"
+Gandaki,Tanahu,Aanbu Khaireni,Health,Medical supplies,Number,0,2010,0,0,0,0,IOM
+Gandaki,Tanahu,Devghat,Health,Medical supplies,Number,0,1730,0,0,0,0,IOM

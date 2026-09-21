@@ -8,8 +8,8 @@ color:
   background: white
 logo:
   medium:
-    light: brand/combined_logos_stacked.png
-    dark: brand/combined_logos_stacked.png
+    light: brand/combined_logos.png
+    dark: brand/combined_logos.png
 
 # Honestly, the problem is that I still don't know how to change 
 # the background colour any way besides using html on the qmd itself
