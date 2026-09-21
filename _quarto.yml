@@ -7,7 +7,7 @@ project:
 website:
   navbar:
     title: "Nepal Rasuwa Floods"
-    logo: brand/combined_logos_stacked.png
+    logo: brand/combined_logos.png
     logo-href: "https://reliefweb.int/disaster/ff-2026-000162-npl"
     left:
         - href: "https://drive.google.com/drive/folders/1_ud5bJy5DrL6t8ZdaIPZbYvGNPt5a3-q?usp=sharing"

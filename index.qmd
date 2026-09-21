@@ -326,11 +326,11 @@ Municipal aggregations are of limited utility in planning and analysis of a resp
 
 From the plots below, we note that: 
 
-* The number of impacted buildings does not align with the Estimated Affected Population. The clearest example of this would be to compare Gosaikunda and Benighat Rorang. 
+* The number of impacted buildings does not align with the Estimated Affected Population. An example of this would be the differences between Gosaikunda and Benighat Rorang. 
 
-* The Estimated Affected Population is several municipalities like Kalika and Aamachhodingmo is very low and has already been greatly exceeded by the 5Ws reached. 
+* The Estimated Affected Population is is very low in several municipalities, like Kalika and Aamachhodingmo, and has already been greatly exceeded by the 5Ws reached. 
 
-* Multiple municipalities not in the Flash Appeal have been reached by partners. Some may be due to the presence of displaced populations (such as Kathmandu), but others such as Myagang are distant from the flooding, as can be seen from the map below. 
+* Multiple municipalities not in the Flash Appeal or the NDRRMA Rapid Disaster Needs Assessment have been reached by partners. Some may be due to the presence of displaced populations (such as Kathmandu), but others such as Myagang are distant from the flooding. 
 
 
 <br>
@@ -485,18 +485,20 @@ affected_reached_summary_table |>
 
 <br>
 
-The NDRRMA' stated affected population of 32,963 is solely derived from the number of persons affected by impacted buildings. However, the calculations for the Flash Appeal was calculated backwards from the total population of the affected wards, and took into considerations factors such as the poverty incidence, incidence of chronic diseases and disabilities but did not take into account the varying levels of damage across and applied a flat percentage across all affected areas, leading to overly small caseloads for some highly-impacted areas and relatively larger caseloads for some less impacted areas further downstream. 
+The NDRRMA's stated affected population of 32,963 is solely derived from the number of persons affected by impacted buildings. However, the calculations for the Flash Appeal was calculated backwards from the total population of the affected wards, and took into consideration factors such as the incidence of poverty, chronic diseases and disabilities, but did not take into account the varying levels of damage across and applied a flat percentage across all affected areas, leading to overly small caseloads for some highly-impacted areas and relatively larger caseloads for some less impacted areas further downstream. 
 
 This is especially evident when we review 5Ws reached as a percentage of the Flash Appeal affected population in the plot below. 
 
 
 <br>
 
-[![](./plots/municipal_gaps_max.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/municipal_gaps_max.png)
+[![Click map for full-size version](./plots/municipal_gaps_max.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/municipal_gaps_max.png)
 
 <br>
 
-A revision of the Estimated Affected Population for the Flash Appeal is recommended to not only take into account the NDRRMA's Rapid Disaster Needs Assessment as well as populations who have been affected by access constraints.  
+A revision of the Estimated Affected Population for the Flash Appeal is recommended to not only take into account the NDRRMA's Rapid Disaster Needs Assessment as well as populations who have been affected by access constraints. 
+
+
 
 <br><br><br>
 
@@ -511,7 +513,7 @@ The plot below shows the differences between the affected wards which were inclu
 
 <br>
 
-[![](./plots/affected_wards.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/affected_wards.png)
+[![Click map for full-size version](./plots/affected_wards.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/affected_wards.png)
 
 <br>
 
@@ -572,7 +574,7 @@ Immediately, anecdotal communications about the over-saturation of aid in Bidur 
 
 <br>
 
-[![](./plots/ward_reached_sum.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/ward_reached_sum.png)
+[![Click map for full-size version](./plots/ward_reached_sum.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/ward_reached_sum.png)
 
 
 
@@ -586,7 +588,7 @@ Area-based programming is key when each ward is subject to multiple, varying con
 
 <br>
 
-[![](./plots/ward_sectors.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/ward_sectors.png)
+[![Click map for full-size version](./plots/ward_sectors.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/ward_sectors.png)
 
 <br>
 
@@ -619,7 +621,7 @@ ward_summary |>
 
 # Assessment coverage
 
-[![](./plots/assessment_map.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/assessment_map.png)
+[![Click map for full-size version](./plots/assessment_map.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/assessment_map.png)
 
 <br>
 
@@ -777,11 +779,11 @@ These groups are plotted in the map below:
 
 <br>
 
-[![](./plots/wards_clustered.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/wards_clustered.png)
+[![Click map for full-size version](./plots/wards_clustered.png)](https://raw.githubusercontent.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/main/plots/wards_clustered.png)
 
 <br>
 
-The dataset containing these groups may be downloaded [here](https://drive.google.com/drive/folders/1dHDzi-gLe0ldOduwGwVUUcas7Qar2CEK?usp=sharing). 
+The dataset containing these groups may be downloaded [here](https://drive.google.com/drive/folders/1dHDzi-gLe0ldOduwGwVUUcas7Qar2CEK?usp=drive_link). 
 
 <br><br><br>
 
@@ -829,8 +831,8 @@ consolidated |>
   datatable(filter = list(position = "top", clear = FALSE), 
               options = list(pageLength = 10, scrollX = TRUE),
               caption = htmltools::tags$caption(style = "caption-side: top;
-                                              text-align: center; font-size: 140%;",
-                                              "Selected Demographic, 5W and Damage Variables from Affected Wards; source: National Statistics Office, Nepal"))
+                                              text-align: center; font-size: 100%;",
+                                              "Selected Demographic, 5W and Damage Variables from Affected Wards; sources: National Statistics Office, NDRRMA RDNA, 5Ws 20260921"))
 
 ```
 
