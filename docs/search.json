@@ -33,5 +33,19 @@
     "title": "Nepal Floods Response Analysis",
     "section": "Useful links and datasets",
     "text": "Useful links and datasets\n\nDigitised NDRRMA Municipal Damage Tables\n\n\nWard groups, including Impacted Buildings by Ward\n\n\n5W Dashboard\n\n\nConsolidated Census Ward-level Household and Population\nVariables include a breakdown of housing materials, wealth quintile, school attendance and household WASH.\n\n\nLogistics Cluster Access Map\nUpdated regularly."
+  },
+  {
+    "objectID": "5w_error_checking.html",
+    "href": "5w_error_checking.html",
+    "title": "Nepal Floods 5Ws Error Reporting",
+    "section": "",
+    "text": "This is a report on several common errors made in 5W reporting in the 2026 Nepal Floods Response. It is hoped that the issues highlighted in this report will serve to improve reporting quality and, consequently, the analysis of response activities.\nThe version of the 5Ws used for this report was the consolidated 5Ws extracted on 20260921. It has 1671 rows.\nSeveral files have been generated as part of this report. They are:\n\nA consolidated 5Ws file with additional columns added to indicate errors.\nA proposed list of the correct response modality for each of the activities reported in 5Ws"
+  },
+  {
+    "objectID": "5w_error_checking.html#sex-and-age-disaggregations",
+    "href": "5w_error_checking.html#sex-and-age-disaggregations",
+    "title": "Nepal Floods 5Ws Error Reporting",
+    "section": "Sex-and-Age Disaggregations",
+    "text": "Sex-and-Age Disaggregations\nSex-and-age disaggregations match with the reported total for most rows in the 5Ws. However, in 373 rows, the number of indimviduals reached exceeds the sum of all the sex-and-age disaggregated data. In 101 rows, the sum of the disaggregations is higher than the number of individuals reached.\n\n\n\nsadd_checknum_rowscorrect1,217over77under377\n\n\n\nFor this sex-and-age disaggregation check, I only summed the figures for boys, girls, men and women without including elderly men and women.\n\\[\nSum = boys_{under18} + girls_{under18} + men_{18andover} + women_{18andover}\n\\] I think this needs to be clarified with partners as a few of them have entered data that implies they believe the sum of disaggregations should be calculated like this:\n\\[\nSum = boys_{under18} + girls_{under18} + men_{18to59} + women_{18to59} + men_{60andover} + women_{60andover}\n\\]"
   }
 ]

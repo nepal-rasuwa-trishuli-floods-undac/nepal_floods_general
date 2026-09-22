@@ -1,0 +1,435 @@
+---
+title: "Nepal Floods 5Ws Error Reporting"
+author: "UN Nepal & iMMAP"
+date-modified: "22 September 2026"
+execute: 
+  echo: false
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo=FALSE, fig.width=9, message = FALSE, warning=FALSE)
+
+library(tidyverse)
+library(sf)
+library(readxl)
+library(kableExtra)
+library(flextable)
+library(viridis)
+library(scales)
+library(janitor)
+library(cowplot)
+library(magick)
+library(patchwork)
+library(shadowtext)
+library(showtext)
+library(ggrepel)
+library(terra)
+library(tidyterra)
+library(maptiles)
+library(cowplot)
+library(ggview)
+library(flextable)
+library(DT)
+
+options(warn = -1)
+
+# showtext_auto()
+
+# font_add_google("Roboto", "roboto")
+
+`%out%` <- Negate(`%in%`)
+
+theme_set(theme_light())
+
+options(scipen = 999)
+
+range_wna <- function(x){(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))}
+
+```
+
+
+```{r data}
+
+nepal_admin <- read_xlsx("./data/npl_admin_boundaries.xlsx", 
+                         sheet = 7) |> 
+  select(adm3_name, adm3_pcode, adm2_name, adm2_pcode, adm1_name, adm1_pcode)
+
+cluster_activity_list <- read_csv("./data/Cluster_Activities - Sector_Activities.csv", skip = 2) |> 
+  clean_names() |> 
+      mutate(in_cluster_list = 1) |> 
+      filter(!is.na(activity))
+
+consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Sep 2026.xlsx", 
+                          skip = 5, 
+                          sheet = "Compiled_Data") |> 
+  clean_names() |> 
+  filter(disaster_response_plan %in% c("Rasuwa Flood Response", "Rasuwa Flood Respnese")) |> 
+  mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
+  mutate_at(c("province", "district", "municipality"), ~ str_trim(.)) |> 
+  mutate(municipality = str_remove_all(municipality, " Gaunpalika"), 
+         municipality = str_remove_all(municipality, " Municipality")) |>
+  mutate(municipality = case_when(
+    municipality == "Benighat" ~ "Benighat Rorang", 
+    municipality == "Galchi Rural Municipality" ~ "Galchhi", 
+    municipality == "Gandaki" ~ "Gandaki", 
+    municipality == "Bheri Malika Municipality" ~ "Bheri Malika", 
+    municipality == "Nalgad Municipality" ~ "Nalgad", 
+    municipality == "Kathmandu Metropolitian City" ~ "Kathmandu", 
+    municipality == "Nagarjun Municipality" ~ "Nagarjun", 
+    municipality == "Belkotgadhi Municipality|Belkotgadhi Nagarpalika" ~ "Belkotgadhi", 
+    str_detect(municipality, "Langtang") ~ "Langtang", 
+    str_detect(municipality, "Bidur") ~ "Bidur", 
+    municipality == "Kispang Municipality" ~ "Kispang", 
+    municipality == "Tarkeshwor" ~ "Tarakeshwor", 
+    municipality == "Rasuwa Dao, Dhunche" ~ "Gosaikunda",
+    str_detect(municipality, "Devghat") ~ "Devghat", 
+    str_detect(municipality, "Gandaki") ~ "Gandaki", 
+    str_detect(municipality, "Belkotgadhi") ~ "Belkotgadhi", 
+    str_detect(municipality, "Langtang") ~ "Langtang",
+    municipality == "Aanbukhaireni" ~ "Aanbu Khaireni",
+    TRUE ~ municipality)) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_name, adm1_pcode), 
+    by = c("province" = "adm1_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_pcode, adm2_name, adm2_pcode), 
+    by = c("adm1_pcode", "district" = "adm2_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      filter(adm3_pcode != "NP0328596") |> 
+      distinct(adm2_pcode, adm3_name, adm3_pcode), 
+    by = c("adm2_pcode", "municipality" = "adm3_name")
+  ) |> 
+  rename(individuals_reached = total_number_of_beneficiaries_reached_people_individuals) |> 
+  filter(disaster_response_plan == "Rasuwa Flood Response")
+```
+
+
+```{r}
+activities_and_modalities <- consolidated |> 
+  count(activity) |> 
+  mutate(correct_response_modality = case_when(
+    str_detect(activity, "Information sharing and awareness sessions|General Hygiene promotion|Community sensitization|PSA messaging|Promotion and awareness|Sensitization/orientation") ~
+      # Advocacy
+      "Awareness/Advocacy",
+    str_detect(activity, "Establishment of child friendly spaces|Support to child protection transit home|Support to unaccompanied, separated and other vulnerable children affected by|SRH outreach program including mobile clinics to provide life-saving interventions|Deployment of Female Community Health Volunteers|Deployment of Mobile Medical Team|Depolyment of Psychiatrist and Pyschologist|Establishment of women friendly spaces|Provision of GBV response services|Integrate psychosocial support services|Major maintenance|Provision of psychosocial support|Provide psychosocial support|Provide targeted MHPSS|Screening of 6-59 months|Tecnical Support|Treatment of Severe Acute Malnutrition|Veterinary treatment and management|Water quality test|Water stations in communities|Water supply in Schools|Water tankering") ~
+      # Service delivery
+      "Service delivery/support",
+    str_detect(activity, "Distributing baby packs|Distribution of recreational kits|Distribution of winterization Kits to children|Distribution of Early Childhood Development (ECD) kits|Distribution of Water purifier|Distribution of critical WASH supplies|Distribution of elderly kits|Distribution of in-kind Food Relief|Distribution of learning packs|Distribution of textbooks|Distribution of water purifier|First Aid Kit|Distribution of essential life saving supplies to women and girls (including dignity kits)|Generator Support - 2.5KW|HH chlorination supplies (like Piyush, Aquatabs etc.)|Kitchen set distribution|NFI Distribution|Provide micronutrient supplements|Provide the assistive devices|Provision of essential and life-saving sexual and reproductive health medications|Provision of essential medicines, supplies and device|Provision of hygiene and sanitation materials|Provision of ready to eat|Solar Light|Support to Temporary Learning Centers (Type -1)|Support municipalities for office supplies|Water storage supplies like HH buckets, tanks|dignity kit") ~ 
+      # In-kind
+      "In-kind assistance", 
+     
+    str_detect(activity, "Orientation/training|Capacity building|teacher training on psychosocial support") ~ 
+      # Capacity building
+      "Capacity building/Training", 
+    str_detect(activity, "Communal Toilet|Emergency Shelter and repair Support|Emergency transitional shelter|Establish Temporary/Makeshift hospital or health facility|Installation/maintenance of WASH facility in school|Temporary Toilets") ~ 
+      # Reconstruction
+      "Repair/Reconstruction/Construction",
+    str_detect(activity, "Cash for work|Cash transfer|Multi-purpose cash transfer|through cash and in-kind modalities") ~
+      # Cash
+      "Cash/Voucher", 
+    str_detect(activity, "Logistics Coordination and Information Management|Procurement and Supply Chain coordination|Site Management Support benefiting affected individuals through coordination|Site level service mapping and gap identification|Site management support|Site-level service monitoring and gap identification|Support to Common Warehousing|Common Transport from Kathmandu HSA") | activity == "Other" ~ 
+      # Other
+      "Other", 
+    TRUE ~ NA_character_
+    
+  ))
+
+# activities_and_modalities |> writexl::write_xlsx("./data/activities_and_modalities.xlsx")
+```
+
+```{r}
+consolidated_error_checking <- consolidated |> 
+  replace_na(
+    list(households_reached = 0, 
+         individuals_reached = 0, 
+         girls_18_yrs = 0, 
+         boys_18_yrs = 0, 
+         women_18_yrs = 0, 
+         men_18_yrs = 0,
+         elderly_women_60_plus = 0, 
+         elderly_men_60_plus = 0, 
+         people_with_disabilities = 0)
+  ) |> 
+  mutate(
+    sadd_total = girls_18_yrs + boys_18_yrs + women_18_yrs + men_18_yrs,
+    sadd_check = individuals_reached - sadd_total
+  ) |> 
+  mutate(
+    sadd_check = case_when(
+    sadd_check > 0 ~ "under", 
+    sadd_check == 0 ~ "correct", 
+    sadd_check < 0 ~ "over"
+  )) |> 
+  mutate(
+    
+    admin_error = case_when(
+    district == "Nuwakot, Rasuwa" ~ "district error", 
+    is.na(municipality) ~ "municipality missing", 
+    municipality %in% c("Tarkeshwar") ~ "municipality error",
+    TRUE ~ NA_character_),
+    
+    ward_error = case_when(
+      is.na(ward) ~ "ward missing", 
+      ward > 20 ~ "ward error", 
+      TRUE ~ NA_character_
+    ), 
+    
+    sector_error = case_when(
+      sector %in% c("Multi-Purpose Cash") ~ "sector spelling", 
+      str_detect(activity, "WASH") & sector %in% c("Food Security", "Shelter") ~ "sector error", 
+      is.na(sector) ~ "missing sector", 
+      TRUE ~ NA_character_
+    ), 
+    
+    activity_error = case_when(
+      is.na(activity) ~ "activity missing", 
+      activity %out% (cluster_activity_list$activity) ~ "activity not in cluster list", 
+      TRUE ~ NA_character_
+    ), 
+    
+    location_type_error = case_when(
+      is.na(location_type) ~ "location type missing", 
+      location_type == "Holding Center/Community" ~ "merged location type", 
+      TRUE ~ NA_character_
+    ), 
+    
+    # relief_item_unit_error = case_when(
+    #   relief_item_unit %in% c("Items", "Number", "Packet") ~ "unit unclear", 
+    #   relief_item_unit %in% c("PAC", "Box", "Piece", "Meals", 
+    #                           "Sachet", "Pairs", "Drum", "Strip", 
+    #                           "N/A", "Pcs", "set", "Cylinder", "Meter") ~ "unit error", 
+    #   relief_item_unit %in% c("kg", "Tons") ~ "unit typo", 
+    #   TRUE ~ NA_character_
+    # ), 
+    # 
+    activity_status_error = ifelse(is.na(activity_status), "activity status missing", NA_character_)
+    
+    ) |> 
+  left_join(
+    activities_and_modalities |> 
+      select(-n), 
+    by = "activity"
+  ) |> 
+  mutate(response_modality_error = ifelse(response_modality != correct_response_modality,
+                                          "response modality error", 
+                                          NA_character_))
+  
+  
+# consolidated_error_checking |> writexl::write_xlsx("./data/consolidated_error_checking.xlsx")
+```
+
+# Introduction
+
+This is a report on several common errors made in 5W reporting in the 2026 Nepal Floods Response. It is hoped that the issues highlighted in this report will serve to improve reporting quality and, consequently, the analysis of response activities. 
+
+The version of the 5Ws used for this report was the consolidated 5Ws extracted on 20260921. It has `r nrow(consolidated)` rows. 
+
+Several files have been generated as part of this report. They are: 
+
+* A consolidated 5Ws file with additional columns added to indicate errors. 
+* A proposed list of the correct response modality for each of the activities reported in 5Ws
+
+<br>
+
+# Admin and geography errors
+
+To match with the Pcodes from this [source](https://data.humdata.org/dataset/cod-ab-npl) on HDX, the words `Gaunpalika` and `Municipality` have been stripped from all municipality names.
+
+The remaining errors are minimal: 
+
+<br>
+
+```{r}
+read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Sep 2026.xlsx", 
+                          skip = 5, 
+                          sheet = "Compiled_Data") |> 
+  clean_names() |>
+  mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
+  mutate_at(c("province", "district", "municipality"), ~ str_trim(.)) |> 
+  mutate(municipality = str_remove_all(municipality, " Gaunpalika"), 
+         municipality = str_remove_all(municipality, " Municipality")) |>
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_name, adm1_pcode), 
+    by = c("province" = "adm1_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      distinct(adm1_pcode, adm2_name, adm2_pcode), 
+    by = c("adm1_pcode", "district" = "adm2_name")
+  ) |> 
+  left_join(
+    nepal_admin |> 
+      filter(adm3_pcode != "NP0328596") |> 
+      distinct(adm2_pcode, adm3_name, adm3_pcode), 
+    by = c("adm2_pcode", "municipality" = "adm3_name")
+  ) |> 
+  filter(is.na(adm3_pcode) | is.na(adm2_pcode)) |>  
+  count(district, municipality) |> 
+  rename(num_rows = n) |> 
+  arrange(desc(num_rows)) |>
+  filter(num_rows != 62) |> 
+  flextable() |> 
+  set_table_properties(width = .5, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("Administrative areas that cannot be matched with their Pcodes")
+```
+
+
+<br>
+
+The majority of errors involve missing municipalities. Others involve the misattribution of municipalities (i.e. Gosaikunda in Nuwakot) or spelling errors (Tarkeshwar). 
+
+However, a far more common form of geodata error is that of missing ward numbers: 
+
+<br>
+
+```{r}
+consolidated_error_checking |> 
+  count(ward_error) |> 
+  rename(num_rows = n) |> 
+  mutate(ward_error = ifelse(is.na(ward_error), "no error", ward_error)) |>
+  flextable() |> 
+  set_table_properties(width = .5, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("47% of all rows are missing ward numbers")
+```
+
+
+<br><br><br>
+
+# Sector and activity errors
+
+As expected, Sector errors are uncommon, with the most common error being a missing sector. 
+
+<br>
+
+```{r}
+consolidated_error_checking |> 
+  count(sector_error) |>
+  rename(num_rows = n) |> 
+  mutate(sector_error = ifelse(is.na(sector_error), "no error", sector_error)) |>
+  flextable() |> 
+  set_table_properties(width = .5, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("Sector errors are uncommon")
+```
+
+
+<br>
+
+When it comes to activities, the most common errors are either missing activities or activities that do not align with the cluster lists of activities (which are available from the dropdowns). 
+
+<br>
+
+```{r}
+consolidated_error_checking |> 
+  count(activity_error) |> 
+  rename(num_rows = n) |> 
+  mutate(activity_error = ifelse(is.na(activity_error), "no error", activity_error)) |>
+  flextable() |> 
+  set_table_properties(width = .5, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("13% of rows have activity errors")
+```
+
+<br>
+
+Additionally, 71 rows are missing an Activity Status. 
+
+<br><br><br>
+
+## Sex-and-Age Disaggregations 
+
+Sex-and-age disaggregations match with the reported total for most rows in the 5Ws. However, in 373 rows, the number of indimviduals reached exceeds the sum of all the sex-and-age disaggregated data. In 101 rows, the sum of the disaggregations is higher than the number of individuals reached. 
+
+
+<br>
+
+```{r}
+consolidated_error_checking |>
+  count(sadd_check) |> 
+  rename(num_rows = n) |> 
+  flextable() |> 
+  set_table_properties(width = .5, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("27% of rows have disaggregation errors")
+```
+
+<br>
+
+For this sex-and-age disaggregation check, I only summed the figures for boys, girls, men and women without including elderly men and women. 
+
+
+$$
+Sum = boys_{under18} + girls_{under18} + men_{18andover} + women_{18andover}
+$$
+I think this needs to be clarified with partners as a few of them have entered data that implies they believe the sum of disaggregations should be calculated like this: 
+
+
+$$
+Sum = boys_{under18} + girls_{under18} + men_{18to59} + women_{18to59} + men_{60andover} + women_{60andover}
+$$
+
+
+
+<br><br><br>
+
+# Modality
+
+Response modalities were matched to activities. The list can be found [here](). 
+
+
+
+```{r}
+consolidated_error_checking |> 
+  count(response_modality_error) |> 
+  rename(num_rows = n) |> 
+  mutate(response_modality_error = ifelse(is.na(response_modality_error), "no error", response_modality_error)) |> 
+  flextable() |> 
+  set_table_properties(width = .5, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("13% of rows had response modality errors")
+```
+
+<br>
+
+Below are some examples of modality errors. 
+
+<br>
+
+```{r}
+set.seed(1131) 
+
+consolidated_error_checking |> 
+  filter(response_modality_error == "response modality error") |> 
+  sample_n(5) |> 
+  select(activity, response_modality, correct_response_modality) |> 
+  flextable() |> 
+  set_table_properties(width = 1, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("Some examples of modality errors")
+```
+
+<br><br><br>
+
+# Units
+
+It is recommended to standardise relief item units. These are the recommende units: 
+
+* Kilogram (KG)
+* Metric Ton (MT)
+* Litre
+* Piece(s): This includes pills, tubes, vials, ampoules, tents
+* Kit: The kit/box contents must be specified in the comments. Kit contents should also be standardised by the relevant Clusters. 
+* Training/Session
+* NPR: Nepali Rupee, for cash transfers
+* Buildings/system: toilets/shelter/temporary learning spaces/water systems
+
+

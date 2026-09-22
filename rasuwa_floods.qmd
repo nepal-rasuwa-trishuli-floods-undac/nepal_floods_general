@@ -3239,10 +3239,6 @@ consolidated_error_checking <- consolidated |>
 
 ```
 
-```{r}
-consolidated_error_checking |>
-  glimpse()
-```
 
 
 ```{r}
@@ -3269,159 +3265,38 @@ consolidated |>
 ```
 
 
-```{r}
-consolidated |> 
-  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
-  mutate_at(
-    vars(households_reached, individuals_reached, 
-         girls_18_yrs, boys_18_yrs, 
-         women_18_yrs, men_18_yrs, 
-         elderly_women_60_plus, 
-         elderly_men_60_plus, 
-         people_with_disabilities),
-    ~replace_na(.x, 0)
-  ) |> 
-  mutate(sadd_total = girls_18_yrs + boys_18_yrs + women_18_yrs + men_18_yrs +
-           elderly_women_60_plus + elderly_men_60_plus,
-         sadd_check = individuals_reached - sadd_total) |> 
-  mutate(sadd_check_summary = case_when(
-    sadd_check > 0 ~ "under", 
-    sadd_check == 0 ~ "correct", 
-    sadd_check < 0 ~ "over"
-  )) |> 
-  group_by(sadd_check_summary) |> 
-  summarise(n = n()) |> 
-  mutate(
-    
-  )
-
-
-
-```
-
-```{r}
-consolidated |> 
-  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
-  filter(response_modality == "Awareness/Advocacy") |> 
-  count(activity)
-  count(response_modality)
-  
- consolidated |>
-   mutate(response_modality_error = case_when(
-     str_detect(activity, "Distribution") & response_modality != "In-kind assistance" ~ 1,
-     activity %in% c("Cash for work including community led debris removal", 
-                     "Cash for work/recovery") & 
-       response_modality %in% c("Capacity building/Training", 
-                                "Service delivery/support") ~ 1, 
-     activity %in% c("Emergency Shelter and repair Support", 
-                     "Installation/maintenance of WASH facility in school", 
-                     "Establish Temporary/Makeshift hospital or health facility") & 
-       response_modality != "Repair/Reconstruction/Construction" ~ 1, 
-     str_detect(activity, "Sensitization/orientation|General Hygiene promotion|PSA messaging on MHPSS") & 
-       response_modality != "Awareness/Advocacy" ~ 1,
-     activity %in% c("Host Family Assistance") & response_modality "In-kind assistance" ~ 1,
-     str_detect(activity, "Integrate psychosocial support services into the SRH service package") & 
-       response_modality %in% c("In-kind assistance") ~ 1, 
-     str_detect(activity, "Capacity building of frontline service providers") & 
-       response_modality != "Capacity building/Training" ~ 1, 
-     str_detect(activity, "Provision of psychosocial support|Provide psychosocial support to service providers ensuring caring for carers|SRH outreach program including mobile clinics to provide life-saving interventions") & 
-       response_modality != "Service delivery/support" ~ 1, 
-     str_detect(activity, "Provision of essential medicines, supplies and devices") & 
-       response_modality == "Other" ~ 1, 
-     str_detect(activity, "Provision of ready to eat or cooked meals to affected people") & 
-       response_modality == "Service delivery/support" ~ 1, 
-     str_detect(activity, "Provide micronutrient supplements to children between 6-23 months") & 
-       response_modality != "	In-kind assistance" ~ 1, 
-     str_detect(activity, "Site Management, Coordination and Monitoring") & 
-       response_modality != "Other" ~ 1, 
-     str_detect(activity, "Water stations in communities (large tank setups like 5000 ltrs, 10000 litres)") & 
-       response_modality != "Service delivery/support" ~ 1, 
-     str_detect(activity, "Water storage supplies like HH buckets, tanks|Distribution of critical WASH supplies (including hygiene kits) to affected households|Child Protection : Distribution of recreational kits|Child Protection : Establishment of child friendly spaces|NFI Distribution (Mosquito net, baskets, bedsheets|Distribution of Sanitation and Relief Supplies for Rasuwa Flood Response|Distribution of learning packs") & 
-       response_modality != "In-kind assistance" ~ 1,
-     
-     
-     
-     is.na(response_modality) ~ 1, 
-     is.na(activity) ~ 1,
-     TRUE ~ 0
-     
-   ))
-  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
-   count(activity, response_modality)
-```
 
 ```{r}
 consolidated |> 
   count(activity) |> 
   mutate(response_modality = case_when(
-    str_detect(actvity, "Cash for work|Cash transfer") ~ 
+    str_detect(actvity, "Cash for work|Cash transfer|Multi-purpose cash transfer|through cash and in-kind modalities") ~ 
       # Cash
       "Cash/Voucher", 
-    str_detect(activity, "Distributing baby packs|Distribution of recreational kits|Distribution of winterization Kits to children") ~ 
+    str_detect(activity, "Distributing baby packs|Distribution of recreational kits|Distribution of winterization Kits to children|Distribution of Early Childhood Development (ECD) kits|Distribution of Water purifier|Distribution of critical WASH supplies|Distribution of elderly kits|Distribution of in-kind Food Relief|Distribution of learning packs|Distribution of textbooks|Distribution of water purifier|First Aid Kit|Distribution of essential life saving supplies to women and girls (including dignity kits)|Generator Support - 2.5KW|HH chlorination supplies (like Piyush, Aquatabs etc.)|Kitchen set distribution|NFI Distribution|Provide micronutrient supplements|Provide the assistive devices|Provision of essential and life-saving sexual and reproductive health medications|Provision of essential medicines, supplies and device|Provision of hygiene and sanitation materials|Provision of ready to eat|Solar Light|Support to Temporary Learning Centers (Type -1)|Support municipalities for office supplies|Water storage supplies like HH buckets, tanks") ~ 
       # In-kind
       "In-kind assistance", 
-    str_detect(activity, "Establishment of child friendly spaces|Support to child protection transit home|Support to unaccompanied, separated and other vulnerable children affected by disaster|Common Transport from Kathmandu HSA") ~
+    str_detect(activity, "Establishment of child friendly spaces|Support to child protection transit home|Support to unaccompanied, separated and other vulnerable children affected by|SRH outreach program including mobile clinics to provide life-saving interventions|Deployment of Female Community Health Volunteers|Deployment of Mobile Medical Team|Depolyment of Psychiatrist and Pyschologist|Establishment of women friendly spaces|Provision of GBV response services|Integrate psychosocial support services|Major maintenance|Provision of psychosocial support|Provide psychosocial support|Provide targeted MHPSS|Screening of 6-59 months|Tecnical Support|Treatment of Severe Acute Malnutrition|Veterinary treatment and management|Water quality test|Water stations in communities|Water supply in Schools|Water tankering|") ~
       # Service delivery
       "Service delivery/support", 
-    str_detect(activity, "Orientation/training") ~ 
+    str_detect(activity, "Orientation/training|Sensitization/orientation|Capacity building|teacher training on psychosocial support") ~ 
       # Capacity building
       "Capacity building/Training", 
-    str_detect(activity, "Communal Toilet") ~ 
+    str_detect(activity, "Communal Toilet|Emergency Shelter and repair Support|Emergency transitional shelter|Establish Temporary/Makeshift hospital or health facility|Installation/maintenance of WASH facility in school|Temporary Toilets") ~ 
       # Reconstruction
-      "Repair/Reconstruction/Construction"
+      "Repair/Reconstruction/Construction",
+    str_detect(activity, "Information sharing and awareness sessions|General Hygiene promotion|Community sensitization|PSA messaging|Promotion and awareness") ~
+      # Advocacy
+      "Awareness/Advocacy", 
+    str_detect(activity, "Logistics Coordination and Information Management|Procurement and Supply Chain coordination|Site Management Support benefiting affected individuals through coordination|Site level service mapping and gap identification|Site management support|Site-level service monitoring and gap identification|Support to Common Warehousing|Common Transport from Kathmandu HSA") | activity == "Other" ~ 
+      # Other
+      "Other", 
+    TRUE ~ NA_character_
     
   ))
 ```
 
-```{r}
-consolidated |> 
-  filter(activity == "Communal Toilet") |> 
-  pull(activity_description)
-```
 
-
-```{r}
-consolidated |> 
-  count(response_modality)
-```
-
-
-Support to Temporary Learning Centers (Type -1) and Transitional learning centers (Type-2)
-
-```{r}
-consolidated |>
-  filter(activity == "Host Family Assistance") |> 
-  pull(activity_description)
-  count(sector)
-  count(area_of_responsibility_aor)
-  glimpse()
-  count(relief_item_unit)
-  glimpse()
-```
-
-
-
-
-```{r}
-consolidated |> count(activity) |> 
-  filter(
-    activity %in% c("Data and Information Management", 
-                    "Logistics Coordination and Information Management", 
-                    "Nutrition education along food security interventions", 
-                    "Promotion and awareness on water conservation, storage and water quality/safety", 
-                    )
-  )
-```
-
-```{r}
-consolidated |> 
-  filter(
-    
-  )
-  filter(is.na(activity)) |>
-  count(sector)
-  count(activity_description)
-```
 
 
 A total of 73,784 individuals have been reached in Gosaikunda Municipality across the  Food Security, Protection, Shelter and WASH Clusters. 
