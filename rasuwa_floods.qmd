@@ -2759,6 +2759,73 @@ st_crs(faded_country)
 
 # 5Ws
 
+## Deduplication 
+
+```{r}
+all_duplicates <- consolidated |> 
+  left_join(
+    consolidated |>
+      # filter(lead_agency %in% c("UNICEF")) |>
+      filter(individuals_reached > 0) |>
+      count(province,
+            district,
+            municipality,
+            ward,
+            sector, 
+            activity,
+            individuals_reached,
+            sort = TRUE) |>
+      rename(duplicates = n) |> 
+      mutate(duplicates = ifelse(duplicates < 2, NA_real_, duplicates)),
+    
+    by = c("province", "district", "municipality", "ward",
+           "sector", "activity", "individuals_reached")
+  )  |> 
+  # filter(duplicates > 1) |> 
+  arrange(duplicates, province, district, municipality, lead_agency, implementing_partner)
+
+all_duplicates |> 
+  # writexl::write_xlsx("./data/all_duplicates_consolidated.xlsx")
+  count(duplicates)
+
+```
+
+
+
+```{r}
+consolidated |> 
+  left_join(
+    consolidated |>
+      filter(lead_agency %in% c("UNICEF")) |>
+      filter(individuals_reached > 0) |>
+      count(province,
+            district,
+            municipality,
+            ward,
+            activity,
+            individuals_reached,
+            sort = TRUE) |>
+      rename(duplicates = n) |> 
+      mutate(duplicates = ifelse(duplicates < 2, NA_real_, duplicates), 
+             unicef_duplicates = ifelse(duplicates > 1, "unicef_duplicates", NA_character_)),
+    
+    by = c("province", "district", "municipality", "ward",
+           "activity", "individuals_reached")
+  )  |> 
+  filter(unicef_duplicates > 1) |> 
+  arrange(province, district, municipality, lead_agency, implementing_partner)
+
+
+
+
+
+  write_csv("./data/unicef_duplicated_rows.csv")
+ 
+  
+  glimpse()
+```
+
+
 ## NDRRMA Summary 
 
 ```{r}

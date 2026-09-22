@@ -234,8 +234,9 @@ Several files have been generated as part of this report. They are:
 
 * A consolidated 5Ws file with additional columns added to indicate errors. Download [here](https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/raw/main/data/consolidated_error_checking.xlsx).
 * A proposed list of the correct response modality for each of the activities reported in 5Ws. Download [here](https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/raw/main/data/activities_and_modalities.xlsx).
+* A consolidated 5Ws file with a column indicating possible duplications. Download [here](https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/raw/main/data/all_duplicates_consolidated.xlsx).
 
-<br>
+<br><br><br>
 
 # Admin and geography errors
 
@@ -421,7 +422,7 @@ consolidated_error_checking |>
 
 # Units
 
-It is recommended to standardise relief item units. These are the recommende units: 
+It is recommended to standardise relief item units. These are the recommended units: 
 
 * Kilogram (KG)
 * Metric Ton (MT)
@@ -431,5 +432,59 @@ It is recommended to standardise relief item units. These are the recommende uni
 * Training/Session
 * NPR: Nepali Rupee, for cash transfers
 * Buildings/system: toilets/shelter/temporary learning spaces/water systems
+
+
+<br><br><br>
+
+# Duplications 
+
+Several potentially duplicated rows have been identified. These have been marked in this [dataset](https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/raw/main/data/all_duplicates_consolidated.xlsx). 
+
+These rows were selected because they have the exact same: 
+
+* province
+* district
+* municipality
+* ward
+* sector
+* activity
+* individuals_reached
+
+<br>
+
+```{r}
+all_duplicates <- consolidated |> 
+  left_join(
+    consolidated |>
+      # filter(lead_agency %in% c("UNICEF")) |>
+      filter(individuals_reached > 0) |>
+      count(province,
+            district,
+            municipality,
+            ward,
+            sector, 
+            activity,
+            individuals_reached,
+            sort = TRUE) |>
+      rename(duplicates = n) |> 
+      mutate(duplicates = ifelse(duplicates < 2, NA_real_, duplicates)),
+    
+    by = c("province", "district", "municipality", "ward",
+           "sector", "activity", "individuals_reached")
+  )  |> 
+  # filter(duplicates > 1) |> 
+  arrange(duplicates, province, district, municipality, lead_agency, implementing_partner)
+
+all_duplicates |> 
+  # writexl::write_xlsx("./data/all_duplicates_consolidated.xlsx")
+  count(duplicates) |> 
+  mutate(duplicates = ifelse(is.na(duplicates), "not a duplicate", duplicates)) |> 
+  rename(num_rows = n) |>  
+  flextable() |> 
+  set_table_properties(width = .5, layout = "autofit") |> 
+  theme_zebra() |> 
+  set_caption("15% of rows are possible duplicates")
+
+```
 
 
