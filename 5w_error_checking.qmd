@@ -247,6 +247,9 @@ The remaining errors are minimal:
 <br>
 
 ```{r}
+#| label: tbl-admins
+#| tbl-cap: "Administrative areas that cannot be matched with their Pcodes"
+
 read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Sep 2026.xlsx", 
                           skip = 5, 
                           sheet = "Compiled_Data") |> 
@@ -278,8 +281,7 @@ read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Sep 2026.xlsx",
   filter(num_rows != 62) |> 
   flextable() |> 
   set_table_properties(width = .5, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("Administrative areas that cannot be matched with their Pcodes")
+  theme_zebra() 
 ```
 
 
@@ -292,14 +294,17 @@ However, a far more common form of geodata error is that of missing ward numbers
 <br>
 
 ```{r}
+#| label: tbl-wards
+#| tbl-cap: "47% of all rows are missing ward numbers"
+
+
 consolidated_error_checking |> 
   count(ward_error) |> 
   rename(num_rows = n) |> 
   mutate(ward_error = ifelse(is.na(ward_error), "no error", ward_error)) |>
   flextable() |> 
   set_table_properties(width = .5, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("47% of all rows are missing ward numbers")
+  theme_zebra() 
 ```
 
 
@@ -312,14 +317,16 @@ As expected, Sector errors are uncommon, with the most common error being a miss
 <br>
 
 ```{r}
+#| label: tbl-sectors
+#| tbl-cap: "Sector errors are uncommon"
+
 consolidated_error_checking |> 
   count(sector_error) |>
   rename(num_rows = n) |> 
   mutate(sector_error = ifelse(is.na(sector_error), "no error", sector_error)) |>
   flextable() |> 
   set_table_properties(width = .5, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("Sector errors are uncommon")
+  theme_zebra() 
 ```
 
 
@@ -330,14 +337,16 @@ When it comes to activities, the most common errors are either missing activitie
 <br>
 
 ```{r}
+#| label: tbl-activities
+#| tbl-cap: "13% of rows have activity errors"
+
 consolidated_error_checking |> 
   count(activity_error) |> 
   rename(num_rows = n) |> 
   mutate(activity_error = ifelse(is.na(activity_error), "no error", activity_error)) |>
   flextable() |> 
   set_table_properties(width = .5, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("13% of rows have activity errors")
+  theme_zebra() 
 ```
 
 <br>
@@ -354,13 +363,15 @@ Sex-and-age disaggregations match with the reported total for most rows in the 5
 <br>
 
 ```{r}
+#| label: tbl-sadd
+#| tbl-cap: "27% of rows have disaggregation errors"
+
 consolidated_error_checking |>
   count(sadd_check) |> 
   rename(num_rows = n) |> 
   flextable() |> 
   set_table_properties(width = .5, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("27% of rows have disaggregation errors")
+  theme_zebra() 
 ```
 
 <br>
@@ -389,14 +400,16 @@ Response modalities were matched to activities. The list can be found [here](htt
 
 
 ```{r}
+#| label: tbl-modalities
+#| tbl-cap: "13% of rows had response modality errors"
+
 consolidated_error_checking |> 
   count(response_modality_error) |> 
   rename(num_rows = n) |> 
   mutate(response_modality_error = ifelse(is.na(response_modality_error), "no error", response_modality_error)) |> 
   flextable() |> 
   set_table_properties(width = .5, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("13% of rows had response modality errors")
+  theme_zebra() 
 ```
 
 <br>
@@ -406,6 +419,9 @@ Below are some examples of modality errors.
 <br>
 
 ```{r}
+#| label: tbl-modality-examples
+#| tbl-cap: "Some examples of modality errors"
+
 set.seed(1131) 
 
 consolidated_error_checking |> 
@@ -414,8 +430,7 @@ consolidated_error_checking |>
   select(activity, response_modality, correct_response_modality) |> 
   flextable() |> 
   set_table_properties(width = 1, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("Some examples of modality errors")
+  theme_zebra() 
 ```
 
 <br><br><br>
@@ -453,6 +468,9 @@ These rows were selected because they have the exact same:
 <br>
 
 ```{r}
+#| label: tbl-duplicates
+#| tbl-cap: "15% of rows are possible duplicates"
+
 all_duplicates <- consolidated |> 
   left_join(
     consolidated |>
@@ -482,8 +500,7 @@ all_duplicates |>
   rename(num_rows = n) |>  
   flextable() |> 
   set_table_properties(width = .5, layout = "autofit") |> 
-  theme_zebra() |> 
-  set_caption("15% of rows are possible duplicates")
+  theme_zebra() 
 
 ```
 
