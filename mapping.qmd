@@ -209,6 +209,8 @@ impacted_buildings <- read_xlsx("./data/impacted_buildings.xlsx") |>
     by = c("municipality" = "adm3_name")
   ) |> 
   filter(adm3_pcode != "NP0327301" & adm3_pcode != "NP0335301")
+
+proj_flat <- read_csv("./data/population_projections_2026_affected_wards_flat.csv")
 ```
 
 
@@ -1468,7 +1470,133 @@ save_ggplot(combined_map, "./plots/snapshot_map.png")
 ```
 
 
+# Operational presence
+
+```{r}
+consolidated |> 
+  filter(!is.na(ward)) |>
+  filter(!is.na(adm3_pcode)) |> 
+  pivot_longer(cols = lead_agency:implementing_partner, 
+               names_to = "agency_role", 
+               values_to = "agency") |> 
+  group_by(district, adm2_pcode, municipality, adm3_pcode, ward) |> 
+  summarise(num_agencies = n_distinct(agency), 
+            .groups = "drop") |> 
+  full_join(
+      read_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv") |> 
+        select(-different, -projection_2026_population_total), 
+      by = c("district", "adm2_pcode", "municipality", "adm3_pcode", "ward")
+  ) |>
+  replace_na(
+    list(num_agencies = 0, 
+         flash_appeal_affected = 0, 
+         rdna_affected = 0, 
+         ndrrma_new = 0)
+  ) |> 
+  left_join(proj_flat |> 
+              select(adm3_pcode, ward, projection_2026_population_total), 
+            by = c("adm3_pcode", "ward")
+            ) |> 
+  mutate(category = case_when(
+    ndrrma_new == 1 & rdna_affected == 1 ~ "Both", 
+    rdna_affected == 1 & ndrrma_new == 0 ~ "Only RDNA", 
+    ndrrma_new == 1 & rdna_affected == 0 ~ "Only New Map", 
+    TRUE ~ NA_character_)) |> 
+  count(category)
+
+
+```
 
 
 
+
+```{r}
+operational_presence <- consolidated |> 
+  filter(!is.na(ward)) |>
+  filter(!is.na(adm3_pcode)) |> 
+  pivot_longer(cols = lead_agency:implementing_partner, 
+               names_to = "agency_role", 
+               values_to = "agency") |> 
+  group_by(district, adm2_pcode, municipality, adm3_pcode, ward) |> 
+  summarise(num_agencies = n_distinct(agency), 
+            .groups = "drop") |> 
+  full_join(
+      read_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv") |> 
+        select(-different, -projection_2026_population_total), 
+      by = c("district", "adm2_pcode", "municipality", "adm3_pcode", "ward")
+  ) |>
+  replace_na(
+    list(num_agencies = 0, 
+         flash_appeal_affected = 0, 
+         rdna_affected = 0, 
+         ndrrma_new = 0)
+  ) |> 
+  left_join(proj_flat |> 
+              select(adm3_pcode, ward, projection_2026_population_total), 
+            by = c("adm3_pcode", "ward")
+            ) |> 
+  mutate(category = case_when(
+    ndrrma_new == 1 & rdna_affected == 1 ~ "New Map\nand\nRDNA", 
+    rdna_affected == 1 & ndrrma_new == 0 ~ "Only RDNA", 
+    ndrrma_new == 1 & rdna_affected == 0 ~ "Only New Map", 
+    TRUE ~ NA_character_)) |> 
+  mutate(flash_appeal_affected = ifelse(flash_appeal_affected == 1, "Affected", NA_character_)) |> 
+  mutate(ward_label = ifelse(num_agencies > 0, num_agencies, "")) |> 
+ right_join(
+   wards, 
+   by = c("adm3_pcode", "ward")
+ ) |> 
+  st_as_sf() |>
+  ggplot() + 
+  geom_sf(aes(fill = category), alpha = .8) +
+  geom_sf(data = adm3, alpha = .25, linewidth = .75, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha")),
+                 aes(label = adm3_name),
+              alpha = .25) +
+  scale_fill_manual(values = c(
+    "New Map\nand\nRDNA" = "#009edb",
+    "Only RDNA" = "#72bf44", 
+    "Only New Map" = "#e3edf6"), 
+    na.value = "grey97", 
+    na.translate = FALSE
+    ) +
+  geom_sf(aes(colour = flash_appeal_affected), fill = NA, linewidth = .75) +
+  # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  scale_colour_manual(values = c("Affected" = "#e56a54"), 
+      na.value = "grey80", 
+      na.translate = FALSE) + 
+  coord_sf(xlim = c(84.4, 85.6), ylim = c(27.63, 28.35)) +
+  labs(x = "", y = "", 
+       fill = "",
+       colour = "Flash\nAppeal",
+       title = "Agency Presence in Affected Wards by Flash Appeal, NDRRMA RDNA and New NDRRMA Map", 
+       subtitle = "Number of Agencies listed.") +
+  theme(plot.title = element_text(size = 20, face = "bold")) +
+  guides(fill = guide_legend(order = 1, 
+                             override.aes = list(size = 1)), 
+         colour = guide_legend(order = 2)) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: Nepal National Disaster Risk Reduction and Management Authority; UNOSAT; United Nations Nepal and its humanitarian partners."
+  )
+
+ggsave("./plots/operational_presence.png", operational_presence, height = 11.7, width = 16.5, units = "in")  
+```
   
