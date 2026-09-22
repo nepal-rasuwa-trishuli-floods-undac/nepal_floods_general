@@ -232,8 +232,8 @@ The version of the 5Ws used for this report was the consolidated 5Ws extracted o
 
 Several files have been generated as part of this report. They are: 
 
-* A consolidated 5Ws file with additional columns added to indicate errors. 
-* A proposed list of the correct response modality for each of the activities reported in 5Ws
+* A consolidated 5Ws file with additional columns added to indicate errors. Download [here](https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/raw/main/data/consolidated_error_checking.xlsx).
+* A proposed list of the correct response modality for each of the activities reported in 5Ws. Download [here](https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/raw/main/data/activities_and_modalities.xlsx).
 
 <br>
 
@@ -383,7 +383,7 @@ $$
 
 # Modality
 
-Response modalities were matched to activities. The list can be found [here](). 
+Response modalities were matched to activities. The list can be found [here](https://github.com/nepal-rasuwa-trishuli-floods-undac/nepal_floods_general/raw/main/data/activities_and_modalities.xlsx). 
 
 
 
