@@ -382,12 +382,16 @@ proj_flat_working |>
 
 ## Affected wards
 
+```{r}
+differences |> count(municipality)
+```
+
 
 
 ```{r}
 proj_flat <- read_csv("./data/population_projections_2026_affected_wards_flat.csv")
 
-proj_flat |> mutate(
+differences <- proj_flat |> mutate(
   rdna_affected = case_when(
     municipality == "Bidur" & ward %in% c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12) ~ 1, 
     municipality == "Belkotgadhi" & ward %in% c(5, 7, 8) ~ 1, 
@@ -449,7 +453,13 @@ proj_flat |> mutate(
     municipality == "Aamachhodingmo" & ward %in% c(2, 4) ~ 0,
     TRUE ~ rdna_affected
   )) |> 
-  
+  mutate(affected_20260923 = ifelse(
+    municipality %in% c("Gosaikunda", "Aamachhodingmo"), 
+    rdna_affected, 
+    ndrrma_new
+  )) 
+
+differences |> 
   write_csv("./data/differences_between_flash_appeal_and_rdna_affected_wards.csv")
 
 
@@ -3104,7 +3114,7 @@ consolidated |>
 ## Consolidated
 
 ```{r}
-consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Sep 2026.xlsx", 
+consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_23 Sep 2026.xlsx", 
                           skip = 5, 
                           sheet = "Compiled_Data") |> 
   clean_names() |> 
@@ -3112,6 +3122,7 @@ consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Se
   mutate_at(c("province", "district", "municipality"), ~ str_to_title(.)) |> 
   mutate_at(c("province", "district", "municipality"), ~ str_trim(.)) |> 
   mutate(municipality = str_remove_all(municipality, " Gaunpalika"), 
+         municipality = str_remove_all(municipality, " Rural Municipality"), 
          municipality = str_remove_all(municipality, " Municipality")) |>
   mutate(municipality = case_when(
     municipality == "Benighat" ~ "Benighat Rorang", 
@@ -3150,9 +3161,118 @@ consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY)_21 Se
     by = c("adm2_pcode", "municipality" = "adm3_name")
   ) |> 
   rename(individuals_reached = total_number_of_beneficiaries_reached_people_individuals) |> 
-  filter(disaster_response_plan == "Rasuwa Flood Response")
+  filter(disaster_response_plan == "Rasuwa Flood Response") |> 
+  mutate(sector = ifelse(sector == "Multi-Purpose Cash", "Multi-purpose Cash", sector))
 ```
 
+```{r}
+census_flat |> 
+  group_by(municipality) |> 
+  summarise(population_total = sum(population_total))
+```
+
+```{r}
+consolidated |> 
+  filter(ward < 20) |> 
+  filter(!is.na(activity) & !is.na(adm3_pcode)) |> 
+  group_by(activity, adm3_pcode, ward) |> 
+  summarise(
+    individuals_sum = sum(individuals_reached, na.rm = TRUE), 
+    individuals_max = max(individuals_reached, na.rm = TRUE)
+  ) |> 
+  mutate(individuals_max = ifelse(!is.finite(individuals_max), 
+                                  0, individuals_max)) |> 
+  left_join(
+    census_flat |> 
+      select(adm3_pcode, ward, population_total) |> 
+      left_join(
+        differences |> 
+          select(adm3_pcode, ward, affected = affected_20260923, projection_2026_population_total), 
+        by= c("adm3_pcode", "ward")
+      ) |> 
+      mutate(population = ifelse(!is.na(projection_2026_population_total), 
+                                 projection_2026_population_total, 
+                                 population_total)) |> 
+      select(adm3_pcode, ward, population, affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  mutate(
+    sum_pc_population = individuals_sum / population,
+    max_pc_population = individuals_max / population
+  ) |> 
+  arrange(desc(sum_pc_population))
+```
+
+
+```{r}
+consolidated |> 
+  filter(ward < 20) |> 
+  filter(!is.na(activity) & !is.na(adm3_pcode)) |> 
+  group_by(activity, adm3_pcode, ward) |> 
+  summarise(
+    individuals_sum = sum(individuals_reached, na.rm = TRUE), 
+    individuals_max = max(individuals_reached, na.rm = TRUE)
+  ) |> 
+  mutate(individuals_max = ifelse(!is.finite(individuals_max), 
+                                  0, individuals_max)) |> 
+  left_join(
+    census_flat |> 
+      select(adm3_pcode, ward, population_total) |> 
+      left_join(
+        differences |> 
+          select(adm3_pcode, ward, affected = affected_20260923, projection_2026_population_total), 
+        by= c("adm3_pcode", "ward")
+      ) |> 
+      mutate(population = ifelse(!is.na(projection_2026_population_total), 
+                                 projection_2026_population_total, 
+                                 population_total)) |> 
+      select(adm3_pcode, ward, population, affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  mutate(
+    sum_pc_population = individuals_sum / population,
+    max_pc_population = individuals_max / population
+  ) |> 
+  write_csv("./data/activity_reached_against_ward_population.csv")
+  
+consolidated |> 
+  filter(ward < 20) |> 
+  filter(!is.na(adm3_pcode)) |> 
+  group_by(adm3_pcode, ward) |> 
+  summarise(
+    individuals_sum = sum(individuals_reached, na.rm = TRUE), 
+    individuals_max = max(individuals_reached, na.rm = TRUE)
+  ) |> 
+  mutate(individuals_max = ifelse(!is.finite(individuals_max), 
+                                  0, individuals_max)) |> 
+  left_join(
+    census_flat |> 
+      select(adm3_pcode, ward, population_total) |> 
+      left_join(
+        differences |> 
+          select(adm3_pcode, ward, affected = affected_20260923, projection_2026_population_total), 
+        by= c("adm3_pcode", "ward")
+      ) |> 
+      mutate(population = ifelse(!is.na(projection_2026_population_total), 
+                                 projection_2026_population_total, 
+                                 population_total)) |> 
+      select(adm3_pcode, ward, population, affected), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  mutate(
+    sum_pc_population = individuals_sum / population,
+    max_pc_population = individuals_max / population
+  ) |> 
+  write_csv("./data/ward_reached_against_ward_population.csv")  
+```
+
+```{r}
+differences |> 
+  filter(adm3_pcode == "NP0329401")
+
+census_flat |> 
+  filter(adm3_pcode == "NP0329401")
+```
 
 
 ```{r}
@@ -3219,7 +3339,7 @@ consolidated <- read_xlsx("./data/NEPAL 5W Data Consolidation (ADMIN_ONLY) 20260
 consolidated |> 
   filter(relief_item_unit == "Meter") |> 
   sample_n(3) |> 
-  pull(activity)
+  pull(activity)-
 ```
 
 
@@ -3498,18 +3618,77 @@ consolidated |>
             individuals_targeted = sum(people_targeted_individuals, na.rm = TRUE))
 ```
 
-### Sector agencies map
+## Sector agencies map
+
+### All agencies 
 
 ```{r}
-consolidated |> 
-  filter(!is.na(district) & is.na(adm2_pcode))
+agency_by_ward <- consolidated |> 
+  mutate(sector = ifelse(str_detect(sector, "Protection"), "Protection", sector), 
+         sector = ifelse(str_detect(sector, "Health"), "Health", sector)) |> 
+  filter(sector %out% c("ETC", "Logistics") & !is.na(sector)) |> 
+  mutate(sector = str_trim(sector)) |> 
+  filter(province != "Karnali") |>
+  group_by(district, adm2_pcode, municipality, adm3_pcode, ward, sector, lead_agency, implementing_partner) |> 
+  summarise(
+    frequencies = sum(individuals_reached, na.rm = TRUE), 
+    .groups = "drop"
+  ) |> 
+  filter(!is.na(ward) & ward < 20) |> 
+  mutate(duplicate = ifelse(
+    implementing_partner == lead_agency, 
+    1, 0
+  )) |> 
+  mutate(implementing_partner = ifelse(
+    duplicate == 1, NA_character_, implementing_partner
+  )) |> 
+  pivot_longer(
+    lead_agency:implementing_partner, 
+    names_to = "role",
+    values_to = "agencies"
+  ) |> 
+  select(-frequencies, -duplicate) |> 
+  filter(!is.na(agencies) & !is.na(municipality)) |>  
+  group_by(district, adm2_pcode, municipality, adm3_pcode, ward, sector) |> 
+  summarise(num_agencies = n_distinct(agencies), 
+            agencies_text = paste(agencies, collapse = ",")) |> 
+  left_join(
+    differences |> 
+      select(
+        affected = affected_20260923, adm3_pcode, ward
+      ), 
+  by = c("adm3_pcode", "ward")
+  ) |> 
+  replace_na(list(affected = 0))
+
+
+
+agency_by_ward |> writexl::write_xlsx("./data/agency_by_ward.xlsx")
 ```
 
 ```{r}
-nepal_admin |> 
-  filter(adm2_name == "Nuwakot")
+agency_by_ward |> 
+  select(-num_agencies) |> 
+  pivot_wider(
+    names_from = sector, 
+    values_from = agencies_text
+  ) |> 
+  select(-adm2_pcode, -adm3_pcode) |> 
+  writexl::write_xlsx("./data/agencies_text_by_ward_wide.xlsx")
+
+agency_by_ward |> 
+  select(-agencies_text) |> 
+  pivot_wider(
+    names_from = sector, 
+    values_from = num_agencies
+  ) |> 
+  select(-adm2_pcode, -adm3_pcode) |> 
+  writexl::write_xlsx("./data/num_agencies_by_ward_wide.xlsx")
+  glimpse()
 ```
 
+
+### UN agencies 
 
 ```{r}
 consolidated |> 
