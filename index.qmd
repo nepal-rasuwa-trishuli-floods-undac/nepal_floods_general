@@ -1,7 +1,7 @@
 ---
 title: "Nepal Floods Response Analysis"
 author: "UN Nepal & iMMAP"
-date-modified: "20 September 2026"
+date-modified: "23 September 2026"
 execute: 
   echo: false
 ---
@@ -296,11 +296,11 @@ register <- read_xlsx("./data/Nepal - Assessment registry - Rasuwa Flood.xlsx", 
 
 # Introduction
 
-The response to the 2026 Nepal Floods is comprised of the efforts of 58 Lead Agencies and 46 Implementing Partners. According to the 5Ws dashboard, a total of 61,612 persons have been reached across 15 Municipalities. The Flash Appeal estimated 84,720 people were affected by the flooding. 
+The response to the 2026 Nepal Floods is comprised of the efforts of 58 Lead Agencies and 50 Implementing Partners. According to the 5Ws dashboard, a total of 64,263 persons have been reached across 15 Municipalities. The Flash Appeal estimated 84,720 people were affected by the flooding. 
 
 ## Executive summary
 
-* Municipal aggregations are of limited utility in response planning and analysis. The ward is a more appropriate administrative level for planning and analysis of a response along a narrow corridor. 
+* The ward is a more appropriate administrative level than the municipality for planning and analysis of a response along a narrow corridor.
 
 * Only `r round(has_ward$pc * 100, 2)`% of all beneficiary frequencies (inclusive of double counting) in the 5Ws are reported at ward level. This percentage is likely to increase as the response goes along, though significant omissions from the first week of the response will likely never be resolved. 
 
@@ -326,9 +326,11 @@ From the plots below, we note that:
 
 * Populations in Galchhi and Aamachhodingmo have received a high proportion of relief interventions in comparison to the scale of damage in these areas. Benighat Rorang and Siddhalek are the opposite, though being much further downstream, flood damage in these areas is likely less severe. 
 
+The municipal-level plots below allow for the comparison between the number of impacted buildings, the sum of all beneficiary frequencies in the 5Ws (which includes double counting and is indicative of how humanitarian partners have allocated their resources to date) and the total population of the affected wards. 
+
 <br>
 
-```{r}
+```{r fig.height=8}
 consolidated |> 
   filter(response_modality != "Awareness/Advocacy") |> 
   mutate(district = ifelse(municipality == "Gosaikunda", "Rasuwa", district)) |> 
@@ -343,19 +345,26 @@ consolidated |>
     by = "adm3_pcode"
   ) |> 
   relocate(impacted_buildings, .before = beneficiary_frequencies) |> 
-  pivot_longer(cols = impacted_buildings:beneficiary_frequencies, 
+  left_join(
+    differences |>
+      filter(affected_20260923 == 1) |>
+      group_by(district, municipality, adm3_pcode) |>
+      summarise(
+        population_2026 = sum(projection_2026_population_total, na.rm = TRUE)), 
+    by = c("adm3_pcode", "district", "municipality")
+  ) |> 
+  pivot_longer(cols = impacted_buildings:population_2026, 
                names_to = "variable",
                values_to = "value") |> 
   mutate(variable = case_when(
-    variable == "estimated_affected_population" ~ "Affected Population (Flash Appeal)", 
+    variable == "population_2026" ~ "Total population in Affected Wards", 
     variable == "impacted_buildings" ~ "Impacted Buildings",
     variable == "beneficiary_frequencies" ~ "Beneficiary Frequencies (5Ws)", 
     TRUE ~ NA_character_
   )) |> 
   mutate(variable = fct_relevel(variable, c("Impacted Buildings", 
-                                            "Affected Population (Flash Appeal)", 
-                                            "Beneficiary Frequencies (5Ws)"))) |> 
-  filter(variable != "Affected Population (Flash Appeal)") |> 
+                                            "Beneficiary Frequencies (5Ws)", 
+                                            "Affected Population (Flash Appeal)"))) |> 
   mutate(
     municipality = ifelse(municipality %out%
                             c("Bidur", "Gosaikunda", "Benighat Rorang", "Kispang", "Uttargaya",
@@ -363,7 +372,9 @@ consolidated |>
                                       "Ichchha Kamana", "Galchhi", "Aamachhodingmo" , "Tarakeshwor", 
                                       "Shahid Lakhan"), 
                           "Other", municipality)) |> 
-  mutate(district = ifelse(municipality == "Other", NA_character_, district)) |> 
+  mutate(district = ifelse(municipality == "Other", "Other", district), 
+         district = fct_relevel(district, 
+                                c("Dhading", "Nuwakot", "Rasuwa", "Other"))) |> 
   group_by(district, municipality, variable) |> 
   summarise(value = sum(value, na.rm = TRUE), 
             .groups = "drop") |> 
@@ -383,8 +394,9 @@ consolidated |>
     "Dhading" = "#72bf44", 
     "Gorkha" = "#e6efd0", 
     "Nuwakot" = "#64bdea", 
-    "Rasuwa" = "#c5dfef", 
-    "Tanahu" = "#0074b7")
+    "Rasuwa" = "#004987", 
+    "Tanahu" = "#0074b7", 
+    "Other" = "grey60")
   ) +
   theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = 1), 
         strip.background = element_rect(fill = "black")) + 
@@ -393,14 +405,16 @@ consolidated |>
        title = "Comparison between Affected Municipalities", 
        subtitle = "Beneficiary frequencies include double counting and are to used to visualise how resources have been allocated", 
        caption = "Source: NDRRMA RDNA; UN Nepal and its humanitarian partners; 5Ws 20260923.")
+
+#ggsave("./plots/comparison_between_municipalities.png", height = 9, width = 8, units = "in")
 ```
 
 
 <br>
 
-The NDRRMA's stated affected population of 32,963 is solely derived from the number of persons affected by impacted buildings. Calculations for a larger figure that also includes populations who have been cut off from essential services and income-earning opportunities are currently underway. 
+The NDRRMA's stated affected population of 32,963 is solely derived from the number of persons affected by impacted buildings. As mentioned, calculations of a larger figure that also includes populations who have been cut off from essential services and income-earning opportunities are currently underway. 
 
-The map below shows individuals reached in the 5Ws with OCHA's formula for avoiding double counting applied. Though the scale of the response in Bidur is very large, and District authorities have indicated that the municipality is saturated, the total number of individuals reached is only about double what it is in Gosaikunda, despite the much larger number of people who live in Bidur.
+The map below shows individuals reached in the 5Ws with OCHA's formula for avoiding double counting applied. Though the scale of the response in Bidur is very large, and District authorities have indicated that the municipality is saturated, the total number of individuals reached is only about double what it is in Gosaikunda.
 
 As a final note, the 5Ws only captures the response achievements of UN Nepal and its humanitarian partners. For a more comprehensive understanding of gaps, data on the government's response is being sought. 
 
@@ -420,8 +434,142 @@ The ward is a more appropriate administrative level for analysis than the munici
 
 Only `r round(has_ward$pc * 100, 2)`% of all beneficiary frequencies in the 5Ws are reported at ward level. Whilst most partners are able to report current activities at the ward level, backfilling the achievements from the first week of the response with ward-level data has proved to be challenging: many relief commodities were provided to municipal authorities or "distributed" to warehouses in district or municipal seats and obtaining last-mile data for these will be challenging. 
 
-Bearing these limitations mind, the plot below shows ward-level 5W achievements. We have used the sum of all beneficiary frequencies reached, without regard for double counting, as it provides an idea how agencies have allocated their resources to date.
+Bearing these limitations mind, the plots below shows ward-level 5W achievements. We have used the sum of all beneficiary frequencies reached, without regard for double counting, as it provides an idea how agencies have allocated their resources to date.
 
+<br>
+
+```{r fig.height=9}
+consolidated |>
+  filter(response_modality != "Awareness/Advocacy") |> 
+  filter(ward < 20) |> 
+  mutate(district = ifelse(municipality == "Gosaikunda", "Rasuwa", district)) |> 
+  group_by(district, municipality, adm3_pcode, ward) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE), 
+            .groups = "drop") |> 
+  left_join(
+    differences |> 
+      select(adm3_pcode, ward, population_2026 = projection_2026_population_total), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(
+    census_flat |> 
+      select(population_2021 = population_total, adm3_pcode, ward),
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(impacted_buildings |> 
+              select(impacted_buildings, adm3_pcode, ward), 
+            by = c("adm3_pcode", "ward")) |> 
+  # This is because we don't have the countrywide tables
+  mutate(population = ifelse(!is.na(population_2026), population_2026, population_2021),
+         pc_reached = individuals_reached / population) |> 
+  mutate(district = ifelse(district %out% c("Dhading", "Nuwakot", "Rasuwa"), "Other", district),
+         district = fct_relevel(district, 
+                                c("Dhading", "Nuwakot", "Rasuwa", "Other")), 
+         ward_label = paste0(municipality, "-", ward)) |> 
+  replace_na(list(impacted_buildings = 0)) |> 
+  ggplot(aes(x = individuals_reached, y = pc_reached)) + 
+  geom_point(aes(colour = district, size = impacted_buildings), 
+             alpha = .8) +
+  geom_text_repel(aes(label = ward_label), 
+            size = 1.5, alpha = .8) +
+  scale_size_continuous(range = c(.1, 7)) +
+  scale_x_continuous(trans = "log10", labels = comma, 
+                     breaks = c(0, 3, 10, 30, 100, 300, 1000, 3000, 10000, 30000)) + 
+  scale_y_continuous(labels = percent) +
+  scale_colour_manual(values = c(
+    "Chitawan" = "#cee3a0", 
+    "Dhading" = "#72bf44", 
+    "Gorkha" = "#e6efd0", 
+    "Nuwakot" = "#64bdea", 
+    "Rasuwa" = "#004987", 
+    "Tanahu" = "#0074b7", 
+    "Other" = "grey60")
+  ) + 
+  labs(x = "Beneficiary frequencies 5Ws (log scale)", 
+       y = "Beneficiary frequencies as % of ward population", 
+       colour = "District", 
+       size = "Impacted buildings", 
+       title = "The response to-date has been focused on a small set of highly-impacted areas", 
+       subtitle = "Beneficiary frequencies (which include double counting) are used because they are a good indicator\nof how resources have been allocated.") + 
+  guides(
+    colour = guide_legend(override.aes = list(alpha = 1, size = 3), 
+                          order = 1), 
+    size = guide_legend(order = 2)
+  ) + 
+  
+
+consolidated |>
+  filter(response_modality != "Awareness/Advocacy") |> 
+  filter(ward < 20) |> 
+  mutate(district = ifelse(municipality == "Gosaikunda", "Rasuwa", district)) |> 
+  group_by(district, municipality, adm3_pcode, ward) |> 
+  summarise(individuals_reached = sum(individuals_reached, na.rm = TRUE), 
+            .groups = "drop") |> 
+  left_join(
+    differences |> 
+      select(adm3_pcode, ward, population_2026 = projection_2026_population_total), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(
+    census_flat |> 
+      select(population_2021 = population_total, adm3_pcode, ward),
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(impacted_buildings |> 
+              select(impacted_buildings, adm3_pcode, ward), 
+            by = c("adm3_pcode", "ward")) |> 
+  # This is because we don't have the countrywide tables
+  mutate(population = ifelse(!is.na(population_2026), population_2026, population_2021),
+         pc_reached = individuals_reached / population) |> 
+  mutate(district = ifelse(district %out% c("Dhading", "Nuwakot", "Rasuwa"), "Other", district),
+         district = fct_relevel(district, 
+                                c("Dhading", "Nuwakot", "Rasuwa", "Other")), 
+         ward_label = paste0(municipality, "-", ward)) |> 
+  replace_na(list(impacted_buildings = 0)) |> 
+  filter(pc_reached <= 2) |> 
+  ggplot(aes(x = individuals_reached, y = pc_reached)) + 
+  geom_point(aes(colour = district, size = impacted_buildings), 
+             alpha = .8) +
+  geom_text_repel(aes(label = ward_label), 
+            size = 1.5, alpha = .8) +
+  scale_size_continuous(range = c(.1, 7)) +
+  scale_x_continuous(trans = "log10", labels = comma, 
+                     breaks = c(0, 3, 10, 30, 100, 300, 1000, 3000, 10000, 30000)) + 
+  scale_y_continuous(labels = percent) +
+  scale_colour_manual(values = c(
+    "Chitawan" = "#cee3a0", 
+    "Dhading" = "#72bf44", 
+    "Gorkha" = "#e6efd0", 
+    "Nuwakot" = "#64bdea", 
+    "Rasuwa" = "#004987", 
+    "Tanahu" = "#0074b7", 
+    "Other" = "grey60")
+  ) + 
+  labs(x = "Beneficiary frequencies 5Ws (log scale)", 
+       y = "Beneficiary frequencies as % of ward population", 
+       colour = "District", 
+       size = "Impacted buildings", 
+       title = "Sub-section of the plot above", 
+       subtitle = "Showing wards where beneficiary frequencies are less than 200% of the ward population") + 
+  guides(
+    colour = guide_legend(override.aes = list(alpha = 1, size = 3), 
+                          order = 1), 
+    size = guide_legend(order = 2)
+  ) + 
+  
+  plot_layout(ncol = 1, 
+              guides = "collect") + 
+  
+  plot_annotation(caption = "Source: 5Ws 20260923, National Statsics Office Nepal")
+
+# ggsave("./plots/beneficiary_frequencies_by_ward.png", height = 10, width = 8.5, units = "in")
+
+```
+
+
+<br>
+
+There is a very high concentration of beneficiary frequencies in Bidur-2, likely due to its relative accessibility and the presence of several holding centres within that ward. This is also evident in the map of beneficiary frequencies in the map below. 
 
 <br>
 
@@ -430,9 +578,8 @@ Bearing these limitations mind, the plot below shows ward-level 5W achievements.
 
 <br>
 
-There is a very high concentration of beneficiary frequencies in Bidur-2, likely due to its relative accessibility and the presence of several holding centres within that ward. 
 
-Also from the map, we note a non-insignificant amount of humanitarian assistance that are outside of the affected areas. These are summarised in the table below. 
+Also from the map, we note a non-insignificant amount of humanitarian assistance that are outside of the affected areas. These are summarised in the table below. Some of these interventions were in more distant holding centres, like those in Kathmandu; however, some of the activities reported were within affected municipalities but still quite distant from the flooding. 
 
 <br>
 
@@ -486,6 +633,50 @@ Sector presence is densest in Nuwakot. Though even within municipalities as well
 
 
 The most prolific Cluster in terms of ward-level presence is the Protection Cluster, which is working in 29 wards. Of the 37 wards in where humanitarian partners are working, 27 have more than one Cluster present. The most common Cluster combination is between Health & Nutrition and Protection (19 wards together), followed by WASH and Protection (17 wards); though this should be noted that this is more of an indicator of intra-UNICEF coordination than concerted area-based programming. Shelter and WASH are present in 13 wards together. 
+
+<br>
+
+```{r fig.height=5.5}
+ward_summary |>
+  pivot_longer(
+    cols = food_security_individuals_reached:cccm_individuals_reached, 
+    names_to = "sector", 
+    values_to = "frequencies"
+  ) |> 
+  mutate(sector = str_remove_all(sector, "_individuals_reached")) |> 
+  filter(!is.na(frequencies)) |> 
+  mutate(count = 1) |> 
+  group_by(sector, district, municipality, ward, adm3_pcode) |> 
+  summarise(count = sum(count), .groups = "drop") |> 
+  mutate(ward_label = paste0(district, ", ", municipality, "-", ward)) |> 
+  mutate(sector = str_replace_all(sector, "_", " "), 
+         sector = str_to_title(sector), 
+         sector = ifelse(sector == "Cccm", "CCCM", sector), 
+         sector = ifelse(sector == "Health Nutrition", "Health & Nutrition", sector), 
+         sector = ifelse(sector == "Wash", "WASH", sector),
+         sector = str_trim(sector)) |> 
+  filter(sector != "Logistics") |> 
+  ggplot(aes(x = count, y = ward_label)) + 
+  geom_col(aes(fill = sector)) + 
+  scale_fill_manual(values = c(
+    "CCCM" = "#999999", 
+    "Shelter" = "#ed1847",
+    "Food Security" = "#72bf44", 
+    "Education" = "#ffc800", 
+    "Protection" = "#f58220",
+    "WASH" = "#009edb",
+    "Health & Nutrition" = "#a05fb4")
+  ) +
+  scale_x_continuous(breaks = seq(1, 7, 1)) +
+  labs(title = "Sector presence by Ward", 
+       subtitle = "According to the 5Ws on 20260923", 
+       x = "Number of sectors", 
+       y = "", 
+       fill = "") 
+
+#ggsave("./plots/sector_presence_by_ward.png", height = 5, width = 7, units = "in")
+
+```
 
 
 
@@ -542,7 +733,7 @@ register |>
 
 <br>
 
-Given the various methodologies being employed and differing sampling frames employed, there is no mathematical way to reconcile the results of these various assessments. However, more in-depth secondary data reviews should be possible for Bidur and Belkotgadhi in Nuwakot, Gosaikunda and Uttargaya in Rasuwa, and Galchhi and Gajuri in Dhading. However, reconciling planned and conducted assessments into these 4 sub-contexts mentioned in the next section will be much easier. 
+Given the various methodologies being employed and differing sampling frames employed, there is no mathematical way to reconcile the results of these various assessments. However, more in-depth secondary data reviews should be possible for Bidur and Belkotgadhi in Nuwakot, Gosaikunda and Uttargaya in Rasuwa, and Galchhi and Gajuri in Dhading. However, reconciling planned and conducted assessments into the 4 sub-contexts mentioned in the next section will be much easier. 
 
 For more details, please refer to the Assessment Registry [here](https://docs.google.com/spreadsheets/d/1UwPxOlgHHFpaKJd3NZUIjgBrSr7dVdTzN7GXaM6sMQk/edit?usp=drive_link).
 

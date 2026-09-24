@@ -274,11 +274,7 @@ damage_points_20260914 |> writexl::write_xlsx("./data/damage_points_20260914.xls
 
 # Plotting 
 
-```{r}
-consolidated |> 
-  filter(!is.na(individuals_reached)) |> 
-  filter(municipality == "Bidur" & ward == 2)
-```
+
 
 
 
@@ -748,6 +744,82 @@ BB####
 ggsave("./plots/ward_populations.png", ward_populations, height = 11.7, width = 16.5, units = "in") 
 ```
 
+## Poorest quintile
+
+```{r}
+ward_poorest <- differences |> 
+      select(adm3_pcode, ward, affected_20260923) |> 
+  left_join(read_csv("./data/population_projections_2026_affected_wards_flat.csv") |> 
+              select(adm3_pcode, ward, population_2026 = projection_2026_population_total), 
+            by = c("adm3_pcode", "ward")) |> 
+  left_join(
+    consolidated |> 
+      filter(individuals_reached > 0) |> 
+      group_by(adm3_pcode, ward) |> 
+      summarise(max_individuals_reached = max(individuals_reached, na.rm = TRUE), 
+                individuals_reached = sum(individuals_reached, na.rm = TRUE)), 
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  left_join(
+    census_flat |> 
+      select(poorest_quintile_pc = wealth_quintile_poorest_quintile_pc, adm3_pcode, ward),
+    by = c("adm3_pcode", "ward")
+  ) |> 
+  # This is because we don't have the countrywide tables
+  mutate(affected = ifelse(affected_20260923 == 1, "Affected", NA_character_)) |>
+  right_join(
+    wards |> 
+      select(-population), 
+    by = c("adm3_pcode", "ward")
+  )  |> 
+  mutate(ward_label = as.character(ward), 
+         ward_label = ifelse(
+           !is.na(affected), 
+           ward_label,
+           ""
+         )) |> 
+  st_as_sf() |> 
+  ggplot() +
+  # Ward populations and affected wards
+  geom_sf(aes(fill = poorest_quintile_pc), linewidth = .1) +
+  geom_sf(data = adm3, alpha = .25, linewidth = .5, colour = "grey70", fill = NA) +
+  geom_sf_text(data = adm3 |> 
+                 filter(adm2_name %in% c("Rasuwa", "Nuwakot", "Dhading", 
+                                         "Chitawan", "Tanahu", "Gorkha")),
+                 aes(label = adm3_name),
+              alpha = .25) +
+  # River
+  geom_sf(data = river, colour = "#0074b7", fill = "#0074b7") +
+  scale_fill_continuous(high = "#003425", low = "#e6efd0", labels = comma,
+                          na.value = "grey99") +
+  geom_shadowtext(
+      aes(label = ward_label, 
+          geometry = geometry), 
+      stat = "sf_coordinates", 
+      size = 2.5, color = "black",  bg.color = "white", bg.r = 0.1) +
+  coord_sf(xlim = c(84.5, 85.6), ylim = c(27.63, 28.35)) + 
+  labs(x = "", y = "", 
+       title = "% of Households in the Poorest quintile in Flood-affected areas",
+       subtitle = "Ward numbers listed.",
+       fill = "% in\nPoorest\nQuintile") + 
+  theme(plot.title = element_text(size = 20, face = "bold")) + 
+  guides(fill = guide_colorbar(order = 1), 
+         colour = guide_legend(order = 2)) +
+  
+  combined_logos +
+
+  plot_layout(ncol = 1, 
+              heights = c(25, 1), 
+  design = "
+AAAAAA
+BB####
+") + 
+  plot_annotation(
+    caption = "Sources: National Population and Housing Census 2021; 2026 Ward-level Population Projections, National Statistics Office, NDRRMA Rapid Disaster Needs Assessment."
+  )
+
+ggsave("./plots/ward_poorest.png", ward_poorest, height = 11.7, width = 16.5, units = "in") 
+```
 
 ### Reached gaps
 
