@@ -2894,12 +2894,6 @@ consolidated |>
 
 
 ```{r}
-consolidated |> glimpse()
-consolidated |> count(activity_status)
-```
-
-
-```{r}
 cluster_activity_list <- read_csv("./data/Cluster_Activities - Sector_Activities.csv", skip = 2) |> 
   clean_names() |> 
       mutate(in_cluster_list = 1) |> 
@@ -2980,10 +2974,6 @@ consolidated_error_checking <- consolidated |>
 ```
 
 
-
-```{r}
-consolidated |> filter(disaster_response_plan == "Rasuwa Flood Response") |> count(district)
-```
 
 ```{r}
 consolidated |> filter(disaster_response_plan == "Rasuwa Flood Response") |> count(municipality)
@@ -3171,6 +3161,8 @@ consolidated |>
 ## Sector agencies map
 
 ### All agencies 
+
+Agencies by ward dataset. 
 
 ```{r}
 agency_by_ward <- consolidated |> 
