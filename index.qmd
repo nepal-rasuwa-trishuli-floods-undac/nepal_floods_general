@@ -436,9 +436,11 @@ Only `r round(has_ward$pc * 100, 2)`% of all beneficiary frequencies in the 5Ws 
 
 Bearing these limitations mind, the plots below shows ward-level 5W achievements. We have used the sum of all beneficiary frequencies reached, without regard for double counting, as it provides an idea how agencies have allocated their resources to date.
 
+On the x-axis of the plots below is the number of beneficiary frequencies reached per ward. On the y-axis is the number of beneficiary frequencies, as a % of the ward's population. The size of each point indicates each ward's share of damaged buildings: as with the municipal-level comparisons, the scale of response interventions does not always align with the scale of damage in each area.  
+
 <br>
 
-```{r fig.height=9}
+```{r fig.height=10, fig.width=9}
 consolidated |>
   filter(response_modality != "Awareness/Advocacy") |> 
   filter(ward < 20) |> 
@@ -569,7 +571,9 @@ consolidated |>
 
 <br>
 
-There is a very high concentration of beneficiary frequencies in Bidur-2, likely due to its relative accessibility and the presence of several holding centres within that ward. This is also evident in the map of beneficiary frequencies in the map below. 
+There is a very high concentration of beneficiary frequencies in Bidur-2 and Bidur-2, likely due to their relative accessibility and the presence of several holding centres within those wards. 
+
+This is also evident in the map of beneficiary frequencies in the map below. 
 
 <br>
 
@@ -579,7 +583,7 @@ There is a very high concentration of beneficiary frequencies in Bidur-2, likely
 <br>
 
 
-Also from the map, we note a non-insignificant amount of humanitarian assistance that are outside of the affected areas. These are summarised in the table below. Some of these interventions were in more distant holding centres, like those in Kathmandu; however, some of the activities reported were within affected municipalities but still quite distant from the flooding. 
+Also from the map, we note a non-insignificant amount of humanitarian assistance that are outside of the affected areas. These are summarised in the table below. Some of these interventions were in more distant holding centres, like those in Kathmandu, but this will need to be investigated in more detail. 
 
 <br>
 
